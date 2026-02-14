@@ -12,20 +12,25 @@ import { AuthService } from '../../core/auth/auth.service';
   template: `
     <div class="home-container">
       <div class="hero-section">
-        <div class="hero-overlay">
-          <h1>NorCal Men's Retreat 2026</h1>
-          <p class="hero-subtitle">A Gathering of Men in Christ</p>
-          <p class="hero-details"><i class="pi pi-calendar"></i> April 16-18, 2026</p>
-          <p class="hero-details"><i class="pi pi-map-marker"></i> Alliance Redwoods, Occidental, CA</p>
-          <p class="hero-details"><i class="pi pi-dollar"></i> $240 per person</p>
-          <div class="hero-actions">
-            <a routerLink="/registration">
-              <button pButton label="Register Now" icon="pi pi-pencil" size="large"></button>
-            </a>
-            <a routerLink="/venue">
-              <button pButton label="View Venue" icon="pi pi-map" size="large"
-                      class="p-button-outlined" style="border-color: #f0e6d0; color: #f0e6d0;"></button>
-            </a>
+        <div class="hero-content">
+          <div class="hero-text">
+            <h1>NorCal Men's Retreat 2026</h1>
+            <p class="hero-subtitle">A Gathering of Men in Christ</p>
+            <p class="hero-details"><i class="pi pi-calendar"></i> April 16-18, 2026</p>
+            <p class="hero-details"><i class="pi pi-map-marker"></i> Alliance Redwoods, Occidental, CA</p>
+            <p class="hero-details"><i class="pi pi-dollar"></i> $240 per person</p>
+            <div class="hero-actions">
+              <a routerLink="/registration">
+                <button pButton label="Register Now" icon="pi pi-pencil" size="large"></button>
+              </a>
+              <a routerLink="/venue">
+                <button pButton label="View Venue" icon="pi pi-map" size="large"
+                        class="p-button-outlined" style="border-color: #f0e6d0; color: #f0e6d0;"></button>
+              </a>
+            </div>
+          </div>
+          <div class="hero-flyer">
+            <img src="assets/images/retreat-flyer.jpg" alt="NorCal Men's Retreat 2026 Flyer" />
           </div>
         </div>
       </div>
@@ -68,15 +73,27 @@ import { AuthService } from '../../core/auth/auth.service';
   styles: [`
     .home-container { max-width: 1200px; margin: 0 auto; }
     .hero-section {
-      background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 30%, #c8923a 70%, #d4782f 100%);
-      border-radius: 16px; padding: 4rem 2rem; text-align: center;
+      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      border-radius: 16px; padding: 3rem;
       margin-bottom: 3rem; overflow: hidden;
     }
-    .hero-overlay { position: relative; z-index: 1; color: #f0e6d0; }
-    .hero-section h1 { font-size: 3rem; font-weight: 800; margin: 0 0 0.5rem 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-    .hero-subtitle { font-size: 1.4rem; font-style: italic; margin: 0 0 2rem 0; opacity: 0.9; }
-    .hero-details { font-size: 1.1rem; margin: 0.5rem 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem; i { color: #e8a832; } }
-    .hero-actions { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
+    .hero-content {
+      display: flex; align-items: center; gap: 3rem;
+    }
+    .hero-text {
+      flex: 1; color: #f0e6d0;
+      h1 { font-size: 2.8rem; font-weight: 800; margin: 0 0 0.5rem 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    }
+    .hero-subtitle { font-size: 1.3rem; font-style: italic; margin: 0 0 1.5rem 0; opacity: 0.9; }
+    .hero-details { font-size: 1.1rem; margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem; i { color: #e8a832; } }
+    .hero-flyer {
+      flex-shrink: 0;
+      img {
+        width: 300px; border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      }
+    }
+    .hero-actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
     .hero-actions a { text-decoration: none; }
     .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
     .info-card {
@@ -99,7 +116,14 @@ import { AuthService } from '../../core/auth/auth.service';
         i { color: #e8a832; }
       }
     }
-    @media (max-width: 768px) { .hero-section { padding: 3rem 1.5rem; } .hero-section h1 { font-size: 2rem; } }
+    @media (max-width: 768px) {
+      .hero-section { padding: 2rem 1.5rem; }
+      .hero-content { flex-direction: column; text-align: center; gap: 2rem; }
+      .hero-text h1 { font-size: 2rem; }
+      .hero-details { justify-content: center; }
+      .hero-actions { justify-content: center; }
+      .hero-flyer img { width: 250px; }
+    }
   `]
 })
 export class HomeComponent {}
