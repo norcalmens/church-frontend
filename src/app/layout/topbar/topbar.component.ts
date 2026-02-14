@@ -26,11 +26,16 @@ import { AuthService } from '../../core/auth/auth.service';
         <a routerLink="/admin/dashboard" routerLinkActive="active" *ngIf="authService.isAdmin()">Admin</a>
       </nav>
       <div class="topbar-right">
-        <span class="user-greeting" *ngIf="authService.getCurrentUser() as user">
-          {{ user.username }}
-        </span>
-        <button pButton icon="pi pi-sign-out" class="p-button-text p-button-rounded"
-                (click)="authService.logout()"></button>
+        <ng-container *ngIf="authService.getCurrentUser() as user; else loginLink">
+          <span class="user-greeting">{{ user.username }}</span>
+          <button pButton icon="pi pi-sign-out" class="p-button-text p-button-rounded"
+                  (click)="authService.logout()"></button>
+        </ng-container>
+        <ng-template #loginLink>
+          <a routerLink="/login" class="login-link">
+            <i class="pi pi-sign-in"></i> Login
+          </a>
+        </ng-template>
       </div>
     </div>
   `,
@@ -67,6 +72,12 @@ import { AuthService } from '../../core/auth/auth.service';
     }
     .topbar-right { display: flex; align-items: center; gap: 0.75rem; }
     .user-greeting { color: #f0e6d0; font-size: 0.9rem; font-weight: 500; }
+    .login-link {
+      color: #f0e6d0; text-decoration: none; font-weight: 500;
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 1rem; border-radius: 6px; transition: all 0.2s;
+      &:hover { background: rgba(255, 255, 255, 0.1); color: #e8a832; }
+    }
     ::ng-deep .topbar-right .p-button.p-button-text {
       color: #f0e6d0 !important;
       &:hover { background: rgba(255, 255, 255, 0.1) !important; }

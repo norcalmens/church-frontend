@@ -18,15 +18,14 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [authGuard],
     children: [
       { path: '', component: HomeComponent },
       { path: 'registration', component: RetreatRegistrationComponent },
       { path: 'venue', component: VenueShowcaseComponent },
       { path: 'theme-poll', component: ThemePollComponent },
       { path: 'payment', component: PaymentComponent },
-      { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [adminGuard] },
-      { path: 'admin/registrations', component: ManageRegistrationsComponent, canActivate: [adminGuard] }
+      { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'admin/registrations', component: ManageRegistrationsComponent, canActivate: [authGuard, adminGuard] }
     ]
   },
   { path: '**', redirectTo: '' }
