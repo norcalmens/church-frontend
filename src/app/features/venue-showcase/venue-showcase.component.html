@@ -1,0 +1,80 @@
+<div class="venue-showcase-container">
+  <div class="hero-section">
+    <div class="hero-overlay">
+      <h1>Alliance Redwoods Conference Grounds</h1>
+      <p class="subtitle">A Sanctuary Among the Giants</p>
+      <p class="location"><i class="pi pi-map-marker"></i> Occidental, California</p>
+      <p-button label="Visit Website" icon="pi pi-external-link" styleClass="hero-button" (onClick)="openWebsite()"></p-button>
+    </div>
+  </div>
+
+  <div class="about-section">
+    <p-card>
+      <div class="about-content">
+        <h2>Experience God's Creation</h2>
+        <p>Nestled among towering redwood trees in the coastal mountains of Sonoma County, Alliance Redwoods Conference Grounds provides the perfect setting for our men's retreat. This beautiful 80-acre property offers a peaceful escape from daily life, creating an ideal environment for spiritual growth, fellowship, and renewal.</p>
+        <p>Whether you're walking among ancient redwoods, gathering for worship, or sharing meals with brothers in Christ, Alliance Redwoods provides a memorable backdrop for our time together.</p>
+      </div>
+    </p-card>
+  </div>
+
+  <div class="video-section">
+    <h2 class="section-title"><i class="pi pi-video"></i> Experience the Grounds</h2>
+    <div class="videos-grid">
+      <div class="video-card" *ngFor="let video of videos">
+        <p-card>
+          <ng-template pTemplate="header">
+            <div class="video-wrapper">
+              <video [src]="video.src" [poster]="video.thumbnail" controls preload="metadata" class="video-player">Your browser does not support the video tag.</video>
+            </div>
+          </ng-template>
+          <h3>{{ video.title }}</h3>
+          <p>{{ video.description }}</p>
+        </p-card>
+      </div>
+    </div>
+    <div class="no-media-message" *ngIf="videos.length === 0"><i class="pi pi-video"></i><p>Videos coming soon!</p></div>
+  </div>
+
+  <p-divider></p-divider>
+
+  <div class="amenities-section">
+    <h2 class="section-title"><i class="pi pi-list"></i> Facilities & Amenities</h2>
+    <div class="amenities-grid">
+      <div class="amenity-card" *ngFor="let amenity of amenities">
+        <p-card>
+          <div class="amenity-content">
+            <div class="amenity-icon"><i [class]="amenity.icon"></i></div>
+            <h3>{{ amenity.title }}</h3>
+            <p>{{ amenity.description }}</p>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <p-card>
+      <div class="info-grid">
+        <div class="info-item">
+          <i class="pi pi-map-marker info-icon"></i>
+          <div><h3>Location</h3><p>5000 Bohemian Highway<br>Occidental, CA 95465</p></div>
+        </div>
+        <div class="info-item">
+          <i class="pi pi-compass info-icon"></i>
+          <div><h3>Getting There</h3><p>Approximately 90 minutes from San Francisco<br>75 minutes from Fairfield</p></div>
+        </div>
+        <div class="info-item">
+          <i class="pi pi-globe info-icon"></i>
+          <div><h3>Learn More</h3><p><a href="https://allianceredwoods.com" target="_blank" class="website-link">Visit Alliance Redwoods Website <i class="pi pi-external-link"></i></a></p></div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <div class="cta-section">
+    <h2>Ready to Join Us?</h2>
+    <p>Register for the men's retreat and experience this amazing venue firsthand!</p>
+    <a routerLink="/registration"><p-button label="Register Now" icon="pi pi-check" size="large" styleClass="cta-button"></p-button></a>
+  </div>
+</div>

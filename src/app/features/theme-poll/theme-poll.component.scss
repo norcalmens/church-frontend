@@ -1,0 +1,35 @@
+$dark-teal: #1a3a4a;
+$deep-teal: #1e4d5e;
+$sunset-orange: #d4782f;
+$warm-amber: #c8923a;
+$golden-glow: #e8a832;
+$gradient-teal: linear-gradient(135deg, $dark-teal 0%, $deep-teal 100%);
+$gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 70%, $sunset-orange 100%);
+
+.poll-container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+.poll-header { text-align: center; padding: 3rem 2rem; background: $gradient-sky; color: white; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba($dark-teal, 0.3); h1 { font-size: 2.5rem; font-weight: 700; margin: 0 0 1rem 0; } .subtitle { font-size: 1.2rem; margin: 0; opacity: 0.95; } }
+
+.embedded-form-section {
+  margin-bottom: 3rem;
+  ::ng-deep .p-card { box-shadow: 0 4px 16px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden; .p-card-header { padding: 0; border-bottom: none; } .p-card-body { padding: 0; } .p-card-content { padding: 0; } .p-card-footer { padding: 1.5rem; background-color: #f8f9fa; border-top: 1px solid #e9ecef; } }
+  .card-header { display: flex; align-items: center; gap: 0.75rem; padding: 1.25rem 1.5rem; background: $gradient-teal; color: white; font-size: 1.3rem; font-weight: 600; i { font-size: 1.5rem; } }
+  .form-wrapper { width: 100%; min-height: 900px; position: relative; iframe { display: block; border: none; width: 100%; } }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; .footer-note { display: flex; align-items: center; gap: 0.5rem; color: #6c757d; font-style: italic; i { color: $dark-teal; } } }
+}
+
+.theme-preview {
+  ::ng-deep .p-card { box-shadow: 0 4px 16px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden; .p-card-header { padding: 0; border-bottom: none; } .p-card-body { padding: 1.5rem; } }
+  .preview-header { display: flex; align-items: center; gap: 0.75rem; padding: 1.25rem 1.5rem; background: $gradient-teal; color: white; font-size: 1.3rem; font-weight: 600; i { font-size: 1.5rem; } }
+  .themes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  .theme-item {
+    display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 8px;
+    background: linear-gradient(135deg, rgba($dark-teal, 0.05) 0%, rgba($deep-teal, 0.05) 100%);
+    border: 1px solid rgba($dark-teal, 0.2); transition: all 0.3s ease;
+    &:hover { background: linear-gradient(135deg, rgba($dark-teal, 0.1) 0%, rgba($deep-teal, 0.1) 100%); border-color: rgba($dark-teal, 0.4); transform: translateY(-2px); box-shadow: 0 4px 8px rgba($dark-teal, 0.15); }
+    .theme-number { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: $gradient-sky; color: white; font-weight: 700; flex-shrink: 0; box-shadow: 0 2px 4px rgba($dark-teal, 0.3); }
+    .theme-text { flex: 1; font-size: 1rem; font-weight: 500; color: #333; }
+  }
+}
+
+@media (max-width: 768px) { .poll-header { padding: 2rem 1rem; h1 { font-size: 1.8rem; } } .embedded-form-section .form-wrapper { min-height: 800px; iframe { height: 800px; } } .theme-preview .themes-grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .poll-container { padding: 1rem 0.5rem; } .poll-header { h1 { font-size: 1.5rem; } } .embedded-form-section .form-wrapper { min-height: 700px; iframe { height: 700px; } } }

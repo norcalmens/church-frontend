@@ -1,0 +1,95 @@
+<p-toast></p-toast>
+
+<div class="registration-container">
+  <div class="header-section">
+    <h1>Men's Retreat Registration</h1>
+    <p>April 16-18, 2026 | Alliance Redwoods, Occidental, CA | $240/person</p>
+  </div>
+
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header-bar"><i class="pi pi-user"></i><span>Primary Contact Information</span></div>
+    </ng-template>
+    <div class="form-grid" [formGroup]="registrationForm">
+      <div class="field"><label>First Name *</label><input type="text" pInputText formControlName="firstName" class="w-full" /></div>
+      <div class="field"><label>Last Name *</label><input type="text" pInputText formControlName="lastName" class="w-full" /></div>
+      <div class="field"><label>Email *</label><input type="email" pInputText formControlName="email" class="w-full" /></div>
+      <div class="field"><label>Phone *</label><input type="tel" pInputText formControlName="phone" class="w-full" /></div>
+      <div class="field"><label>Address *</label><input type="text" pInputText formControlName="address" class="w-full" /></div>
+      <div class="field"><label>City *</label><input type="text" pInputText formControlName="city" class="w-full" /></div>
+      <div class="field"><label>State *</label><input type="text" pInputText formControlName="state" class="w-full" /></div>
+      <div class="field"><label>Zip Code *</label><input type="text" pInputText formControlName="zipCode" class="w-full" /></div>
+    </div>
+  </p-card>
+
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header-bar"><i class="pi pi-users"></i><span>Attendees ($240 per person)</span></div>
+    </ng-template>
+    <div class="attendee-form" [formGroup]="attendeeForm">
+      <div class="form-grid">
+        <div class="field"><label>First Name *</label><input type="text" pInputText formControlName="firstName" class="w-full" /></div>
+        <div class="field"><label>Last Name *</label><input type="text" pInputText formControlName="lastName" class="w-full" /></div>
+        <div class="field"><label>Age *</label><input type="number" pInputText formControlName="age" class="w-full" min="18" /></div>
+        <div class="field"><label>Dietary Restrictions</label><p-dropdown [options]="dietaryOptions" formControlName="dietaryRestrictions" styleClass="w-full"></p-dropdown></div>
+      </div>
+      <button pButton label="Add Attendee" icon="pi pi-plus" class="p-button-outlined mt-2" (click)="addAttendee()"></button>
+    </div>
+    <p-table [value]="attendees" *ngIf="attendees.length > 0" class="mt-3" [tableStyle]="{'min-width': '50rem'}">
+      <ng-template pTemplate="header"><tr><th>Name</th><th>Age</th><th>Dietary</th><th style="width: 80px"></th></tr></ng-template>
+      <ng-template pTemplate="body" let-attendee let-i="rowIndex">
+        <tr>
+          <td>{{ attendee.firstName }} {{ attendee.lastName }}</td>
+          <td>{{ attendee.age }}</td>
+          <td>{{ attendee.dietaryRestrictions }}</td>
+          <td><button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm" (click)="removeAttendee(i)"></button></td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div class="total-section" *ngIf="attendees.length > 0">
+      <strong>{{ attendees.length }} attendee(s)</strong> &mdash; Total: <strong>${{ totalCost }}</strong>
+    </div>
+  </p-card>
+
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header-bar"><i class="pi pi-home"></i><span>Accommodation Preference</span></div>
+    </ng-template>
+    <div [formGroup]="registrationForm">
+      <div class="field"><label>Room Preference</label><p-dropdown [options]="roomPreferences" formControlName="roomPreference" styleClass="w-full"></p-dropdown></div>
+    </div>
+  </p-card>
+
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header-bar"><i class="pi pi-exclamation-triangle"></i><span>Emergency Contact</span></div>
+    </ng-template>
+    <div class="form-grid" [formGroup]="registrationForm">
+      <div class="field"><label>Contact Name *</label><input type="text" pInputText formControlName="emergencyName" class="w-full" /></div>
+      <div class="field"><label>Relationship *</label><input type="text" pInputText formControlName="emergencyRelationship" class="w-full" /></div>
+      <div class="field"><label>Phone *</label><input type="tel" pInputText formControlName="emergencyPhone" class="w-full" /></div>
+    </div>
+  </p-card>
+
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="card-header-bar"><i class="pi pi-check-circle"></i><span>Final Details & Submit</span></div>
+    </ng-template>
+    <div [formGroup]="registrationForm">
+      <div class="field"><label>Special Requests or Notes</label>
+        <textarea pInputTextarea formControlName="specialRequests" rows="4" class="w-full"
+                  placeholder="Any special accommodations, dietary notes, or other requests..."></textarea>
+      </div>
+    </div>
+    <div class="terms-section">
+      <p-checkbox [(ngModel)]="agreedToTerms" [binary]="true" inputId="terms"></p-checkbox>
+      <label for="terms" class="terms-label">
+        I agree to the retreat terms and conditions. I understand the cost is $240 per attendee
+        and is non-refundable after April 1, 2026.
+      </label>
+    </div>
+    <button pButton label="Submit Registration" icon="pi pi-check" class="w-full mt-3"
+            size="large" [loading]="isSubmitting" [disabled]="!agreedToTerms"
+            (click)="submitRegistration()"></button>
+  </p-card>
+</div>

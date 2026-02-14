@@ -1,0 +1,82 @@
+$dark-teal: #1a3a4a;
+$deep-teal: #1e4d5e;
+$light-teal: #2a6a7a;
+$sunset-orange: #d4782f;
+$warm-amber: #c8923a;
+$golden-glow: #e8a832;
+$cream-text: #f0e6d0;
+$off-white: #f5f0e8;
+$gradient-teal: linear-gradient(135deg, $dark-teal 0%, $deep-teal 100%);
+$gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 70%, $sunset-orange 100%);
+
+.registration-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header-section {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: $gradient-sky;
+  color: $cream-text;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba($dark-teal, 0.3);
+  h1 { font-size: 2.5rem; font-weight: 700; margin: 0 0 0.75rem 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+  p { font-size: 1.1rem; margin: 0; opacity: 0.9; }
+}
+
+.card-header-bar {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 1rem 1.5rem; background: $gradient-teal;
+  color: $cream-text; font-size: 1.1rem; font-weight: 600;
+  i { font-size: 1.25rem; }
+}
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.field {
+  margin-bottom: 0.5rem;
+  label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: $dark-teal; font-size: 0.9rem; }
+}
+
+.attendee-form { padding-bottom: 1rem; border-bottom: 1px solid #e9ecef; }
+
+.total-section {
+  margin-top: 1rem; padding: 1rem;
+  background: rgba($dark-teal, 0.05); border-radius: 8px;
+  text-align: center; font-size: 1.1rem; color: $dark-teal;
+}
+
+.terms-section {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  margin-top: 1rem; padding: 1rem;
+  background: rgba($dark-teal, 0.03); border-radius: 8px;
+}
+
+.terms-label { color: #495057; line-height: 1.5; cursor: pointer; }
+
+::ng-deep .registration-container .p-card {
+  border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden;
+  .p-card-header { padding: 0; border-bottom: none; }
+  .p-card-body { padding: 1.5rem; }
+  .p-card-content { padding: 0; }
+}
+
+::ng-deep .registration-container {
+  .p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-danger) {
+    background: $gradient-teal; border: none;
+    &:hover { background: linear-gradient(135deg, $sunset-orange 0%, $golden-glow 100%); }
+  }
+  .p-button.p-button-outlined {
+    border-color: $dark-teal; color: $dark-teal;
+    &:hover { background: rgba($dark-teal, 0.08); }
+  }
+}
+
+@media (max-width: 768px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .header-section { padding: 2rem 1rem; h1 { font-size: 1.8rem; } }
+}
