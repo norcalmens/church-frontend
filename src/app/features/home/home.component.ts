@@ -15,10 +15,10 @@ import { AuthService } from '../../core/auth/auth.service';
         <div class="hero-content">
           <div class="hero-text">
             <h1>NorCal Men's Retreat 2026</h1>
-            <p class="hero-subtitle">A Gathering of Men in Christ</p>
-            <p class="hero-details"><i class="pi pi-calendar"></i> April 16-18, 2026</p>
+            <p class="hero-subtitle">Standing in the Gap</p>
+            <p class="hero-details"><i class="pi pi-calendar"></i> June 11-13, 2026</p>
             <p class="hero-details"><i class="pi pi-map-marker"></i> Alliance Redwoods, Occidental, CA</p>
-            <p class="hero-details"><i class="pi pi-dollar"></i> $240 per person</p>
+            <p class="hero-details"><i class="pi pi-dollar"></i> $288 per person</p>
             <div class="hero-actions">
               <a routerLink="/registration">
                 <button pButton label="Register Now" icon="pi pi-pencil" size="large"></button>
@@ -30,7 +30,7 @@ import { AuthService } from '../../core/auth/auth.service';
             </div>
           </div>
           <div class="hero-flyer">
-            <img src="assets/images/retreat-flyer.jpg" alt="NorCal Men's Retreat 2026 Flyer" />
+            <img src="assets/images/retreat-flyer.png" alt="NorCal Men's Retreat 2026 Flyer" />
           </div>
         </div>
       </div>
