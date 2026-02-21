@@ -63,6 +63,8 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
     { label: 'No Preference', value: 'no-preference' }
   ];
 
+  registrationOpen = new Date() >= new Date('2026-03-01T00:00:00');
+
   constructor() {
     this.registrationForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -89,6 +91,7 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit(): Promise<void> {
+    if (!this.registrationOpen) return;
     this.stripe = await this.stripeService.getStripe();
     if (this.stripe) {
       const elements = this.stripe.elements();

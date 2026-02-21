@@ -59,11 +59,39 @@ import { AuthService } from '../../core/auth/auth.service';
         </p-card>
       </div>
 
-      <div class="quick-links">
-        <h2>Get Involved</h2>
-        <div class="links-grid">
-          <a routerLink="/registration" class="link-card"><i class="pi pi-pencil"></i><span>Register & Pay</span></a>
-          <a routerLink="/venue" class="link-card"><i class="pi pi-map"></i><span>Venue Info</span></a>
+      <div class="what-to-expect">
+        <h2>What to Expect</h2>
+        <div class="expect-grid">
+          <div class="expect-card">
+            <i class="pi pi-users"></i>
+            <h3>Fellowship & Brotherhood</h3>
+            <p>Connect with men from across Northern California in a relaxed, welcoming environment.</p>
+          </div>
+          <div class="expect-card">
+            <i class="pi pi-book"></i>
+            <h3>Inspiring Sessions</h3>
+            <p>Engaging speakers and breakout sessions designed to challenge and encourage you.</p>
+          </div>
+          <div class="expect-card">
+            <i class="pi pi-sun"></i>
+            <h3>Outdoor Activities</h3>
+            <p>Hiking trails, campfire gatherings, and time to enjoy the beauty of Alliance Redwoods.</p>
+          </div>
+          <div class="expect-card">
+            <i class="pi pi-heart"></i>
+            <h3>Worship & Reflection</h3>
+            <p>Dedicated times of worship, prayer, and personal reflection throughout the weekend.</p>
+          </div>
+          <div class="expect-card">
+            <i class="pi pi-building"></i>
+            <h3>Comfortable Lodging</h3>
+            <p>Cabin-style accommodations with meals included for the entire weekend.</p>
+          </div>
+          <div class="expect-card">
+            <i class="pi pi-map"></i>
+            <h3>Redwood Setting</h3>
+            <p>Experience God's creation at Alliance Redwoods, nestled among towering coastal redwoods.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -100,19 +128,17 @@ import { AuthService } from '../../core/auth/auth.service';
       h3 { color: #1a3a4a; font-size: 1.3rem; margin: 0 0 0.75rem 0; }
       p { color: #6c757d; line-height: 1.6; margin: 0; }
     }
-    .quick-links { text-align: center; h2 { color: #1a3a4a; font-size: 2rem; margin-bottom: 1.5rem; } }
-    .links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-    .link-card {
-      display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
-      padding: 2rem 1rem; background: white; border-radius: 12px; text-decoration: none;
-      color: #1a3a4a; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s;
-      i { font-size: 2rem; color: #d4782f; }
-      span { font-weight: 600; font-size: 1.1rem; }
-      &:hover {
-        transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.12);
-        background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%); color: #f0e6d0;
-        i { color: #e8a832; }
-      }
+    .what-to-expect { text-align: center; h2 { color: #1a3a4a; font-size: 2rem; margin-bottom: 1.5rem; } }
+    .expect-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .expect-card {
+      text-align: center; padding: 2rem 1.5rem;
+      background: white; border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+      i { font-size: 2rem; color: #d4782f; margin-bottom: 0.75rem; }
+      h3 { color: #1a3a4a; font-size: 1.15rem; margin: 0 0 0.5rem 0; }
+      p { color: #6c757d; line-height: 1.6; margin: 0; }
+      &:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.12); }
     }
     @media (max-width: 768px) {
       .hero-section { padding: 2rem 1.5rem; }
