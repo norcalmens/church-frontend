@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Registration } from '../core/models/registration.model';
 import { ApiResponse } from '../core/auth/auth.types';
+import { PaymentResponse } from '../core/models/payment.model';
 
 @Injectable({ providedIn: 'root' })
 export class RegistrationService {
@@ -23,6 +24,18 @@ export class RegistrationService {
 
   createRegistration(registration: Registration): Observable<Registration> {
     return this.http.post<ApiResponse<Registration>>('/api/registrations', registration).pipe(
+      map(res => res.data)
+    );
+  }
+
+  createPaymentIntent(registrationId: number): Observable<PaymentResponse> {
+    return this.http.post<ApiResponse<PaymentResponse>>(`/api/registrations/${registrationId}/payment-intent`, {}).pipe(
+      map(res => res.data)
+    );
+  }
+
+  confirmPayment(registrationId: number): Observable<Registration> {
+    return this.http.post<ApiResponse<Registration>>(`/api/registrations/${registrationId}/confirm-payment`, {}).pipe(
       map(res => res.data)
     );
   }

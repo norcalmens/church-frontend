@@ -30,10 +30,6 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
            *ngIf="menuVisibility.isVisible('venue')">
           <i class="pi pi-map"></i> Venue
         </a>
-        <a routerLink="/payment" routerLinkActive="active" (click)="close()"
-           *ngIf="menuVisibility.isVisible('payment')">
-          <i class="pi pi-credit-card"></i> Payment
-        </a>
         <ng-container *ngIf="authService.isAdmin()">
           <div class="sidebar-divider"></div>
           <div class="sidebar-section-title">Admin</div>

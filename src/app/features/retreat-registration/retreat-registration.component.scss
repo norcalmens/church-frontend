@@ -58,6 +58,126 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
 
 .terms-label { color: #495057; line-height: 1.5; cursor: pointer; }
 
+// Payment section styles
+.payment-summary {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba($dark-teal, 0.03);
+  border-radius: 8px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  color: $dark-teal;
+}
+
+.summary-divider {
+  height: 1px;
+  background: rgba($dark-teal, 0.15);
+  margin: 0.25rem 0;
+}
+
+.summary-total {
+  font-size: 1.2rem;
+  strong { color: $sunset-orange; }
+}
+
+.stripe-card-wrapper {
+  margin-bottom: 1rem;
+}
+
+.card-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: $dark-teal;
+  font-size: 0.9rem;
+}
+
+.stripe-card-element {
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  background: white;
+  transition: border-color 0.2s;
+
+  &:hover { border-color: $light-teal; }
+}
+
+.card-error {
+  color: #e53935;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.secure-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(76, 175, 80, 0.08);
+  border-radius: 6px;
+  color: #2e7d32;
+  font-size: 0.85rem;
+
+  i { font-size: 1rem; }
+}
+
+// Success overlay
+.success-overlay {
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.success-content {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+
+  > i {
+    font-size: 4rem;
+    color: #4caf50;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    color: $dark-teal;
+    font-size: 2rem;
+    margin: 0 0 1rem 0;
+  }
+
+  p {
+    color: #666;
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+  }
+}
+
+.success-details {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba($dark-teal, 0.05);
+  border-radius: 8px;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: $dark-teal;
+    font-weight: 600;
+
+    i { color: $sunset-orange; }
+  }
+}
+
 ::ng-deep .registration-container .p-card {
   border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden;
   .p-card-header { padding: 0; border-bottom: none; }
@@ -79,4 +199,5 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
 @media (max-width: 768px) {
   .form-grid { grid-template-columns: 1fr; }
   .header-section { padding: 2rem 1rem; h1 { font-size: 1.8rem; } }
+  .success-details { flex-direction: column; gap: 0.75rem; }
 }

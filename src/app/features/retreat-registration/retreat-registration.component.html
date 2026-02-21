@@ -1,6 +1,24 @@
 <p-toast></p-toast>
 
-<div class="registration-container">
+<!-- Success Overlay -->
+<div class="success-overlay" *ngIf="paymentSuccess">
+  <div class="success-content">
+    <i class="pi pi-check-circle"></i>
+    <h2>Registration Complete!</h2>
+    <p>Thank you for registering for the NorCal Men's Retreat 2026.</p>
+    <p>A confirmation email has been sent to <strong>{{ registrationForm.value.email }}</strong>.</p>
+    <div class="success-details">
+      <div><i class="pi pi-users"></i> {{ attendees.length }} attendee(s)</div>
+      <div><i class="pi pi-dollar"></i> ${{ totalCost }} paid</div>
+      <div><i class="pi pi-calendar"></i> June 11-13, 2026</div>
+    </div>
+    <a routerLink="/">
+      <button pButton label="Return Home" icon="pi pi-home" class="mt-3"></button>
+    </a>
+  </div>
+</div>
+
+<div class="registration-container" *ngIf="!paymentSuccess">
   <div class="header-section">
     <h1>Men's Retreat Registration</h1>
     <p>June 11-13, 2026 | Alliance Redwoods, Occidental, CA | $288/person</p>
@@ -73,6 +91,32 @@
 
   <p-card>
     <ng-template pTemplate="header">
+      <div class="card-header-bar"><i class="pi pi-credit-card"></i><span>Payment Details</span></div>
+    </ng-template>
+    <div class="payment-summary" *ngIf="attendees.length > 0">
+      <div class="summary-row">
+        <span>{{ attendees.length }} attendee(s) x $288</span>
+        <strong>${{ totalCost }}</strong>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-row summary-total">
+        <span>Total Due</span>
+        <strong>${{ totalCost }}</strong>
+      </div>
+    </div>
+    <div class="stripe-card-wrapper">
+      <label class="card-label">Card Details *</label>
+      <div id="card-element" class="stripe-card-element"></div>
+      <div class="card-error" *ngIf="cardError">{{ cardError }}</div>
+    </div>
+    <div class="secure-badge">
+      <i class="pi pi-lock"></i>
+      <span>Secured by Stripe. Your card details are never stored on our servers.</span>
+    </div>
+  </p-card>
+
+  <p-card>
+    <ng-template pTemplate="header">
       <div class="card-header-bar"><i class="pi pi-check-circle"></i><span>Final Details & Submit</span></div>
     </ng-template>
     <div [formGroup]="registrationForm">
@@ -88,8 +132,10 @@
         and is non-refundable after May 28, 2026.
       </label>
     </div>
-    <button pButton label="Submit Registration" icon="pi pi-check" class="w-full mt-3"
-            size="large" [loading]="isSubmitting" [disabled]="!agreedToTerms"
+    <button pButton [label]="attendees.length > 0 ? 'Register & Pay $' + totalCost : 'Register & Pay'"
+            icon="pi pi-lock" class="w-full mt-3"
+            size="large" [loading]="isSubmitting"
+            [disabled]="!agreedToTerms || attendees.length === 0 || !cardComplete"
             (click)="submitRegistration()"></button>
   </p-card>
 </div>
