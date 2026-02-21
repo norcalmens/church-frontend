@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SidebarModule } from 'primeng/sidebar';
 import { AuthService } from '../../core/auth/auth.service';
+import { MenuVisibilityService } from '../../core/services/menu-visibility.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -17,29 +18,36 @@ import { AuthService } from '../../core/auth/auth.service';
         </div>
       </ng-template>
       <div class="sidebar-content">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="close()">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="close()"
+           *ngIf="menuVisibility.isVisible('home')">
           <i class="pi pi-home"></i> Home
         </a>
-        <a routerLink="/registration" routerLinkActive="active" (click)="close()">
+        <a routerLink="/registration" routerLinkActive="active" (click)="close()"
+           *ngIf="menuVisibility.isVisible('registration')">
           <i class="pi pi-pencil"></i> Register
         </a>
-        <a routerLink="/venue" routerLinkActive="active" (click)="close()">
+        <a routerLink="/venue" routerLinkActive="active" (click)="close()"
+           *ngIf="menuVisibility.isVisible('venue')">
           <i class="pi pi-map"></i> Venue
         </a>
-        <a routerLink="/theme-poll" routerLinkActive="active" (click)="close()">
-          <i class="pi pi-chart-bar"></i> Theme Poll
-        </a>
-        <a routerLink="/payment" routerLinkActive="active" (click)="close()">
+        <a routerLink="/payment" routerLinkActive="active" (click)="close()"
+           *ngIf="menuVisibility.isVisible('payment')">
           <i class="pi pi-credit-card"></i> Payment
         </a>
         <ng-container *ngIf="authService.isAdmin()">
           <div class="sidebar-divider"></div>
           <div class="sidebar-section-title">Admin</div>
-          <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="close()">
+          <a routerLink="/admin/dashboard" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('admin/dashboard')">
             <i class="pi pi-chart-line"></i> Dashboard
           </a>
-          <a routerLink="/admin/registrations" routerLinkActive="active" (click)="close()">
+          <a routerLink="/admin/registrations" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('admin/registrations')">
             <i class="pi pi-list"></i> All Registrations
+          </a>
+          <a routerLink="/theme-poll" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('theme-poll')">
+            <i class="pi pi-chart-bar"></i> Theme Poll
           </a>
         </ng-container>
       </div>
@@ -73,6 +81,7 @@ export class SidebarComponent {
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
   authService = inject(AuthService);
+  menuVisibility = inject(MenuVisibilityService);
 
   close(): void {
     this.visible = false;

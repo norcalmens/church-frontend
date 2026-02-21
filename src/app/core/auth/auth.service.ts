@@ -36,7 +36,7 @@ export class AuthService {
   }
 
   private normalizeRoles(roles: string[]): string[] {
-    return roles.map(r => r.replace(/^ROLE_/i, '').toLowerCase());
+    return roles.map(r => r.replace(/^ROLE_/i, '').toUpperCase());
   }
 
   login(credentials: LoginCredentials): Observable<AuthState> {
@@ -175,17 +175,17 @@ export class AuthService {
   isAdmin(): boolean {
     const user = this.currentUserSubject.value;
     if (!user) return false;
-    return user.roles.includes('admin') || user.roles.includes('superuser');
+    return user.roles.includes('ADMIN') || user.roles.includes('SUPERUSER');
   }
 
   isSuperUser(): boolean {
     const user = this.currentUserSubject.value;
-    return user?.roles.includes('superuser') || false;
+    return user?.roles.includes('SUPERUSER') || false;
   }
 
   hasRole(role: string): boolean {
     const user = this.currentUserSubject.value;
-    return user?.roles.includes(role.toLowerCase()) || false;
+    return user?.roles.includes(role.toUpperCase()) || false;
   }
 
   private setAuth(authState: AuthState): void {

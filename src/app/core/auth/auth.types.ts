@@ -75,9 +75,9 @@ export interface LoginCredentials {
 }
 
 export enum Role {
-  SuperUser = 'superuser',
-  Admin = 'admin',
-  Member = 'member'
+  SUPERUSER = 'SUPERUSER',
+  ADMIN = 'ADMIN',
+  MEMBER = 'MEMBER'
 }
 
 export interface CompleteRegistrationRequest {

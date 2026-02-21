@@ -64,7 +64,6 @@ import { AuthService } from '../../core/auth/auth.service';
         <div class="links-grid">
           <a routerLink="/registration" class="link-card"><i class="pi pi-pencil"></i><span>Registration</span></a>
           <a routerLink="/venue" class="link-card"><i class="pi pi-map"></i><span>Venue Info</span></a>
-          <a routerLink="/theme-poll" class="link-card"><i class="pi pi-chart-bar"></i><span>Vote on Theme</span></a>
           <a routerLink="/payment" class="link-card"><i class="pi pi-credit-card"></i><span>Make Payment</span></a>
         </div>
       </div>

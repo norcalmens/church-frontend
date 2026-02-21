@@ -22,7 +22,7 @@ export const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'registration', component: RetreatRegistrationComponent },
       { path: 'venue', component: VenueShowcaseComponent },
-      { path: 'theme-poll', component: ThemePollComponent },
+      { path: 'theme-poll', component: ThemePollComponent, canActivate: [authGuard, adminGuard] },
       { path: 'payment', component: PaymentComponent },
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, adminGuard] },
       { path: 'admin/registrations', component: ManageRegistrationsComponent, canActivate: [authGuard, adminGuard] }

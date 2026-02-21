@@ -1,13 +1,15 @@
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../../core/auth/auth.service';
+import { MenuVisibilityService } from '../../core/services/menu-visibility.service';
+import { MenuSelectorComponent } from '../../features/admin/menu-selector/menu-selector.component';
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, ButtonModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, ButtonModule, MenuSelectorComponent],
   template: `
     <div class="topbar">
       <div class="topbar-left">
@@ -19,13 +21,22 @@ import { AuthService } from '../../core/auth/auth.service';
         </a>
       </div>
       <nav class="topbar-nav">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-        <a routerLink="/registration" routerLinkActive="active">Register</a>
-        <a routerLink="/venue" routerLinkActive="active">Venue</a>
-        <a routerLink="/theme-poll" routerLinkActive="active">Theme Poll</a>
-        <a routerLink="/admin/dashboard" routerLinkActive="active" *ngIf="authService.isAdmin()">Admin</a>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+           *ngIf="menuVisibility.isVisible('home')">Home</a>
+        <a routerLink="/registration" routerLinkActive="active"
+           *ngIf="menuVisibility.isVisible('registration')">Register</a>
+        <a routerLink="/venue" routerLinkActive="active"
+           *ngIf="menuVisibility.isVisible('venue')">Venue</a>
+        <a routerLink="/theme-poll" routerLinkActive="active"
+           *ngIf="authService.isAdmin() && menuVisibility.isVisible('theme-poll')">Theme Poll</a>
+        <a routerLink="/admin/dashboard" routerLinkActive="active"
+           *ngIf="authService.isAdmin() && menuVisibility.isVisible('admin/dashboard')">Admin</a>
       </nav>
       <div class="topbar-right">
+        <button *ngIf="authService.isAdmin()" pButton icon="pi pi-cog"
+                class="p-button-text p-button-rounded gear-btn"
+                (click)="menuSelector.open()"
+                pTooltip="Menu Visibility"></button>
         <ng-container *ngIf="authService.getCurrentUser() as user; else loginLink">
           <span class="user-greeting">{{ user.username }}</span>
           <button pButton icon="pi pi-sign-out" class="p-button-text p-button-rounded"
@@ -38,6 +49,7 @@ import { AuthService } from '../../core/auth/auth.service';
         </ng-template>
       </div>
     </div>
+    <app-menu-selector #menuSelector></app-menu-selector>
   `,
   styles: [`
     .topbar {
@@ -82,6 +94,10 @@ import { AuthService } from '../../core/auth/auth.service';
       color: #f0e6d0 !important;
       &:hover { background: rgba(255, 255, 255, 0.1) !important; }
     }
+    .gear-btn {
+      color: #e8a832 !important;
+      &:hover { color: #f0e6d0 !important; }
+    }
     @media (max-width: 768px) {
       .mobile-menu-btn { display: block; }
       .topbar-nav { display: none; }
@@ -91,5 +107,7 @@ import { AuthService } from '../../core/auth/auth.service';
 })
 export class TopbarComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
+  @ViewChild('menuSelector') menuSelector!: MenuSelectorComponent;
   authService = inject(AuthService);
+  menuVisibility = inject(MenuVisibilityService);
 }
