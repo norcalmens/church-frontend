@@ -1,0 +1,13 @@
+RewriteEngine On
+RewriteBase /
+
+# Redirect to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# If the requested file or directory exists, serve it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Otherwise, send all requests to index.html (Angular routing)
+RewriteRule ^(.*)$ /index.html [L]
