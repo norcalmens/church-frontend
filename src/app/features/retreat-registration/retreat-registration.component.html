@@ -91,51 +91,77 @@
 
   <p-card>
     <ng-template pTemplate="header">
-      <div class="card-header-bar"><i class="pi pi-credit-card"></i><span>Payment Details</span></div>
+      <div class="card-header-bar"><i class="pi pi-star"></i><span>What to Expect</span></div>
     </ng-template>
-    <div class="payment-summary" *ngIf="attendees.length > 0">
-      <div class="summary-row">
-        <span>{{ attendees.length }} attendee(s) x $288</span>
-        <strong>${{ totalCost }}</strong>
-      </div>
-      <div class="summary-divider"></div>
-      <div class="summary-row summary-total">
-        <span>Total Due</span>
-        <strong>${{ totalCost }}</strong>
-      </div>
-    </div>
-    <div class="stripe-card-wrapper">
-      <label class="card-label">Card Details *</label>
-      <div id="card-element" class="stripe-card-element"></div>
-      <div class="card-error" *ngIf="cardError">{{ cardError }}</div>
-    </div>
-    <div class="secure-badge">
-      <i class="pi pi-lock"></i>
-      <span>Secured by Stripe. Your card details are never stored on our servers.</span>
+    <div class="what-to-expect">
+      <p>Join us for a transformative weekend in the heart of the California redwoods. Here's what you can look forward to:</p>
+      <ul>
+        <li><i class="pi pi-users"></i> <strong>Fellowship &amp; Brotherhood</strong> &mdash; Connect with men from across Northern California in a relaxed, welcoming environment.</li>
+        <li><i class="pi pi-book"></i> <strong>Inspiring Sessions</strong> &mdash; Engaging speakers and breakout sessions designed to challenge and encourage you.</li>
+        <li><i class="pi pi-sun"></i> <strong>Outdoor Activities</strong> &mdash; Hiking trails, campfire gatherings, and time to enjoy the beauty of Alliance Redwoods.</li>
+        <li><i class="pi pi-heart"></i> <strong>Worship &amp; Reflection</strong> &mdash; Dedicated times of worship, prayer, and personal reflection throughout the weekend.</li>
+        <li><i class="pi pi-building"></i> <strong>Comfortable Lodging</strong> &mdash; Cabin-style accommodations with meals included for the entire weekend.</li>
+      </ul>
     </div>
   </p-card>
 
-  <p-card>
-    <ng-template pTemplate="header">
-      <div class="card-header-bar"><i class="pi pi-check-circle"></i><span>Final Details & Submit</span></div>
-    </ng-template>
-    <div [formGroup]="registrationForm">
-      <div class="field"><label>Special Requests or Notes</label>
-        <textarea pInputTextarea formControlName="specialRequests" rows="4" class="w-full"
-                  placeholder="Any special accommodations, dietary notes, or other requests..."></textarea>
+  <!-- Payment & Submit section (shown only when registration is open) -->
+  <ng-container *ngIf="registrationOpen">
+    <p-card>
+      <ng-template pTemplate="header">
+        <div class="card-header-bar"><i class="pi pi-credit-card"></i><span>Payment Details</span></div>
+      </ng-template>
+      <div class="payment-summary" *ngIf="attendees.length > 0">
+        <div class="summary-row">
+          <span>{{ attendees.length }} attendee(s) x $288</span>
+          <strong>${{ totalCost }}</strong>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row summary-total">
+          <span>Total Due</span>
+          <strong>${{ totalCost }}</strong>
+        </div>
       </div>
-    </div>
-    <div class="terms-section">
-      <p-checkbox [(ngModel)]="agreedToTerms" [binary]="true" inputId="terms"></p-checkbox>
-      <label for="terms" class="terms-label">
-        I agree to the retreat terms and conditions. I understand the cost is $288 per attendee
-        and is non-refundable after May 28, 2026.
-      </label>
-    </div>
-    <button pButton [label]="attendees.length > 0 ? 'Register & Pay $' + totalCost : 'Register & Pay'"
-            icon="pi pi-lock" class="w-full mt-3"
-            size="large" [loading]="isSubmitting"
-            [disabled]="!agreedToTerms || attendees.length === 0 || !cardComplete"
-            (click)="submitRegistration()"></button>
-  </p-card>
+      <div class="stripe-card-wrapper">
+        <label class="card-label">Card Details *</label>
+        <div id="card-element" class="stripe-card-element"></div>
+        <div class="card-error" *ngIf="cardError">{{ cardError }}</div>
+      </div>
+      <div class="secure-badge">
+        <i class="pi pi-lock"></i>
+        <span>Secured by Stripe. Your card details are never stored on our servers.</span>
+      </div>
+    </p-card>
+
+    <p-card>
+      <ng-template pTemplate="header">
+        <div class="card-header-bar"><i class="pi pi-check-circle"></i><span>Final Details & Submit</span></div>
+      </ng-template>
+      <div [formGroup]="registrationForm">
+        <div class="field"><label>Special Requests or Notes</label>
+          <textarea pInputTextarea formControlName="specialRequests" rows="4" class="w-full"
+                    placeholder="Any special accommodations, dietary notes, or other requests..."></textarea>
+        </div>
+      </div>
+      <div class="terms-section">
+        <p-checkbox [(ngModel)]="agreedToTerms" [binary]="true" inputId="terms"></p-checkbox>
+        <label for="terms" class="terms-label">
+          I agree to the retreat terms and conditions. I understand the cost is $288 per attendee
+          and is non-refundable after May 28, 2026.
+        </label>
+      </div>
+      <button pButton [label]="attendees.length > 0 ? 'Register & Pay $' + totalCost : 'Register & Pay'"
+              icon="pi pi-lock" class="w-full mt-3"
+              size="large" [loading]="isSubmitting"
+              [disabled]="!agreedToTerms || attendees.length === 0 || !cardComplete"
+              (click)="submitRegistration()"></button>
+    </p-card>
+  </ng-container>
+
+  <!-- Registration not yet open banner -->
+  <div class="registration-closed-banner" *ngIf="!registrationOpen">
+    <i class="pi pi-calendar"></i>
+    <h3>Registration Opens March 1, 2026</h3>
+    <p>We're excited to have you join us! Registration and payment will be available starting March 1, 2026. Check back soon!</p>
+  </div>
 </div>

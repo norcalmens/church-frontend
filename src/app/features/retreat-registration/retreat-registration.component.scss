@@ -126,6 +126,60 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
   i { font-size: 1rem; }
 }
 
+// What to Expect
+.what-to-expect {
+  p { color: #495057; line-height: 1.7; margin: 0 0 1rem 0; }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba($dark-teal, 0.03);
+    border-radius: 8px;
+    color: #495057;
+    line-height: 1.5;
+    i { color: $sunset-orange; margin-top: 0.2rem; font-size: 1.1rem; min-width: 20px; }
+  }
+}
+
+// Registration closed banner
+.registration-closed-banner {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  background: linear-gradient(135deg, rgba($dark-teal, 0.06) 0%, rgba($warm-amber, 0.08) 100%);
+  border: 2px dashed rgba($dark-teal, 0.2);
+  border-radius: 12px;
+
+  > i {
+    font-size: 2.5rem;
+    color: $warm-amber;
+    margin-bottom: 0.75rem;
+  }
+
+  h3 {
+    color: $dark-teal;
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: #6c757d;
+    font-size: 1.05rem;
+    margin: 0;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+}
+
 // Success overlay
 .success-overlay {
   max-width: 600px;
