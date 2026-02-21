@@ -18,7 +18,7 @@ import { AuthService } from '../../core/auth/auth.service';
         <div class="login-header">
           <i class="pi pi-sun"></i>
           <h1>NorCal Men's Retreat</h1>
-          <p>April 16-18, 2026</p>
+          <p>June 11-13, 2026</p>
         </div>
         <p-card>
           <h2 style="text-align: center; margin-bottom: 1.5rem; color: #1a3a4a;">Sign In</h2>

@@ -93,7 +93,7 @@ export class RetreatRegistrationComponent {
   }
 
   get totalCost(): number {
-    return this.attendees.length * 240;
+    return this.attendees.length * 288;
   }
 
   submitRegistration(): void {

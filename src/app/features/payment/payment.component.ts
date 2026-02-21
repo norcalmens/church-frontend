@@ -44,7 +44,7 @@ import { AuthService } from '../../core/auth/auth.service';
             <h3><i class="pi pi-shield"></i> Secure Payment</h3>
             <p>All payments are processed securely through Stripe. Your card information is never stored on our servers.</p>
             <h3><i class="pi pi-info-circle"></i> Payment Policy</h3>
-            <p>The retreat cost is $240 per person. Full refunds are available until April 1, 2026. After that date, registrations are non-refundable.</p>
+            <p>The retreat cost is $288 per person. Full refunds are available until May 28, 2026. After that date, registrations are non-refundable.</p>
           </div>
         </p-card>
       </div>
@@ -64,7 +64,7 @@ export class PaymentComponent implements OnInit {
   private paymentService = inject(PaymentService);
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
-  amount = 240;
+  amount = 288;
   donorName = '';
   donorEmail = '';
   processing = false;
