@@ -28,6 +28,49 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
   p { font-size: 1.1rem; margin: 0; opacity: 0.9; }
 }
 
+// Testing banner
+.testing-banner {
+  background: linear-gradient(135deg, rgba($warm-amber, 0.1) 0%, rgba($sunset-orange, 0.08) 100%);
+  border: 2px solid rgba($warm-amber, 0.4);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+}
+
+.testing-banner-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+
+  > i {
+    font-size: 1.75rem;
+    color: $warm-amber;
+    margin-top: 0.15rem;
+  }
+}
+
+.testing-banner-text {
+  strong {
+    display: block;
+    color: $dark-teal;
+    font-size: 1.05rem;
+    margin-bottom: 0.35rem;
+  }
+
+  p {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0 0 0.25rem 0;
+    line-height: 1.5;
+  }
+
+  .testing-admin-note {
+    color: $warm-amber;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+  }
+}
+
 .card-header-bar {
   display: flex; align-items: center; gap: 0.75rem;
   padding: 1rem 1.5rem; background: $gradient-teal;

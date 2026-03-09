@@ -12,6 +12,7 @@ import { ThemePollComponent } from './features/theme-poll/theme-poll.component';
 import { AdminDashboardComponent } from './features/admin/dashboard/admin-dashboard.component';
 import { ManageRegistrationsComponent } from './features/admin/registrations/manage-registrations.component';
 import { UserManagementComponent } from './features/admin/user-management/user-management.component';
+import { MerchandiseComponent } from './features/merchandise/merchandise.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,6 +25,7 @@ export const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'registration', component: RetreatRegistrationComponent },
       { path: 'venue', component: VenueShowcaseComponent },
+      { path: 'merchandise', component: MerchandiseComponent },
       { path: 'theme-poll', component: ThemePollComponent, canActivate: [authGuard, adminGuard] },
       { path: 'payment', redirectTo: 'registration', pathMatch: 'full' },
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, adminGuard] },

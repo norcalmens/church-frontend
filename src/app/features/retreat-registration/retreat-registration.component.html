@@ -24,6 +24,19 @@
     <p>June 11-13, 2026 | Alliance Redwoods, Occidental, CA | $288/person</p>
   </div>
 
+  <!-- Testing Mode Banner -->
+  <div class="testing-banner" *ngIf="testingMode">
+    <div class="testing-banner-content">
+      <i class="pi pi-wrench"></i>
+      <div class="testing-banner-text">
+        <strong>Registration & Payment Validation in Progress</strong>
+        <p>Thank you for your patience! We are currently testing and validating our registration and payment system to ensure a smooth experience for everyone.</p>
+        <p *ngIf="isAdmin" class="testing-admin-note"><i class="pi pi-shield"></i> Admin testing mode is active. You may submit test registrations below.</p>
+        <p *ngIf="!isAdmin" class="testing-admin-note">Public registration will open soon. Please check back shortly.</p>
+      </div>
+    </div>
+  </div>
+
   <p-card>
     <ng-template pTemplate="header">
       <div class="card-header-bar"><i class="pi pi-user"></i><span>Primary Contact Information</span></div>
@@ -106,8 +119,8 @@
     </div>
   </p-card>
 
-  <!-- Payment & Submit section (shown only when registration is open) -->
-  <ng-container *ngIf="registrationOpen">
+  <!-- Payment & Submit section (shown when registration is open or admin testing) -->
+  <ng-container *ngIf="canRegister">
     <p-card>
       <ng-template pTemplate="header">
         <div class="card-header-bar"><i class="pi pi-credit-card"></i><span>Payment Details</span></div>
@@ -168,10 +181,10 @@
     </p-card>
   </ng-container>
 
-  <!-- Registration not yet open banner -->
-  <div class="registration-closed-banner" *ngIf="!registrationOpen">
-    <i class="pi pi-calendar"></i>
-    <h3>Registration Opens March 1, 2026</h3>
-    <p>We're excited to have you join us! Registration and payment will be available starting March 1, 2026. Check back soon!</p>
+  <!-- Registration not yet available for non-admins -->
+  <div class="registration-closed-banner" *ngIf="!canRegister">
+    <i class="pi pi-clock"></i>
+    <h3>Registration Coming Soon</h3>
+    <p>Thank you for your patience! We're putting the finishing touches on our registration system. Please check back shortly.</p>
   </div>
 </div>

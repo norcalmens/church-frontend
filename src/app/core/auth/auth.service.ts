@@ -175,12 +175,12 @@ export class AuthService {
   isAdmin(): boolean {
     const user = this.currentUserSubject.value;
     if (!user) return false;
-    return user.roles.includes('ADMIN') || user.roles.includes('SUPERUSER');
+    return user.roles.includes('ADMIN') || user.roles.includes('SUPERADMIN');
   }
 
-  isSuperUser(): boolean {
+  isSuperAdmin(): boolean {
     const user = this.currentUserSubject.value;
-    return user?.roles.includes('SUPERUSER') || false;
+    return user?.roles.includes('SUPERADMIN') || false;
   }
 
   hasRole(role: string): boolean {

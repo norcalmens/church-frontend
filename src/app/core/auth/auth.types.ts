@@ -75,6 +75,7 @@ export interface LoginCredentials {
 }
 
 export enum Role {
+  SUPERADMIN = 'SUPERADMIN',
   SUPERUSER = 'SUPERUSER',
   ADMIN = 'ADMIN',
   MEMBER = 'MEMBER'

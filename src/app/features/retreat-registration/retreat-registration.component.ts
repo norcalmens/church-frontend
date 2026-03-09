@@ -13,6 +13,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { RegistrationService } from '../../services/registration.service';
 import { StripeService } from '../../services/stripe.service';
+import { AuthService } from '../../core/auth/auth.service';
 import { Attendee } from '../../core/models/attendee.model';
 import { Stripe, StripeCardElement } from '@stripe/stripe-js';
 import { firstValueFrom } from 'rxjs';
@@ -34,6 +35,7 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
   private messageService = inject(MessageService);
   private registrationService = inject(RegistrationService);
   private stripeService = inject(StripeService);
+  private authService = inject(AuthService);
   private ngZone = inject(NgZone);
 
   registrationForm: FormGroup;
@@ -63,8 +65,15 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
     { label: 'No Preference', value: 'no-preference' }
   ];
 
-  // TODO: Change back to '2026-03-01T00:00:00' after testing
-  registrationOpen = new Date() >= new Date('2026-02-01T00:00:00');
+  testingMode = true;
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  get canRegister(): boolean {
+    return this.testingMode && this.isAdmin;
+  }
 
   constructor() {
     // TODO: Remove default values after testing
@@ -93,7 +102,7 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit(): Promise<void> {
-    if (!this.registrationOpen) return;
+    if (!this.canRegister) return;
     this.stripe = await this.stripeService.getStripe();
     if (this.stripe) {
       const elements = this.stripe.elements();

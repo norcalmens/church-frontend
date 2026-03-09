@@ -36,10 +36,19 @@ interface SearchItem {
            *ngIf="menuVisibility.isVisible('registration')">Register</a>
         <a routerLink="/venue" routerLinkActive="active"
            *ngIf="menuVisibility.isVisible('venue')">Venue</a>
+        <a routerLink="/merchandise" routerLinkActive="active"
+           *ngIf="authService.isAdmin() && menuVisibility.isVisible('merchandise')">Merch</a>
         <a routerLink="/theme-poll" routerLinkActive="active"
            *ngIf="authService.isAdmin() && menuVisibility.isVisible('theme-poll')">Theme Poll</a>
-        <a routerLink="/admin/dashboard" routerLinkActive="active"
-           *ngIf="authService.isAdmin() && menuVisibility.isVisible('admin/dashboard')">Admin</a>
+        <div class="admin-dropdown" *ngIf="authService.isAdmin() && menuVisibility.isVisible('admin/dashboard')"
+             (mouseenter)="adminMenuOpen = true" (mouseleave)="adminMenuOpen = false">
+          <a routerLink="/admin/dashboard" routerLinkActive="active" class="admin-nav-link">Admin <i class="pi pi-chevron-down chevron-icon"></i></a>
+          <div class="admin-dropdown-menu" *ngIf="adminMenuOpen">
+            <a routerLink="/admin/dashboard" (click)="adminMenuOpen = false"><i class="pi pi-chart-line"></i> Dashboard</a>
+            <a routerLink="/admin/registrations" (click)="adminMenuOpen = false"><i class="pi pi-list"></i> View All Registrations</a>
+            <a routerLink="/admin/users" (click)="adminMenuOpen = false"><i class="pi pi-users"></i> Manage Users</a>
+          </div>
+        </div>
       </nav>
       <div class="topbar-right">
         <button pButton icon="pi pi-search" class="p-button-text p-button-rounded search-btn"
@@ -121,6 +130,34 @@ interface SearchItem {
         &.active { color: #e8a832; background: rgba(232, 168, 50, 0.15); }
       }
     }
+    /* Admin Dropdown */
+    .admin-dropdown {
+      position: relative;
+    }
+    .admin-nav-link {
+      display: flex; align-items: center;
+      color: rgba(240, 230, 208, 0.8); text-decoration: none;
+      padding: 0.5rem 1rem; border-radius: 6px;
+      font-weight: 500; transition: all 0.2s; cursor: pointer;
+      &:hover { color: #f0e6d0; background: rgba(255, 255, 255, 0.1); }
+      &.active { color: #e8a832; background: rgba(232, 168, 50, 0.15); }
+      .chevron-icon { font-size: 0.65rem; margin-left: 0.35rem; }
+    }
+    .admin-dropdown-menu {
+      position: absolute; top: 100%; left: 0; margin-top: 0.35rem;
+      background: white; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      min-width: 220px; overflow: hidden; z-index: 1050;
+      animation: slideDown 0.15s ease;
+      a {
+        display: flex; align-items: center; gap: 0.65rem;
+        padding: 0.75rem 1rem; color: #1a3a4a !important; text-decoration: none;
+        font-weight: 500; font-size: 0.9rem; transition: background 0.15s;
+        background: transparent !important;
+        i { font-size: 0.95rem; color: #d4782f; width: 18px; text-align: center; }
+        &:hover { background: rgba(26, 58, 74, 0.06) !important; }
+      }
+    }
+
     .topbar-right { display: flex; align-items: center; gap: 0.75rem; }
     .user-greeting { color: #f0e6d0; font-size: 0.9rem; font-weight: 500; }
     .search-btn {
@@ -216,6 +253,7 @@ export class TopbarComponent {
   private router = inject(Router);
 
   searchOpen = false;
+  adminMenuOpen = false;
   searchQuery = '';
   filteredItems: SearchItem[] = [];
 
@@ -223,6 +261,7 @@ export class TopbarComponent {
     { label: 'Home', description: 'Main landing page', icon: 'pi-home', route: '/' },
     { label: 'Registration', description: 'Register for the retreat and pay', icon: 'pi-pencil', route: '/registration' },
     { label: 'Venue', description: 'Alliance Redwoods venue details', icon: 'pi-map-marker', route: '/venue' },
+    { label: 'Merchandise', description: 'Official retreat gear and apparel', icon: 'pi-shopping-bag', route: '/merchandise', adminOnly: true },
     { label: 'Payment', description: 'Retreat registration and payment', icon: 'pi-credit-card', route: '/registration' },
     { label: 'Theme Poll', description: 'Vote on retreat theme', icon: 'pi-chart-bar', route: '/theme-poll', adminOnly: true },
     { label: 'Admin Dashboard', description: 'View registrations and statistics', icon: 'pi-chart-line', route: '/admin/dashboard', adminOnly: true },

@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -19,7 +20,7 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
   selector: 'app-user-management',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, TableModule, ButtonModule, DialogModule,
+    CommonModule, FormsModule, RouterLink, TableModule, ButtonModule, DialogModule,
     InputTextModule, DropdownModule, TagModule, ToastModule, ConfirmDialogModule,
     ToolbarModule, TooltipModule
   ],
@@ -29,6 +30,9 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
     <p-confirmDialog></p-confirmDialog>
 
     <div class="user-mgmt-container">
+      <div class="back-bar">
+        <a routerLink="/admin/dashboard" class="back-link"><i class="pi pi-arrow-left"></i> Back to Dashboard</a>
+      </div>
       <div class="page-header">
         <h1>User Management</h1>
         <p>Create and manage user accounts</p>
@@ -152,6 +156,13 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
   `,
   styles: [`
     .user-mgmt-container { max-width: 1200px; margin: 0 auto; }
+    .back-bar { margin-bottom: 1rem; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: #1a3a4a; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s;
+      &:hover { background: rgba(26, 58, 74, 0.08); color: #d4782f; }
+    }
     .page-header {
       text-align: center; padding: 2rem; margin-bottom: 1.5rem;
       background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 30%, #c8923a 70%, #d4782f 100%);
@@ -231,7 +242,8 @@ export class UserManagementComponent implements OnInit {
 
   getRoleSeverity(role: string): string {
     switch (role) {
-      case 'SUPERUSER': return 'danger';
+      case 'SUPERADMIN': return 'danger';
+      case 'SUPERUSER': return 'warning';
       case 'ADMIN': return 'warning';
       default: return 'info';
     }

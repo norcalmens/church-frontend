@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -15,12 +16,15 @@ import { Registration } from '../../../core/models/registration.model';
 @Component({
   selector: 'app-manage-registrations',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardModule, TableModule, ButtonModule, TagModule, InputTextModule, ToastModule, ConfirmDialogModule],
+  imports: [CommonModule, FormsModule, RouterLink, CardModule, TableModule, ButtonModule, TagModule, InputTextModule, ToastModule, ConfirmDialogModule],
   providers: [MessageService, ConfirmationService],
   template: `
     <p-toast></p-toast>
     <p-confirmDialog></p-confirmDialog>
     <div class="registrations-container">
+      <div class="back-bar">
+        <a routerLink="/admin/dashboard" class="back-link"><i class="pi pi-arrow-left"></i> Back to Dashboard</a>
+      </div>
       <div class="page-header"><h1>All Registrations</h1><p>Manage retreat registrations</p></div>
       <p-card>
         <ng-template pTemplate="header">
@@ -61,6 +65,13 @@ import { Registration } from '../../../core/models/registration.model';
   `,
   styles: [`
     .registrations-container { max-width: 1400px; margin: 0 auto; }
+    .back-bar { margin-bottom: 1rem; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: #1a3a4a; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s;
+      &:hover { background: rgba(26, 58, 74, 0.08); color: #d4782f; }
+    }
     .page-header { text-align: center; padding: 2.5rem 2rem; background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 30%, #c8923a 70%, #d4782f 100%); color: #f0e6d0; border-radius: 12px; margin-bottom: 1.5rem; h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; } p { font-size: 1rem; margin: 0; opacity: 0.9; } }
     .card-header-bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem; background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%); color: #f0e6d0; font-size: 1.1rem; font-weight: 600; }
     .table-toolbar { margin-bottom: 1rem; }

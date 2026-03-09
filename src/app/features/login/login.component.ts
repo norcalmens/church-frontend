@@ -15,34 +15,35 @@ import { AuthService } from '../../core/auth/auth.service';
   template: `
     <div class="login-container">
       <div class="login-card">
-        <div class="login-header">
-          <i class="pi pi-sun"></i>
-          <h1>NorCal Men's Retreat</h1>
-          <p>June 11-13, 2026</p>
+        <div class="login-card-header">
+          <h1>Welcome Back</h1>
         </div>
-        <p-card>
-          <h2 style="text-align: center; margin-bottom: 1.5rem; color: #1a3a4a;">Sign In</h2>
+        <div class="login-card-body">
           <div *ngIf="errorMessage" class="error-message">
             <i class="pi pi-exclamation-triangle"></i> {{ errorMessage }}
           </div>
           <div class="field">
-            <label for="username">Username</label>
+            <label for="username">Username or Email</label>
             <input id="username" type="text" pInputText [(ngModel)]="username"
-                   class="w-full" placeholder="Enter username" (keyup.enter)="login()" />
+                   class="w-full" placeholder="Enter your username or email" (keyup.enter)="login()" />
           </div>
           <div class="field">
             <label for="password">Password</label>
             <p-password id="password" [(ngModel)]="password" [feedback]="false"
                         [toggleMask]="true" styleClass="w-full"
-                        inputStyleClass="w-full" placeholder="Enter password"
+                        inputStyleClass="w-full" placeholder="Enter your password"
                         (onKeyUp)="onPasswordKeyup($event)"></p-password>
           </div>
-          <button pButton label="Sign In" icon="pi pi-sign-in" class="w-full mt-3"
+          <div class="forgot-link">
+            <a routerLink="/forgot-password">Forgot your password?</a>
+          </div>
+          <button pButton label="Login" class="login-btn w-full"
                   [loading]="loading" (click)="login()"></button>
           <div class="login-footer">
-            <a routerLink="/forgot-password">Forgot password?</a>
+            <p>Have credentials from an admin? <a routerLink="/register">Complete your registration</a></p>
+            <a routerLink="/" class="guest-link">Continue browsing as guest</a>
           </div>
-        </p-card>
+        </div>
       </div>
     </div>
   `,
@@ -52,30 +53,70 @@ import { AuthService } from '../../core/auth/auth.service';
       background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 40%, #c8923a 80%, #d4782f 100%);
       padding: 2rem;
     }
-    .login-card { width: 100%; max-width: 420px; }
-    .login-header {
-      text-align: center; color: #f0e6d0; margin-bottom: 2rem;
-      i { font-size: 3rem; color: #e8a832; }
-      h1 { font-size: 2rem; margin: 1rem 0 0.5rem 0; font-weight: 700; }
-      p { font-size: 1.1rem; opacity: 0.9; margin: 0; }
+    .login-card {
+      width: 100%; max-width: 420px;
+      background: white; border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
     }
+    .login-card-header {
+      padding: 2rem 2rem 0.5rem;
+      text-align: center;
+      h1 {
+        font-size: 1.8rem; font-weight: 700; color: #1a3a4a;
+        margin: 0;
+        font-style: italic;
+      }
+    }
+    .login-card-body { padding: 1.5rem 2rem 2rem; }
     .field {
       margin-bottom: 1.25rem;
-      label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a3a4a; }
+      label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a3a4a; font-size: 0.9rem; }
     }
     .error-message {
       background: #fee; border: 1px solid #fcc; border-radius: 6px;
       padding: 0.75rem 1rem; margin-bottom: 1rem; color: #c00;
       display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;
     }
-    .login-footer {
-      text-align: center; margin-top: 1.5rem;
-      a { color: #1a3a4a; text-decoration: none; font-weight: 500;
-        &:hover { text-decoration: underline; color: #d4782f; }
+    .forgot-link {
+      text-align: right; margin-bottom: 1.5rem;
+      a { color: #d4782f; text-decoration: none; font-size: 0.85rem; font-weight: 500;
+        &:hover { text-decoration: underline; color: #c8923a; }
       }
     }
-    ::ng-deep .login-card .p-card { border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }
-    ::ng-deep .p-password { width: 100%; }
+    ::ng-deep .login-btn.p-button {
+      background: white !important;
+      color: #1a3a4a !important;
+      border: 2px solid #1a3a4a !important;
+      font-weight: 700; font-size: 1rem;
+      padding: 0.65rem; border-radius: 8px;
+      transition: all 0.2s;
+      &:hover {
+        background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%) !important;
+        color: #f0e6d0 !important;
+        border-color: #1a3a4a !important;
+      }
+    }
+    .login-footer {
+      margin-top: 1.5rem;
+      p {
+        margin: 0 0 0.35rem 0; color: #555; font-size: 0.9rem;
+        a { color: #d4782f; text-decoration: underline; font-weight: 500;
+          &:hover { color: #c8923a; }
+        }
+      }
+      .guest-link {
+        color: #d4782f; text-decoration: underline; font-size: 0.9rem; font-weight: 500;
+        &:hover { color: #c8923a; }
+      }
+    }
+    ::ng-deep .login-card-body .p-password { width: 100%; }
+    ::ng-deep .login-card-body .p-inputtext {
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      padding: 0.65rem 0.85rem;
+      &:focus { border-color: #1a3a4a; box-shadow: 0 0 0 2px rgba(26, 58, 74, 0.15); }
+    }
   `]
 })
 export class LoginComponent {
