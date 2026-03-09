@@ -25,6 +25,7 @@ import { RegistrationService } from '../../../services/registration.service';
         <h2>Quick Actions</h2>
         <div class="actions-grid">
           <a routerLink="/admin/registrations" class="action-card"><i class="pi pi-list"></i><span>View All Registrations</span></a>
+          <a routerLink="/admin/users" class="action-card"><i class="pi pi-users"></i><span>Manage Users</span></a>
           <a routerLink="/registration" class="action-card"><i class="pi pi-pencil"></i><span>New Registration</span></a>
         </div>
       </div>

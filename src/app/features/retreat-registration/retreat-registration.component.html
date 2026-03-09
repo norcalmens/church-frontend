@@ -48,9 +48,10 @@
       <div class="form-grid">
         <div class="field"><label>First Name *</label><input type="text" pInputText formControlName="firstName" class="w-full" /></div>
         <div class="field"><label>Last Name *</label><input type="text" pInputText formControlName="lastName" class="w-full" /></div>
-        <div class="field"><label>Age *</label><input type="number" pInputText formControlName="age" class="w-full" min="18" /></div>
+        <div class="field"><label>Age *</label><input type="number" pInputText formControlName="age" class="w-full" min="1" /></div>
         <div class="field"><label>Dietary Restrictions</label><p-dropdown [options]="dietaryOptions" formControlName="dietaryRestrictions" styleClass="w-full"></p-dropdown></div>
       </div>
+      <p class="under-18-notice"><i class="pi pi-info-circle"></i> Males under 18 must be accompanied by an adult.</p>
       <button pButton label="Click to Add Attendee" icon="pi pi-user-plus" class="p-button-outlined mt-2" (click)="addAttendee()"></button>
     </div>
     <p-table [value]="attendees" *ngIf="attendees.length > 0" class="mt-3" [tableStyle]="{'min-width': '50rem'}">

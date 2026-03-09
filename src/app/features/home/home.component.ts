@@ -18,7 +18,7 @@ import { AuthService } from '../../core/auth/auth.service';
             <p class="hero-subtitle">Standing in the Gap</p>
             <p class="hero-details"><i class="pi pi-calendar"></i> June 11-13, 2026</p>
             <p class="hero-details"><i class="pi pi-map-marker"></i> Alliance Redwoods, Occidental, CA</p>
-            <p class="hero-details"><i class="pi pi-dollar"></i> $288 per person</p>
+            <p class="hero-details"><i class="pi pi-dollar"></i> 288 per person</p>
             <div class="hero-actions">
               <a routerLink="/registration">
                 <button pButton label="Register Now" icon="pi pi-pencil" size="large"></button>

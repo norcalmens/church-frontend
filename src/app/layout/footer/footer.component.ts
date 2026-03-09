@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   template: `
     <footer class="app-footer">
       <div class="footer-content">
-        <span>NorCal Men's Retreat 2026</span>
+        <span>&copy; {{ currentYear }} NorCal Men's Retreat</span>
         <span class="separator">|</span>
         <span>Churches of Christ, Northern California</span>
       </div>
@@ -27,4 +27,6 @@ import { Component } from '@angular/core';
     .separator { opacity: 0.5; }
   `]
 })
-export class FooterComponent {}
+export class FooterComponent {
+  currentYear = new Date().getFullYear();
+}

@@ -3,17 +3,20 @@ import { authGuard } from './core/auth/auth.guard';
 import { adminGuard } from './core/auth/admin.guard';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './features/login/login.component';
-import { RegisterComponent } from './features/register/register.component';
+import { CompleteRegistrationComponent } from './features/complete-registration/complete-registration.component';
+import { ForcePasswordChangeComponent } from './features/force-password-change/force-password-change.component';
 import { HomeComponent } from './features/home/home.component';
 import { RetreatRegistrationComponent } from './features/retreat-registration/retreat-registration.component';
 import { VenueShowcaseComponent } from './features/venue-showcase/venue-showcase.component';
 import { ThemePollComponent } from './features/theme-poll/theme-poll.component';
 import { AdminDashboardComponent } from './features/admin/dashboard/admin-dashboard.component';
 import { ManageRegistrationsComponent } from './features/admin/registrations/manage-registrations.component';
+import { UserManagementComponent } from './features/admin/user-management/user-management.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'register', component: CompleteRegistrationComponent },
+  { path: 'change-password', component: ForcePasswordChangeComponent },
   {
     path: '',
     component: LayoutComponent,
@@ -24,7 +27,8 @@ export const routes: Routes = [
       { path: 'theme-poll', component: ThemePollComponent, canActivate: [authGuard, adminGuard] },
       { path: 'payment', redirectTo: 'registration', pathMatch: 'full' },
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, adminGuard] },
-      { path: 'admin/registrations', component: ManageRegistrationsComponent, canActivate: [authGuard, adminGuard] }
+      { path: 'admin/registrations', component: ManageRegistrationsComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'admin/users', component: UserManagementComponent, canActivate: [authGuard, adminGuard] }
     ]
   },
   { path: '**', redirectTo: '' }

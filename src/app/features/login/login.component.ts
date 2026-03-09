@@ -40,7 +40,7 @@ import { AuthService } from '../../core/auth/auth.service';
           <button pButton label="Sign In" icon="pi pi-sign-in" class="w-full mt-3"
                   [loading]="loading" (click)="login()"></button>
           <div class="login-footer">
-            <a routerLink="/register">Create an account</a>
+            <a routerLink="/forgot-password">Forgot password?</a>
           </div>
         </p-card>
       </div>
@@ -95,7 +95,13 @@ export class LoginComponent {
     this.loading = true;
     this.errorMessage = '';
     this.authService.login({ username: this.username, password: this.password }).subscribe({
-      next: () => this.router.navigate(['/']),
+      next: (state) => {
+        if (state.passwordChangeRequired) {
+          this.router.navigate(['/change-password']);
+        } else {
+          this.router.navigate(['/']);
+        }
+      },
       error: (err) => {
         this.loading = false;
         this.errorMessage = err.message || 'Login failed';

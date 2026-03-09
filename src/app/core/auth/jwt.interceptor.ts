@@ -22,7 +22,8 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authedReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      // Only attempt refresh if we have a logged-in user and got a 401
+      if (error.status === 401 && authService.getCurrentUser()?.refreshToken) {
         if (!isRefreshing) {
           isRefreshing = true;
           refreshTokenSubject.next(null);
@@ -48,7 +49,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
               if (token === '') {
                 return throwError(() => error);
               }
-              return next(addToken(req, token));
+              return next(addToken(req, token!));
             })
           );
         }
@@ -69,7 +70,9 @@ function isAuthEndpoint(url: string): boolean {
       || url.includes('/api/auth/register')
       || url.includes('/api/auth/refresh')
       || url.includes('/api/auth/forgot-password')
-      || url.includes('/api/auth/reset-password');
+      || url.includes('/api/auth/reset-password')
+      || url.includes('/api/auth/complete-registration')
+      || url.includes('/api/auth/change-password');
 }
 
 function isApiRequest(url: string): boolean {

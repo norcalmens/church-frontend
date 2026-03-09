@@ -87,7 +87,7 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
     this.attendeeForm = this.fb.group({
       firstName: ['John', Validators.required],
       lastName: ['Doe', Validators.required],
-      age: [35, [Validators.required, Validators.min(18)]],
+      age: [35, [Validators.required, Validators.min(1)]],
       dietaryRestrictions: ['None']
     });
   }
