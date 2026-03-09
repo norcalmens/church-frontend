@@ -63,29 +63,31 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
     { label: 'No Preference', value: 'no-preference' }
   ];
 
-  registrationOpen = new Date() >= new Date('2026-03-01T00:00:00');
+  // TODO: Change back to '2026-03-01T00:00:00' after testing
+  registrationOpen = new Date() >= new Date('2026-02-01T00:00:00');
 
   constructor() {
+    // TODO: Remove default values after testing
     this.registrationForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-      address: ['', Validators.required],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      zipCode: ['', Validators.required],
+      firstName: ['John', Validators.required],
+      lastName: ['Doe', Validators.required],
+      email: ['john.doe@test.com', [Validators.required, Validators.email]],
+      phone: ['555-123-4567', Validators.required],
+      address: ['123 Test Street', Validators.required],
+      city: ['Sacramento', Validators.required],
+      state: ['CA', Validators.required],
+      zipCode: ['95814', Validators.required],
       roomPreference: ['no-preference'],
-      emergencyName: ['', Validators.required],
-      emergencyRelationship: ['', Validators.required],
-      emergencyPhone: ['', Validators.required],
+      emergencyName: ['Jane Doe', Validators.required],
+      emergencyRelationship: ['Spouse', Validators.required],
+      emergencyPhone: ['555-987-6543', Validators.required],
       specialRequests: ['']
     });
 
     this.attendeeForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      age: ['', [Validators.required, Validators.min(18)]],
+      firstName: ['John', Validators.required],
+      lastName: ['Doe', Validators.required],
+      age: [35, [Validators.required, Validators.min(18)]],
       dietaryRestrictions: ['None']
     });
   }
@@ -134,6 +136,26 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
 
   removeAttendee(index: number): void {
     this.attendees.splice(index, 1);
+  }
+
+  getMissingFields(): { label: string; done: boolean }[] {
+    const f = this.registrationForm.controls;
+    return [
+      { label: 'First Name', done: f['firstName'].valid },
+      { label: 'Last Name', done: f['lastName'].valid },
+      { label: 'Email', done: f['email'].valid },
+      { label: 'Phone', done: f['phone'].valid },
+      { label: 'Address', done: f['address'].valid },
+      { label: 'City', done: f['city'].valid },
+      { label: 'State', done: f['state'].valid },
+      { label: 'Zip Code', done: f['zipCode'].valid },
+      { label: 'Emergency Contact Name', done: f['emergencyName'].valid },
+      { label: 'Emergency Relationship', done: f['emergencyRelationship'].valid },
+      { label: 'Emergency Phone', done: f['emergencyPhone'].valid },
+      { label: 'At least one attendee added', done: this.attendees.length > 0 },
+      { label: 'Card details complete', done: this.cardComplete },
+      { label: 'Agreed to terms', done: this.agreedToTerms },
+    ];
   }
 
   get totalCost(): number {

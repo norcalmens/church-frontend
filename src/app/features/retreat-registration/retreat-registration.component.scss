@@ -58,6 +58,43 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
 
 .terms-label { color: #495057; line-height: 1.5; cursor: pointer; }
 
+.requirements-checklist {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba($dark-teal, 0.03);
+  border-radius: 8px;
+  border-left: 3px solid $warm-amber;
+
+  p {
+    margin: 0 0 0.75rem 0;
+    color: $dark-teal;
+    font-size: 0.9rem;
+    i { color: $warm-amber; margin-right: 0.25rem; }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #e53935;
+    i { font-size: 0.85rem; }
+
+    &.satisfied {
+      color: #2e7d32;
+    }
+  }
+}
+
 // Payment section styles
 .payment-summary {
   margin-bottom: 1.5rem;
