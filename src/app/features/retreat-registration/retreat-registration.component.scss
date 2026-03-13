@@ -194,6 +194,66 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
   &:hover { border-color: $light-teal; }
 }
 
+/* Geoapify address autocomplete styling */
+.address-field {
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+  ::ng-deep .geoapify-autocomplete-input {
+    width: 100%;
+    padding: 0.75rem 2rem 0.75rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: $dark-teal;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    &:focus {
+      outline: none;
+      border-color: $light-teal;
+      box-shadow: 0 0 0 1px $light-teal;
+    }
+  }
+  ::ng-deep .geoapify-close-button {
+    color: #999;
+    top: 0;
+    height: 100%;
+    right: 8px;
+  }
+  ::ng-deep .geoapify-autocomplete-items {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-top: 2px;
+    z-index: 9999 !important;
+    max-height: 250px;
+    overflow-y: auto;
+    div {
+      padding: 0.6rem 0.75rem;
+      font-size: 0.9rem;
+      color: $dark-teal;
+    }
+    .active, div:hover {
+      background: rgba($dark-teal, 0.06);
+    }
+  }
+  .geoapify-attribution {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: #999;
+    a { color: #999; text-decoration: none; &:hover { color: $dark-teal; } }
+  }
+}
+
+/* Auto-filled fields from address selection */
+input.autofilled {
+  background: #f0f4f5;
+  color: $dark-teal;
+  cursor: default;
+}
+
 .stripe-not-configured {
   display: flex;
   align-items: center;

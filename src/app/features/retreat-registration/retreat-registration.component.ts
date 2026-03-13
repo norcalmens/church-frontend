@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputMaskModule } from 'primeng/inputmask';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -17,13 +18,15 @@ import { AuthService } from '../../core/auth/auth.service';
 import { Attendee } from '../../core/models/attendee.model';
 import { Stripe, StripeCardElement } from '@stripe/stripe-js';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import * as GeocoderAutocomplete from '@geoapify/geocoder-autocomplete';
 
 @Component({
   selector: 'app-retreat-registration',
   standalone: true,
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule, RouterLink,
-    CardModule, InputTextModule, ButtonModule, DropdownModule,
+    CardModule, InputTextModule, InputMaskModule, ButtonModule, DropdownModule,
     CheckboxModule, InputTextareaModule, TableModule, ToastModule
   ],
   providers: [MessageService],
@@ -50,6 +53,9 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
   private cardElement: StripeCardElement | null = null;
   cardError = '';
   cardComplete = false;
+  private autocomplete: any;
+  geoapifyEnabled = !!environment.geoapifyApiKey;
+  addressSelected = false;
 
   get cardReady(): boolean {
     return this.cardComplete || (this.stripeLoaded && !this.stripe);
@@ -77,7 +83,7 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
   }
 
   get canRegister(): boolean {
-    return this.testingMode && this.isAdmin;
+    return true;
   }
 
   constructor() {
@@ -110,14 +116,14 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
       firstName: 'John',
       lastName: 'Doe',
       email: 'john.doe@test.com',
-      phone: '555-123-4567',
+      phone: '(555) 123-4567',
       address: '123 Test Street',
       city: 'Sacramento',
       state: 'CA',
       zipCode: '95814',
       emergencyName: 'Jane Doe',
       emergencyRelationship: 'Spouse',
-      emergencyPhone: '555-987-6543'
+      emergencyPhone: '(555) 987-6543'
     });
     this.attendeeForm.patchValue({
       firstName: 'John',
@@ -128,6 +134,8 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
 
   async ngAfterViewInit(): Promise<void> {
     if (!this.canRegister) return;
+    // Defer to ensure DOM is rendered
+    setTimeout(() => this.initGeoapify(), 0);
     try {
       this.stripe = await this.stripeService.getStripe();
     } catch {
@@ -163,6 +171,43 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
     if (this.cardElement) {
       this.cardElement.destroy();
     }
+  }
+
+  private initGeoapify(): void {
+    const apiKey = environment.geoapifyApiKey;
+    if (!apiKey) return;
+    const container = document.getElementById('address-autocomplete');
+    if (!container) return;
+    this.autocomplete = new GeocoderAutocomplete.GeocoderAutocomplete(container, apiKey, {
+      placeholder: 'Start typing an address...'
+    });
+    this.autocomplete.addFilterByCountry(['us']);
+    this.autocomplete.on('select', (location: any) => {
+      if (location?.properties) {
+        const p = location.properties;
+        const streetAddress = p.address_line1 || [p.housenumber, p.street].filter(Boolean).join(' ');
+        this.ngZone.run(() => {
+          this.registrationForm.patchValue({
+            address: streetAddress,
+            city: p.city || p.town || p.village || '',
+            state: p.state_code?.toUpperCase() || p.state || '',
+            zipCode: p.postcode || ''
+          });
+        });
+        this.autocomplete.setValue(streetAddress);
+        this.addressSelected = true;
+      } else {
+        this.ngZone.run(() => {
+          this.addressSelected = false;
+          this.registrationForm.patchValue({
+            address: '',
+            city: '',
+            state: '',
+            zipCode: ''
+          });
+        });
+      }
+    });
   }
 
   addAttendee(): void {
