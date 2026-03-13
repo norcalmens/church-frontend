@@ -194,6 +194,19 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
   &:hover { border-color: $light-teal; }
 }
 
+.stripe-not-configured {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  color: #856404;
+  font-size: 0.9rem;
+  i { color: #856404; }
+}
+
 .card-error {
   color: #e53935;
   font-size: 0.85rem;

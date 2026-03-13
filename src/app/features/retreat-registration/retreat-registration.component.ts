@@ -45,10 +45,15 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
   agreedToTerms = false;
   paymentSuccess = false;
 
-  private stripe: Stripe | null = null;
+  stripe: Stripe | null = null;
+  stripeLoaded = false;
   private cardElement: StripeCardElement | null = null;
   cardError = '';
   cardComplete = false;
+
+  get cardReady(): boolean {
+    return this.cardComplete || (this.stripeLoaded && !this.stripe);
+  }
 
   dietaryOptions = [
     { label: 'None', value: 'None' },
@@ -76,35 +81,62 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
   }
 
   constructor() {
-    // TODO: Remove default values after testing
     this.registrationForm = this.fb.group({
-      firstName: ['John', Validators.required],
-      lastName: ['Doe', Validators.required],
-      email: ['john.doe@test.com', [Validators.required, Validators.email]],
-      phone: ['555-123-4567', Validators.required],
-      address: ['123 Test Street', Validators.required],
-      city: ['Sacramento', Validators.required],
-      state: ['CA', Validators.required],
-      zipCode: ['95814', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', Validators.required],
+      address: ['', Validators.required],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+      zipCode: ['', Validators.required],
       roomPreference: ['no-preference'],
-      emergencyName: ['Jane Doe', Validators.required],
-      emergencyRelationship: ['Spouse', Validators.required],
-      emergencyPhone: ['555-987-6543', Validators.required],
+      emergencyName: ['', Validators.required],
+      emergencyRelationship: ['', Validators.required],
+      emergencyPhone: ['', Validators.required],
       specialRequests: ['']
     });
 
     this.attendeeForm = this.fb.group({
-      firstName: ['John', Validators.required],
-      lastName: ['Doe', Validators.required],
-      age: [35, [Validators.required, Validators.min(1)]],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      age: [null, [Validators.required, Validators.min(1)]],
       dietaryRestrictions: ['None']
+    });
+  }
+
+  fillTestData(): void {
+    this.registrationForm.patchValue({
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@test.com',
+      phone: '555-123-4567',
+      address: '123 Test Street',
+      city: 'Sacramento',
+      state: 'CA',
+      zipCode: '95814',
+      emergencyName: 'Jane Doe',
+      emergencyRelationship: 'Spouse',
+      emergencyPhone: '555-987-6543'
+    });
+    this.attendeeForm.patchValue({
+      firstName: 'John',
+      lastName: 'Doe',
+      age: 35
     });
   }
 
   async ngAfterViewInit(): Promise<void> {
     if (!this.canRegister) return;
-    this.stripe = await this.stripeService.getStripe();
+    try {
+      this.stripe = await this.stripeService.getStripe();
+    } catch {
+      this.stripe = null;
+    }
+    this.stripeLoaded = true;
     if (this.stripe) {
+      // Wait for Angular to render the #card-element div after *ngIf="stripe" becomes true
+      await new Promise(resolve => setTimeout(resolve, 0));
       const elements = this.stripe.elements();
       this.cardElement = elements.create('card', {
         style: {
@@ -162,13 +194,13 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
       { label: 'Emergency Relationship', done: f['emergencyRelationship'].valid },
       { label: 'Emergency Phone', done: f['emergencyPhone'].valid },
       { label: 'At least one attendee added', done: this.attendees.length > 0 },
-      { label: 'Card details complete', done: this.cardComplete },
+      { label: 'Card details complete', done: this.cardReady },
       { label: 'Agreed to terms', done: this.agreedToTerms },
     ];
   }
 
   get totalCost(): number {
-    return this.attendees.length * 288;
+    return this.attendees.length * 248;
   }
 
   async submitRegistration(): Promise<void> {
@@ -184,11 +216,7 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please agree to the terms' });
       return;
     }
-    if (!this.stripe || !this.cardElement) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Payment system is not ready. Please refresh and try again.' });
-      return;
-    }
-    if (!this.cardComplete) {
+    if (this.stripe && !this.cardComplete) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please enter your card details' });
       return;
     }
@@ -204,38 +232,41 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
       };
       const created = await firstValueFrom(this.registrationService.createRegistration(registration));
 
-      // Step 2: Create payment intent linked to registration
-      const paymentResponse = await firstValueFrom(
-        this.registrationService.createPaymentIntent(created.id!)
-      );
+      if (this.stripe && this.cardElement) {
+        // Step 2: Create payment intent linked to registration
+        const paymentResponse = await firstValueFrom(
+          this.registrationService.createPaymentIntent(created.id!)
+        );
 
-      // Step 3: Confirm card payment with Stripe
-      const { error, paymentIntent } = await this.stripe.confirmCardPayment(
-        paymentResponse.clientSecret,
-        {
-          payment_method: {
-            card: this.cardElement,
-            billing_details: {
-              name: `${this.registrationForm.value.firstName} ${this.registrationForm.value.lastName}`,
-              email: this.registrationForm.value.email,
-              phone: this.registrationForm.value.phone
+        // Step 3: Confirm card payment with Stripe
+        const { error, paymentIntent } = await this.stripe.confirmCardPayment(
+          paymentResponse.clientSecret,
+          {
+            payment_method: {
+              card: this.cardElement,
+              billing_details: {
+                name: `${this.registrationForm.value.firstName} ${this.registrationForm.value.lastName}`,
+                email: this.registrationForm.value.email,
+                phone: this.registrationForm.value.phone
+              }
             }
           }
+        );
+
+        if (error) {
+          this.messageService.add({ severity: 'error', summary: 'Payment Failed', detail: error.message || 'Card payment failed' });
+          this.isSubmitting = false;
+          return;
         }
-      );
 
-      if (error) {
-        this.messageService.add({ severity: 'error', summary: 'Payment Failed', detail: error.message || 'Card payment failed' });
-        this.isSubmitting = false;
-        return;
+        if (paymentIntent?.status === 'succeeded') {
+          // Step 4: Confirm payment on backend (verifies with Stripe, updates status, sends emails)
+          await firstValueFrom(this.registrationService.confirmPayment(created.id!));
+        }
       }
 
-      if (paymentIntent?.status === 'succeeded') {
-        // Step 4: Confirm payment on backend (verifies with Stripe, updates status, sends emails)
-        await firstValueFrom(this.registrationService.confirmPayment(created.id!));
-        this.paymentSuccess = true;
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Registration and payment completed!' });
-      }
+      this.paymentSuccess = true;
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: this.stripe ? 'Registration and payment completed!' : 'Registration created (payment skipped - Stripe not configured)' });
     } catch (err: any) {
       this.messageService.add({
         severity: 'error',

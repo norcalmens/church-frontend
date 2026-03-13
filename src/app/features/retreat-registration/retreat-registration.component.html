@@ -21,7 +21,7 @@
 <div class="registration-container" *ngIf="!paymentSuccess">
   <div class="header-section">
     <h1>Men's Retreat Registration</h1>
-    <p>June 11-13, 2026 | Alliance Redwoods, Occidental, CA | $288/person</p>
+    <p>June 11-13, 2026 | Alliance Redwoods, Occidental, CA | $248/person</p>
   </div>
 
   <!-- Testing Mode Banner -->
@@ -32,6 +32,7 @@
         <strong>Registration & Payment Validation in Progress</strong>
         <p>Thank you for your patience! We are currently testing and validating our registration and payment system to ensure a smooth experience for everyone.</p>
         <p *ngIf="isAdmin" class="testing-admin-note"><i class="pi pi-shield"></i> Admin testing mode is active. You may submit test registrations below.</p>
+        <button *ngIf="isAdmin" pButton label="Fill Test Data" icon="pi pi-bolt" class="p-button-warning p-button-sm mt-2" (click)="fillTestData()"></button>
         <p *ngIf="!isAdmin" class="testing-admin-note">Public registration will open soon. Please check back shortly.</p>
       </div>
     </div>
@@ -55,7 +56,7 @@
 
   <p-card>
     <ng-template pTemplate="header">
-      <div class="card-header-bar"><i class="pi pi-users"></i><span>Attendees ($288 per person)</span></div>
+      <div class="card-header-bar"><i class="pi pi-users"></i><span>Attendees ($248 per person)</span></div>
     </ng-template>
     <div class="attendee-form" [formGroup]="attendeeForm">
       <div class="form-grid">
@@ -127,7 +128,7 @@
       </ng-template>
       <div class="payment-summary" *ngIf="attendees.length > 0">
         <div class="summary-row">
-          <span>{{ attendees.length }} attendee(s) x $288</span>
+          <span>{{ attendees.length }} attendee(s) x $248</span>
           <strong>${{ totalCost }}</strong>
         </div>
         <div class="summary-divider"></div>
@@ -138,7 +139,11 @@
       </div>
       <div class="stripe-card-wrapper">
         <label class="card-label">Card Details *</label>
-        <div id="card-element" class="stripe-card-element"></div>
+        <div id="card-element" class="stripe-card-element" *ngIf="stripe"></div>
+        <div class="stripe-not-configured" *ngIf="!stripe">
+          <i class="pi pi-info-circle"></i>
+          <span>Stripe is not configured. Card entry is unavailable in this environment.</span>
+        </div>
         <div class="card-error" *ngIf="cardError">{{ cardError }}</div>
       </div>
       <div class="secure-badge">
@@ -160,11 +165,11 @@
       <div class="terms-section">
         <p-checkbox [(ngModel)]="agreedToTerms" [binary]="true" inputId="terms"></p-checkbox>
         <label for="terms" class="terms-label">
-          I agree to the retreat terms and conditions. I understand the cost is $288 per attendee
+          I agree to the retreat terms and conditions. I understand the cost is $248 per attendee
           and is non-refundable after May 28, 2026.
         </label>
       </div>
-      <div class="requirements-checklist" *ngIf="!agreedToTerms || attendees.length === 0 || !cardComplete || registrationForm.invalid">
+      <div class="requirements-checklist" *ngIf="!agreedToTerms || attendees.length === 0 || !cardReady || registrationForm.invalid">
         <p><i class="pi pi-info-circle"></i> <strong>Please complete the following to submit:</strong></p>
         <ul>
           <li *ngFor="let field of getMissingFields()" [class.satisfied]="field.done">
@@ -176,7 +181,7 @@
       <button pButton [label]="attendees.length > 0 ? 'Register & Pay $' + totalCost : 'Register & Pay'"
               icon="pi pi-lock" class="w-full mt-3"
               size="large" [loading]="isSubmitting"
-              [disabled]="!agreedToTerms || attendees.length === 0 || !cardComplete || registrationForm.invalid"
+              [disabled]="!agreedToTerms || attendees.length === 0 || !cardReady || registrationForm.invalid"
               (click)="submitRegistration()"></button>
     </p-card>
   </ng-container>

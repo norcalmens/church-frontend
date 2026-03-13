@@ -111,7 +111,7 @@ export class ManageRegistrationsComponent implements OnInit {
       header: 'Confirm Delete', icon: 'pi pi-exclamation-triangle',
       accept: () => {
         if (reg.id) {
-          this.registrationService.deleteRegistration(reg.id).subscribe({
+          this.registrationService.adminDeleteRegistration(reg.id).subscribe({
             next: () => { this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Registration deleted' }); this.loadRegistrations(); },
             error: () => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete' }); }
           });

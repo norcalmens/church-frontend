@@ -44,9 +44,11 @@ interface SearchItem {
              (mouseenter)="adminMenuOpen = true" (mouseleave)="adminMenuOpen = false">
           <a routerLink="/admin/dashboard" routerLinkActive="active" class="admin-nav-link">Admin <i class="pi pi-chevron-down chevron-icon"></i></a>
           <div class="admin-dropdown-menu" *ngIf="adminMenuOpen">
-            <a routerLink="/admin/dashboard" (click)="adminMenuOpen = false"><i class="pi pi-chart-line"></i> Dashboard</a>
-            <a routerLink="/admin/registrations" (click)="adminMenuOpen = false"><i class="pi pi-list"></i> View All Registrations</a>
-            <a routerLink="/admin/users" (click)="adminMenuOpen = false"><i class="pi pi-users"></i> Manage Users</a>
+            <div class="admin-dropdown-panel">
+              <a routerLink="/admin/dashboard" (click)="adminMenuOpen = false"><i class="pi pi-chart-line"></i> Dashboard</a>
+              <a routerLink="/admin/registrations" (click)="adminMenuOpen = false"><i class="pi pi-list"></i> View All Registrations</a>
+              <a routerLink="/admin/users" (click)="adminMenuOpen = false"><i class="pi pi-users"></i> Manage Users</a>
+            </div>
           </div>
         </div>
       </nav>
@@ -144,9 +146,12 @@ interface SearchItem {
       .chevron-icon { font-size: 0.65rem; margin-left: 0.35rem; }
     }
     .admin-dropdown-menu {
-      position: absolute; top: 100%; left: 0; margin-top: 0.35rem;
+      position: absolute; top: 100%; left: 0; padding-top: 0.35rem;
+      min-width: 220px; z-index: 1050;
+    }
+    .admin-dropdown-panel {
       background: white; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-      min-width: 220px; overflow: hidden; z-index: 1050;
+      overflow: hidden;
       animation: slideDown 0.15s ease;
       a {
         display: flex; align-items: center; gap: 0.65rem;

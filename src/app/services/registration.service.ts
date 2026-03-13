@@ -52,6 +52,12 @@ export class RegistrationService {
     );
   }
 
+  adminDeleteRegistration(id: number): Observable<void> {
+    return this.http.delete<ApiResponse<void>>(`/api/registrations/admin/${id}`).pipe(
+      map(res => res.data)
+    );
+  }
+
   getAllRegistrations(): Observable<Registration[]> {
     return this.http.get<ApiResponse<Registration[]>>('/api/registrations/all').pipe(
       map(res => res.data)
