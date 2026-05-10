@@ -18,7 +18,8 @@ import { AuthService } from '../../core/auth/auth.service';
             <p class="hero-subtitle">Standing in the Gap</p>
             <p class="hero-details"><i class="pi pi-calendar"></i> June 11-13, 2026</p>
             <p class="hero-details"><i class="pi pi-map-marker"></i> Alliance Redwoods, Occidental, CA</p>
-            <p class="hero-details"><i class="pi pi-dollar"></i> 248 per person</p>
+            <p class="hero-details"><i class="pi pi-dollar"></i> Full retreat $248 &middot; Single day $85</p>
+            <p class="hero-details hero-details-sub"><i class="pi pi-info-circle"></i> Linen &amp; towel package $25 (or $5/item) &middot; Single-day meals $50 (2) / $65 (3)</p>
             <div class="hero-actions">
               <a routerLink="/registration">
                 <button pButton label="Register Now" icon="pi pi-pencil" size="large"></button>
@@ -85,7 +86,12 @@ import { AuthService } from '../../core/auth/auth.service';
           <div class="expect-card">
             <i class="pi pi-building"></i>
             <h3>Comfortable Lodging</h3>
-            <p>Cabin-style accommodations with meals included for the entire weekend.</p>
+            <p>Cabin-style accommodations with meals included for the full 3-day stay. Linens &amp; towels are a separate $25 package (or $5/item).</p>
+          </div>
+          <div class="expect-card">
+            <i class="pi pi-calendar-plus"></i>
+            <h3>Single-Day Option</h3>
+            <p>Can't stay overnight? Attend any day for $85, with optional half-day meals ($50, 2 meals) or full-day meals ($65, 3 meals).</p>
           </div>
           <div class="expect-card">
             <i class="pi pi-map"></i>
@@ -112,6 +118,7 @@ import { AuthService } from '../../core/auth/auth.service';
     }
     .hero-subtitle { font-size: 1.3rem; font-style: italic; margin: 0 0 1.5rem 0; opacity: 0.9; }
     .hero-details { font-size: 1.1rem; margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem; i { color: #e8a832; } }
+    .hero-details-sub { font-size: 0.95rem; opacity: 0.85; }
     .hero-flyer {
       flex-shrink: 0;
       img {

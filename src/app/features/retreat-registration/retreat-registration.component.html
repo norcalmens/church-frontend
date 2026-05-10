@@ -21,7 +21,9 @@
 <div class="registration-container" *ngIf="!paymentSuccess">
   <div class="header-section">
     <h1>Men's Retreat Registration</h1>
-    <p>June 11-13, 2026 | Alliance Redwoods, Occidental, CA | $248/person</p>
+    <p>June 11-13, 2026 | Alliance Redwoods, Occidental, CA</p>
+    <p class="header-pricing">Full retreat $248 &middot; Single day $85</p>
+    <p class="header-pricing-sub">Linen &amp; towel package $25 (or $5/item) &middot; Single-day meals $50 (2) / $65 (3)</p>
   </div>
 
   <!-- Admin Testing Mode Banner -->
@@ -49,6 +51,7 @@
         <div id="address-autocomplete" class="w-full" *ngIf="geoapifyEnabled"></div>
         <input *ngIf="!geoapifyEnabled" type="text" pInputText formControlName="address" class="w-full" />
         <input type="hidden" formControlName="address" *ngIf="geoapifyEnabled" />
+        <small *ngIf="geoapifyEnabled" class="address-hint"><i class="pi pi-info-circle"></i> If you see your address in the list but it still won't validate, try spelling out the street suffix in full &mdash; e.g. <strong>Circle</strong> instead of <em>Cir</em>, <strong>Street</strong> instead of <em>St</em>, <strong>Avenue</strong> instead of <em>Ave</em>.</small>
         <small *ngIf="geoapifyEnabled" class="geoapify-attribution">Powered by <a href="https://www.geoapify.com/" target="_blank" rel="noopener">Geoapify</a></small>
       </div>
       <div class="field"><label>City *</label><input type="text" pInputText formControlName="city" class="w-full" [readonly]="addressSelected" [class.autofilled]="addressSelected" /></div>
@@ -59,7 +62,7 @@
 
   <p-card>
     <ng-template pTemplate="header">
-      <div class="card-header-bar"><i class="pi pi-users"></i><span>Attendees ($248 per person)</span></div>
+      <div class="card-header-bar"><i class="pi pi-users"></i><span>Attendees</span></div>
     </ng-template>
     <div class="attendee-form" [formGroup]="attendeeForm">
       <div class="form-grid">
@@ -68,16 +71,90 @@
         <div class="field"><label>Age *</label><input type="number" pInputText formControlName="age" class="w-full" min="1" /></div>
         <div class="field"><label>Dietary Restrictions</label><p-dropdown [options]="dietaryOptions" formControlName="dietaryRestrictions" styleClass="w-full"></p-dropdown></div>
       </div>
+
+      <div class="option-block">
+        <label class="option-label">Attendance *</label>
+        <div class="radio-row">
+          <div class="radio-item">
+            <p-radioButton name="attendanceType" value="full" formControlName="attendanceType" inputId="att-full"></p-radioButton>
+            <label for="att-full">Full retreat (3 days, lodging incl.) &mdash; ${{ fullRetreatPrice }}</label>
+          </div>
+          <div class="radio-item">
+            <p-radioButton name="attendanceType" value="partial" formControlName="attendanceType" inputId="att-partial"></p-radioButton>
+            <label for="att-partial">Single day(s), no overnight &mdash; ${{ perDayPrice }}/day</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="option-block" *ngIf="attendeeForm.get('attendanceType')?.value === 'partial'">
+        <label class="option-label">Day(s) attending *</label>
+        <div class="checkbox-row">
+          <div class="checkbox-item">
+            <p-checkbox formControlName="dayThu" [binary]="true" inputId="day-thu"></p-checkbox>
+            <label for="day-thu">Thu, Jun 11</label>
+          </div>
+          <div class="checkbox-item">
+            <p-checkbox formControlName="dayFri" [binary]="true" inputId="day-fri"></p-checkbox>
+            <label for="day-fri">Fri, Jun 12</label>
+          </div>
+          <div class="checkbox-item">
+            <p-checkbox formControlName="daySat" [binary]="true" inputId="day-sat"></p-checkbox>
+            <label for="day-sat">Sat, Jun 13</label>
+          </div>
+        </div>
+
+        <label class="option-label mt-3">Meals</label>
+        <div class="radio-row">
+          <div class="radio-item">
+            <p-radioButton name="mealOption" value="none" formControlName="mealOption" inputId="meal-none"></p-radioButton>
+            <label for="meal-none">No meals (sessions only)</label>
+          </div>
+          <div class="radio-item">
+            <p-radioButton name="mealOption" value="half" formControlName="mealOption" inputId="meal-half"></p-radioButton>
+            <label for="meal-half">Half day &mdash; 2 meals &mdash; ${{ halfDayMealPrice }}</label>
+          </div>
+          <div class="radio-item">
+            <p-radioButton name="mealOption" value="full" formControlName="mealOption" inputId="meal-full"></p-radioButton>
+            <label for="meal-full">Full day &mdash; 3 meals &mdash; ${{ fullDayMealPrice }}</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="option-block" *ngIf="attendeeForm.get('attendanceType')?.value === 'full'">
+        <label class="option-label">Linens &amp; towels (overnight stay)</label>
+        <p class="option-help"><i class="pi pi-info-circle"></i> The $248 retreat fee does <strong>not</strong> include linens or towels.</p>
+        <div class="radio-row">
+          <div class="radio-item">
+            <p-radioButton name="linenOption" value="none" formControlName="linenOption" inputId="linen-none"></p-radioButton>
+            <label for="linen-none">Bringing my own</label>
+          </div>
+          <div class="radio-item">
+            <p-radioButton name="linenOption" value="package" formControlName="linenOption" inputId="linen-pkg"></p-radioButton>
+            <label for="linen-pkg">Linen &amp; towel package &mdash; ${{ linenPackagePrice }} (covers full stay)</label>
+          </div>
+          <div class="radio-item">
+            <p-radioButton name="linenOption" value="individual" formControlName="linenOption" inputId="linen-ind"></p-radioButton>
+            <label for="linen-ind">Individual items &mdash; ${{ linenItemPrice }} each</label>
+          </div>
+        </div>
+        <div class="field mt-2" *ngIf="attendeeForm.get('linenOption')?.value === 'individual'" style="max-width: 200px;">
+          <label>Number of items</label>
+          <p-inputNumber formControlName="linenItemCount" [min]="1" [max]="20" [showButtons]="true" styleClass="w-full"></p-inputNumber>
+        </div>
+      </div>
+
       <p class="under-18-notice"><i class="pi pi-info-circle"></i> Males under 18 must be accompanied by an adult.</p>
       <button pButton label="Click to Add Attendee" icon="pi pi-user-plus" class="p-button-outlined mt-2" (click)="addAttendee()"></button>
     </div>
     <p-table [value]="attendees" *ngIf="attendees.length > 0" class="mt-3" [tableStyle]="{'min-width': '50rem'}">
-      <ng-template pTemplate="header"><tr><th>Name</th><th>Age</th><th>Dietary</th><th style="width: 80px"></th></tr></ng-template>
+      <ng-template pTemplate="header"><tr><th>Name</th><th>Age</th><th>Dietary</th><th>Breakdown</th><th style="text-align:right">Subtotal</th><th style="width: 80px"></th></tr></ng-template>
       <ng-template pTemplate="body" let-attendee let-i="rowIndex">
         <tr>
           <td>{{ attendee.firstName }} {{ attendee.lastName }}</td>
           <td>{{ attendee.age }}</td>
           <td>{{ attendee.dietaryRestrictions }}</td>
+          <td>{{ attendeeBreakdown(attendee) }}</td>
+          <td style="text-align:right"><strong>${{ attendeeTotal(attendee) }}</strong></td>
           <td><button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm" (click)="removeAttendee(i)"></button></td>
         </tr>
       </ng-template>
@@ -130,9 +207,9 @@
         <div class="card-header-bar"><i class="pi pi-credit-card"></i><span>Payment Details</span></div>
       </ng-template>
       <div class="payment-summary" *ngIf="attendees.length > 0">
-        <div class="summary-row">
-          <span>{{ attendees.length }} attendee(s) x $248</span>
-          <strong>${{ totalCost }}</strong>
+        <div class="summary-row" *ngFor="let a of attendees">
+          <span>{{ a.firstName }} {{ a.lastName }} &mdash; {{ attendeeBreakdown(a) }}</span>
+          <strong>${{ attendeeTotal(a) }}</strong>
         </div>
         <div class="summary-divider"></div>
         <div class="summary-row summary-total">
@@ -168,8 +245,10 @@
       <div class="terms-section">
         <p-checkbox [(ngModel)]="agreedToTerms" [binary]="true" inputId="terms"></p-checkbox>
         <label for="terms" class="terms-label">
-          I agree to the retreat terms and conditions. I understand the cost is $248 per attendee
-          and is non-refundable after May 28, 2026.
+          I agree to the retreat terms and conditions. Full retreat is $248 per attendee (linens
+          $25 package or $5/item add-on); single-day attendance is $85/day with optional half-day
+          ($50, 2 meals) or full-day ($65, 3 meals) meal packages. Registration is non-refundable
+          after May 28, 2026.
         </label>
       </div>
       <div class="requirements-checklist" *ngIf="!agreedToTerms || attendees.length === 0 || !cardReady || registrationForm.invalid">
