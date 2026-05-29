@@ -36,6 +36,8 @@ interface SearchItem {
            *ngIf="menuVisibility.isVisible('registration')">Register</a>
         <a routerLink="/venue" routerLinkActive="active"
            *ngIf="menuVisibility.isVisible('venue')">Venue</a>
+        <a routerLink="/donations" routerLinkActive="active" class="donate-link"
+           *ngIf="menuVisibility.isVisible('donations')">Donate</a>
         <a routerLink="/merchandise" routerLinkActive="active"
            *ngIf="authService.isAdmin() && menuVisibility.isVisible('merchandise')">Merch</a>
         <a routerLink="/theme-poll" routerLinkActive="active"
@@ -130,6 +132,12 @@ interface SearchItem {
         font-weight: 500; transition: all 0.2s;
         &:hover { color: #f0e6d0; background: rgba(255, 255, 255, 0.1); }
         &.active { color: #e8a832; background: rgba(232, 168, 50, 0.15); }
+      }
+      a.donate-link {
+        color: #e8a832;
+        border: 1px solid rgba(232, 168, 50, 0.55);
+        &:hover { color: #e8a832; background: rgba(232, 168, 50, 0.15); }
+        &.active { color: #e8a832; background: rgba(232, 168, 50, 0.22); }
       }
     }
     /* Admin Dropdown */
@@ -266,6 +274,7 @@ export class TopbarComponent {
     { label: 'Home', description: 'Main landing page', icon: 'pi-home', route: '/' },
     { label: 'Registration', description: 'Register for the retreat and pay', icon: 'pi-pencil', route: '/registration' },
     { label: 'Venue', description: 'Alliance Redwoods venue details', icon: 'pi-map-marker', route: '/venue' },
+    { label: 'Donate', description: 'Make a donation to support the retreat', icon: 'pi-heart', route: '/donations' },
     { label: 'Merchandise', description: 'Official retreat gear and apparel', icon: 'pi-shopping-bag', route: '/merchandise', adminOnly: true },
     { label: 'Payment', description: 'Retreat registration and payment', icon: 'pi-credit-card', route: '/registration' },
     { label: 'Theme Poll', description: 'Vote on retreat theme', icon: 'pi-chart-bar', route: '/theme-poll', adminOnly: true },

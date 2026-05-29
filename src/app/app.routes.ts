@@ -13,6 +13,7 @@ import { AdminDashboardComponent } from './features/admin/dashboard/admin-dashbo
 import { ManageRegistrationsComponent } from './features/admin/registrations/manage-registrations.component';
 import { UserManagementComponent } from './features/admin/user-management/user-management.component';
 import { MerchandiseComponent } from './features/merchandise/merchandise.component';
+import { DonationsComponent } from './features/donations/donations.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -26,6 +27,7 @@ export const routes: Routes = [
       { path: 'registration', component: RetreatRegistrationComponent },
       { path: 'venue', component: VenueShowcaseComponent },
       { path: 'merchandise', component: MerchandiseComponent },
+      { path: 'donations', component: DonationsComponent },
       { path: 'theme-poll', component: ThemePollComponent, canActivate: [authGuard, adminGuard] },
       { path: 'payment', redirectTo: 'registration', pathMatch: 'full' },
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, adminGuard] },

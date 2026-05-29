@@ -38,14 +38,12 @@ $gradient-secondary: linear-gradient(135deg, $primary-teal 0%, $secondary-teal 1
 
 .video-section {
   padding: 3rem 2rem; background: #f8f9fa; border-radius: 12px;
-  .videos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 2rem;
-    .video-card {
-      .video-wrapper { position: relative; padding-top: 56.25%; background: #000; border-radius: 8px 8px 0 0; overflow: hidden;
-        .video-player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-      }
-      h3 { color: $primary-teal; margin-bottom: 0.5rem; font-size: 1.3rem; }
-      p { color: #6c757d; line-height: 1.6; }
+  .video-feature { max-width: 860px; margin: 2rem auto 0;
+    .video-embed { position: relative; padding-top: 56.25%; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18); background: #000;
+      iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
     }
+    .video-caption { text-align: center; color: #6c757d; line-height: 1.6; margin: 1rem 0 0; font-size: 1.05rem; }
   }
 }
 

@@ -20,20 +20,16 @@
 
   <div class="video-section">
     <h2 class="section-title"><i class="pi pi-video"></i> Experience the Grounds</h2>
-    <div class="videos-grid">
-      <div class="video-card" *ngFor="let video of videos">
-        <p-card>
-          <ng-template pTemplate="header">
-            <div class="video-wrapper">
-              <video [src]="video.src" [poster]="video.thumbnail" controls preload="metadata" class="video-player">Your browser does not support the video tag.</video>
-            </div>
-          </ng-template>
-          <h3>{{ video.title }}</h3>
-          <p>{{ video.description }}</p>
-        </p-card>
+    <div class="video-feature">
+      <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/chtQilKMLPo"
+                title="Alliance Redwoods Conference Grounds"
+                loading="lazy" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
       </div>
+      <p class="video-caption">An official tour of Alliance Redwoods Conference Grounds &mdash; our home among the Occidental redwoods.</p>
     </div>
-    <div class="no-media-message" *ngIf="videos.length === 0"><i class="pi pi-video"></i><p>Videos coming soon!</p></div>
   </div>
 
   <p-divider></p-divider>

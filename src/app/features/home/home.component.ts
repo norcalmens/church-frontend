@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
@@ -28,10 +28,19 @@ import { AuthService } from '../../core/auth/auth.service';
                 <button pButton label="View Venue" icon="pi pi-map" size="large"
                         class="p-button-outlined" style="border-color: #f0e6d0; color: #f0e6d0;"></button>
               </a>
+              <a routerLink="/donations">
+                <button pButton label="Donate" icon="pi pi-heart" size="large" class="donate-hero-btn"></button>
+              </a>
             </div>
           </div>
           <div class="hero-flyer">
-            <img src="assets/images/retreat-flyer.png" alt="NorCal Men's Retreat 2026 Flyer" />
+            <button type="button" class="flyer-thumb" (click)="lightboxOpen = true" aria-label="Enlarge flyer">
+              <img src="assets/images/retreat-flyer.png" alt="NorCal Men's Retreat 2026 Flyer" />
+              <span class="flyer-zoom-hint"><i class="pi pi-search-plus"></i> Click to enlarge</span>
+            </button>
+            <a class="flyer-download" href="assets/retreat-flyer.pdf" target="_blank" rel="noopener">
+              <i class="pi pi-download"></i> Download Flyer (PDF)
+            </a>
           </div>
         </div>
       </div>
@@ -101,6 +110,14 @@ import { AuthService } from '../../core/auth/auth.service';
         </div>
       </div>
     </div>
+
+    <div class="flyer-lightbox" *ngIf="lightboxOpen" (click)="lightboxOpen = false">
+      <button type="button" class="lightbox-close" (click)="lightboxOpen = false" aria-label="Close"><i class="pi pi-times"></i></button>
+      <img src="assets/images/retreat-flyer.png" alt="NorCal Men's Retreat 2026 Flyer" (click)="$event.stopPropagation()" />
+      <a class="lightbox-download" href="assets/retreat-flyer.pdf" target="_blank" rel="noopener" (click)="$event.stopPropagation()">
+        <i class="pi pi-download"></i> Download PDF
+      </a>
+    </div>
   `,
   styles: [`
     .home-container { max-width: 1200px; margin: 0 auto; }
@@ -121,13 +138,57 @@ import { AuthService } from '../../core/auth/auth.service';
     .hero-details-sub { font-size: 0.95rem; opacity: 0.85; }
     .hero-flyer {
       flex-shrink: 0;
-      img {
-        width: 300px; border-radius: 12px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-      }
+      display: flex; flex-direction: column; align-items: center; gap: 0.85rem;
     }
+    .flyer-thumb {
+      position: relative; display: block; line-height: 0; cursor: pointer;
+      padding: 9px; border: none; background: #f0e6d0;
+      border-radius: 14px; box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+      img { display: block; width: 300px; border-radius: 7px; }
+    }
+    .flyer-zoom-hint {
+      position: absolute; inset: 9px; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      background: rgba(26, 58, 74, 0.55); color: #f0e6d0; font-weight: 600; font-size: 0.95rem;
+      opacity: 0; transition: opacity 0.2s; line-height: 1;
+      i { font-size: 1.15rem; }
+    }
+    .flyer-thumb:hover .flyer-zoom-hint, .flyer-thumb:focus-visible .flyer-zoom-hint { opacity: 1; }
+    .flyer-download {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: #f0e6d0; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      padding: 0.5rem 1rem; border: 1px solid rgba(240, 230, 208, 0.4); border-radius: 8px;
+      transition: all 0.2s;
+      i { color: #e8a832; }
+      &:hover { background: rgba(240, 230, 208, 0.12); border-color: #e8a832; color: #e8a832; }
+    }
+    .flyer-lightbox {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1rem; padding: 2rem; animation: lbFade 0.15s ease;
+      img { max-height: 86vh; max-width: 92vw; border-radius: 8px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6); }
+    }
+    .lightbox-close {
+      position: absolute; top: 1.25rem; right: 1.5rem;
+      width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer;
+      background: rgba(255, 255, 255, 0.12); color: #fff; font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      &:hover { background: rgba(255, 255, 255, 0.25); }
+    }
+    .lightbox-download {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: #e8a832; color: #1a3a4a; text-decoration: none; font-weight: 700;
+      padding: 0.6rem 1.25rem; border-radius: 8px; transition: background 0.2s;
+      &:hover { background: #f0e6d0; }
+    }
+    @keyframes lbFade { from { opacity: 0; } to { opacity: 1; } }
     .hero-actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
     .hero-actions a { text-decoration: none; }
+    ::ng-deep .donate-hero-btn.p-button {
+      background: #e8a832; border-color: #e8a832; color: #1a3a4a; font-weight: 700;
+    }
+    ::ng-deep .donate-hero-btn.p-button:hover { background: #d4782f; border-color: #d4782f; color: #fff; }
     .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
     .info-card {
       text-align: center; padding: 1rem;
@@ -153,8 +214,15 @@ import { AuthService } from '../../core/auth/auth.service';
       .hero-text h1 { font-size: 2rem; }
       .hero-details { justify-content: center; }
       .hero-actions { justify-content: center; }
-      .hero-flyer img { width: 250px; }
+      .flyer-thumb img { width: 250px; }
     }
   `]
 })
-export class HomeComponent {}
+export class HomeComponent {
+  lightboxOpen = false;
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.lightboxOpen = false;
+  }
+}
