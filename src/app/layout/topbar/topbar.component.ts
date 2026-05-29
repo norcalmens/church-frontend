@@ -36,6 +36,8 @@ interface SearchItem {
            *ngIf="menuVisibility.isVisible('registration')">Register</a>
         <a routerLink="/venue" routerLinkActive="active"
            *ngIf="menuVisibility.isVisible('venue')">Venue</a>
+        <a routerLink="/worship" routerLinkActive="active"
+           *ngIf="menuVisibility.isVisible('worship')">Worship</a>
         <a routerLink="/donations" routerLinkActive="active" class="donate-link"
            *ngIf="menuVisibility.isVisible('donations')">Donate</a>
         <a routerLink="/merchandise" routerLinkActive="active"
@@ -50,6 +52,7 @@ interface SearchItem {
               <a routerLink="/admin/dashboard" (click)="adminMenuOpen = false"><i class="pi pi-chart-line"></i> Dashboard</a>
               <a routerLink="/admin/registrations" (click)="adminMenuOpen = false"><i class="pi pi-list"></i> View All Registrations</a>
               <a routerLink="/admin/users" (click)="adminMenuOpen = false"><i class="pi pi-users"></i> Manage Users</a>
+              <a routerLink="/admin/zoom-links" (click)="adminMenuOpen = false"><i class="pi pi-video"></i> Manage Zoom Links</a>
             </div>
           </div>
         </div>
@@ -134,10 +137,10 @@ interface SearchItem {
         &.active { color: #e8a832; background: rgba(232, 168, 50, 0.15); }
       }
       a.donate-link {
-        color: #e8a832;
-        border: 1px solid rgba(232, 168, 50, 0.55);
-        &:hover { color: #e8a832; background: rgba(232, 168, 50, 0.15); }
-        &.active { color: #e8a832; background: rgba(232, 168, 50, 0.22); }
+        background: #d4782f; color: #fff;
+        border: 1px solid #d4782f;
+        &:hover { background: #b8651f; border-color: #b8651f; color: #fff; }
+        &.active { background: #b8651f; border-color: #b8651f; color: #fff; }
       }
     }
     /* Admin Dropdown */
@@ -275,6 +278,8 @@ export class TopbarComponent {
     { label: 'Registration', description: 'Register for the retreat and pay', icon: 'pi-pencil', route: '/registration' },
     { label: 'Venue', description: 'Alliance Redwoods venue details', icon: 'pi-map-marker', route: '/venue' },
     { label: 'Donate', description: 'Make a donation to support the retreat', icon: 'pi-heart', route: '/donations' },
+    { label: 'Worship', description: 'Zoom meetings for worship and fellowship', icon: 'pi-video', route: '/worship' },
+    { label: 'Manage Zoom Links', description: 'Add, edit, or remove Worship Zoom meetings', icon: 'pi-video', route: '/admin/zoom-links', adminOnly: true },
     { label: 'Merchandise', description: 'Official retreat gear and apparel', icon: 'pi-shopping-bag', route: '/merchandise', adminOnly: true },
     { label: 'Payment', description: 'Retreat registration and payment', icon: 'pi-credit-card', route: '/registration' },
     { label: 'Theme Poll', description: 'Vote on retreat theme', icon: 'pi-chart-bar', route: '/theme-poll', adminOnly: true },

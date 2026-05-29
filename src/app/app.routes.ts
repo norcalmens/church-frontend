@@ -14,6 +14,8 @@ import { ManageRegistrationsComponent } from './features/admin/registrations/man
 import { UserManagementComponent } from './features/admin/user-management/user-management.component';
 import { MerchandiseComponent } from './features/merchandise/merchandise.component';
 import { DonationsComponent } from './features/donations/donations.component';
+import { WorshipComponent } from './features/worship/worship.component';
+import { ZoomLinksAdminComponent } from './features/admin/zoom-links/zoom-links-admin.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -28,6 +30,8 @@ export const routes: Routes = [
       { path: 'venue', component: VenueShowcaseComponent },
       { path: 'merchandise', component: MerchandiseComponent },
       { path: 'donations', component: DonationsComponent },
+      { path: 'worship', component: WorshipComponent },
+      { path: 'admin/zoom-links', component: ZoomLinksAdminComponent, canActivate: [authGuard, adminGuard] },
       { path: 'theme-poll', component: ThemePollComponent, canActivate: [authGuard, adminGuard] },
       { path: 'payment', redirectTo: 'registration', pathMatch: 'full' },
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, adminGuard] },
