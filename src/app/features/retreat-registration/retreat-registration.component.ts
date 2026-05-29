@@ -118,6 +118,7 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
       city: ['', Validators.required],
       state: ['', Validators.required],
       zipCode: ['', Validators.required],
+      congregation: [''],
       roomPreference: ['no-preference'],
       emergencyName: ['', Validators.required],
       emergencyRelationship: ['', Validators.required],
@@ -154,6 +155,7 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
       city: 'Sacramento',
       state: 'CA',
       zipCode: '95814',
+      congregation: 'Test Community Church',
       emergencyName: 'Jane Doe',
       emergencyRelationship: 'Spouse',
       emergencyPhone: '(555) 987-6543'

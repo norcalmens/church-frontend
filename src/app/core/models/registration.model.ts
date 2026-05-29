@@ -10,6 +10,7 @@ export interface Registration {
   city: string;
   state: string;
   zipCode: string;
+  congregation?: string;
   roomPreference: string;
   emergencyName: string;
   emergencyRelationship: string;

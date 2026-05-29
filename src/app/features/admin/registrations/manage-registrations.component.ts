@@ -32,6 +32,8 @@ import { Registration } from '../../../core/models/registration.model';
         </ng-template>
         <div class="table-toolbar">
           <span class="p-input-icon-left"><i class="pi pi-search"></i><input type="text" pInputText [(ngModel)]="searchTerm" placeholder="Search..." (input)="filterRegistrations()" /></span>
+          <button pButton label="Download CSV" icon="pi pi-download" class="p-button-outlined csv-btn"
+                  (click)="exportCsv()" [disabled]="!registrations.length"></button>
         </div>
         <p-table [value]="filteredRegistrations" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [sortField]="'registeredAt'" [sortOrder]="-1" [tableStyle]="{'min-width': '60rem'}" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}">
           <ng-template pTemplate="header">
@@ -74,7 +76,8 @@ import { Registration } from '../../../core/models/registration.model';
     }
     .page-header { text-align: center; padding: 2.5rem 2rem; background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 30%, #c8923a 70%, #d4782f 100%); color: #f0e6d0; border-radius: 12px; margin-bottom: 1.5rem; h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; } p { font-size: 1rem; margin: 0; opacity: 0.9; } }
     .card-header-bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem; background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%); color: #f0e6d0; font-size: 1.1rem; font-weight: 600; }
-    .table-toolbar { margin-bottom: 1rem; }
+    .table-toolbar { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .csv-btn { margin-left: auto; }
     ::ng-deep .registrations-container .p-card { border-radius: 12px; overflow: hidden; .p-card-header { padding: 0; border-bottom: none; } .p-card-body { padding: 1.5rem; } .p-card-content { padding: 0; } }
     ::ng-deep .p-datatable .p-datatable-thead > tr > th { background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%); color: #f0e6d0; }
   `]
@@ -103,6 +106,49 @@ export class ManageRegistrationsComponent implements OnInit {
 
   getStatusSeverity(status: string | undefined): string {
     switch (status) { case 'paid': return 'success'; case 'pending': return 'warning'; case 'refunded': return 'info'; default: return 'warning'; }
+  }
+
+  exportCsv(): void {
+    const cols: [string, (r: Registration) => unknown][] = [
+      ['ID', r => r.id],
+      ['Registered At', r => r.registeredAt],
+      ['First Name', r => r.firstName],
+      ['Last Name', r => r.lastName],
+      ['Email', r => r.email],
+      ['Phone', r => r.phone],
+      ['Address', r => r.address],
+      ['City', r => r.city],
+      ['State', r => r.state],
+      ['Zip', r => r.zipCode],
+      ['Congregation', r => r.congregation],
+      ['Room Preference', r => r.roomPreference],
+      ['Attendee Count', r => r.attendees?.length || 0],
+      ['Attendees', r => (r.attendees || []).map(a => `${a.firstName} ${a.lastName} (${a.age})`).join('; ')],
+      ['Total Amount', r => r.totalAmount],
+      ['Payment Status', r => r.paymentStatus || 'pending'],
+      ['Stripe Payment ID', r => r.stripePaymentId],
+      ['Emergency Name', r => r.emergencyName],
+      ['Emergency Relationship', r => r.emergencyRelationship],
+      ['Emergency Phone', r => r.emergencyPhone],
+      ['Special Requests', r => r.specialRequests],
+    ];
+    const esc = (v: unknown): string => {
+      const s = v == null ? '' : String(v);
+      return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    };
+    const header = cols.map(c => c[0]).join(',');
+    const body = this.registrations.map(r => cols.map(c => esc(c[1](r))).join(','));
+    const csv = [header, ...body].join('\r\n');
+    // BOM so Excel recognizes UTF-8
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `registrations-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   confirmDelete(reg: Registration): void {
