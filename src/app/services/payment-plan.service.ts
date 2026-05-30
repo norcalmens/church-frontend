@@ -23,6 +23,9 @@ export class PaymentPlanService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`/api/payment-plans/${id}`);
   }
+  resendInvite(planId: number): Observable<void> {
+    return this.http.post<void>(`/api/payment-plans/${planId}/resend-invite`, {});
+  }
   recordPayment(planId: number, payment: PaymentPlanPayment): Observable<PaymentPlanPayment> {
     return this.http.post<PaymentPlanPayment>(`/api/payment-plans/${planId}/payments`, payment);
   }

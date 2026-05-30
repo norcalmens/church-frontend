@@ -73,6 +73,7 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
               <td class="actions">
                 <button pButton icon="pi pi-list" class="p-button-text p-button-sm" (click)="openDetail(p)" pTooltip="Payments"></button>
                 <button pButton icon="pi pi-copy" class="p-button-text p-button-sm" (click)="copyPayLink(p)" pTooltip="Copy pay link"></button>
+                <button pButton icon="pi pi-send" class="p-button-text p-button-sm" (click)="resendInvite(p)" pTooltip="Resend invite email"></button>
                 <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEdit(p)" pTooltip="Edit plan"></button>
                 <button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm" (click)="confirmDelete(p)" pTooltip="Delete plan"></button>
               </td>
@@ -342,6 +343,14 @@ export class PaymentPlansAdminComponent implements OnInit {
       () => this.toast.add({ severity: 'success', summary: 'Copied', detail: 'Pay link copied to clipboard' }),
       () => this.toast.add({ severity: 'warn', summary: 'Copy failed', detail: url })
     );
+  }
+
+  resendInvite(p: PaymentPlan): void {
+    if (p.id == null) return;
+    this.svc.resendInvite(p.id).subscribe({
+      next: () => this.toast.add({ severity: 'success', summary: 'Email sent', detail: `Invite re-sent to ${p.payerEmail}` }),
+      error: (e) => this.toast.add({ severity: 'error', summary: 'Error', detail: e?.error?.message || 'Could not send invite' })
+    });
   }
 
   // ===== Plan CRUD =====
