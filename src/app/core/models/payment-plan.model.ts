@@ -24,6 +24,13 @@ export interface PaymentPlan {
   createdAt?: string;
   updatedAt?: string;
 
+  // Recurring (Stripe Subscription)
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  recurringAmount?: number;
+  recurringStatus?: 'active' | 'past_due' | 'canceled' | 'unpaid' | 'trialing' | string;
+  recurringStartedAt?: string;
+
   // Computed by backend
   paidAmount?: number;
   balance?: number;

@@ -69,11 +69,22 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
               <td>{{'$'}}{{ (p.paidAmount || 0) | number:'1.2-2' }}</td>
               <td><strong>{{'$'}}{{ (p.balance ?? p.totalAmount) | number:'1.2-2' }}</strong></td>
               <td><p-progressBar [value]="progress(p)" [showValue]="false" [style]="{height: '8px'}"></p-progressBar></td>
-              <td><p-tag [value]="p.status || 'active'" [severity]="statusSeverity(p.status)"></p-tag></td>
+              <td>
+                <p-tag [value]="p.status || 'active'" [severity]="statusSeverity(p.status)"></p-tag>
+                <div *ngIf="p.recurringStatus" class="recurring-line">
+                  <i class="pi pi-sync"></i>
+                  <span [class.muted]="p.recurringStatus !== 'active'">
+                    {{ p.recurringStatus === 'active' ? ('$' + (p.recurringAmount | number:'1.2-2') + '/mo') : p.recurringStatus }}
+                  </span>
+                </div>
+              </td>
               <td class="actions">
                 <button pButton icon="pi pi-list" class="p-button-text p-button-sm" (click)="openDetail(p)" pTooltip="Payments"></button>
                 <button pButton icon="pi pi-copy" class="p-button-text p-button-sm" (click)="copyPayLink(p)" pTooltip="Copy pay link"></button>
                 <button pButton icon="pi pi-send" class="p-button-text p-button-sm" (click)="resendInvite(p)" pTooltip="Resend invite email"></button>
+                <button *ngIf="p.recurringStatus === 'active'" pButton icon="pi pi-times-circle"
+                        class="p-button-warning p-button-text p-button-sm"
+                        (click)="confirmCancelRecurring(p)" pTooltip="Cancel monthly auto-pay"></button>
                 <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEdit(p)" pTooltip="Edit plan"></button>
                 <button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm" (click)="confirmDelete(p)" pTooltip="Delete plan"></button>
               </td>
@@ -234,6 +245,11 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
     .toolbar { margin-bottom: 1rem; }
     .muted { color: #6c757d; font-size: 0.82rem; }
     .actions { white-space: nowrap; }
+    .recurring-line { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.35rem;
+      font-size: 0.78rem; color: #2e9e5b; font-weight: 600;
+      i { font-size: 0.7rem; }
+      .muted { color: #9aa0a6; font-weight: 500; text-transform: capitalize; }
+    }
     ::ng-deep .plans-container .p-card { border-radius: 12px; overflow: hidden;
       .p-card-header { padding: 0; border-bottom: none; } .p-card-body { padding: 1.5rem; } .p-card-content { padding: 0; }
     }
@@ -350,6 +366,20 @@ export class PaymentPlansAdminComponent implements OnInit {
     this.svc.resendInvite(p.id).subscribe({
       next: () => this.toast.add({ severity: 'success', summary: 'Email sent', detail: `Invite re-sent to ${p.payerEmail}` }),
       error: (e) => this.toast.add({ severity: 'error', summary: 'Error', detail: e?.error?.message || 'Could not send invite' })
+    });
+  }
+
+  confirmCancelRecurring(p: PaymentPlan): void {
+    this.confirm.confirm({
+      message: `Cancel the monthly auto-pay ($${Number(p.recurringAmount || 0).toFixed(2)}/mo) on "${p.planName}"? The plan and any existing payments stay; only the recurring schedule is stopped.`,
+      header: 'Cancel Monthly Auto-Pay', icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        if (p.id == null) return;
+        this.svc.cancelRecurring(p.id).subscribe({
+          next: () => { this.toast.add({ severity: 'success', summary: 'Canceled', detail: 'Monthly auto-pay stopped' }); this.load(); },
+          error: (e) => this.toast.add({ severity: 'error', summary: 'Error', detail: e?.error?.message || 'Cancel failed' })
+        });
+      }
     });
   }
 

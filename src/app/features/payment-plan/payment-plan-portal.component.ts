@@ -57,6 +57,18 @@ import { firstValueFrom } from 'rxjs';
           </div>
         </p-card>
 
+        <!-- Active recurring banner -->
+        <p-card *ngIf="plan.recurringStatus === 'active' && plan.recurringAmount">
+          <div class="recurring-active">
+            <i class="pi pi-sync"></i>
+            <div>
+              <strong>Monthly auto-pay is on</strong>
+              <p>{{'$'}}{{ plan.recurringAmount | number:'1.2-2' }} per month — Stripe will charge your card automatically until your balance reaches zero or the plan is canceled.</p>
+              <small>To cancel auto-pay, contact the retreat team.</small>
+            </div>
+          </div>
+        </p-card>
+
         <p-card *ngIf="plan.status === 'active' && (plan.balance ?? plan.totalAmount) > 0">
           <ng-template pTemplate="header">
             <div class="section-header"><i class="pi pi-dollar"></i>Make a Payment</div>
@@ -89,6 +101,34 @@ import { firstValueFrom } from 'rxjs';
                     [label]="payAmount > 0 ? ('Pay $' + (payAmount | number:'1.2-2')) : 'Pay'"
                     icon="pi pi-lock" [disabled]="!canPay" [loading]="submitting" (click)="pay()"></button>
             <p class="secure"><i class="pi pi-shield"></i> Secure payment processed by Stripe</p>
+          </div>
+        </p-card>
+
+        <!-- Recurring (monthly) setup card -->
+        <p-card *ngIf="plan.status === 'active' && (plan.balance ?? plan.totalAmount) > 0 && plan.recurringStatus !== 'active'">
+          <ng-template pTemplate="header">
+            <div class="section-header"><i class="pi pi-sync"></i>Pay Monthly (Auto-Pay)</div>
+          </ng-template>
+          <div class="pay-form">
+            <p class="hint">Set up an automatic monthly charge so you don't have to remember. We'll stop the moment your balance reaches zero.</p>
+            <div class="amount-row">
+              <div class="field">
+                <label>Monthly amount</label>
+                <p-inputNumber [(ngModel)]="recurringAmount" mode="currency" currency="USD" locale="en-US"
+                               [min]="5" inputStyleClass="w-full"></p-inputNumber>
+              </div>
+              <div class="quick-amounts">
+                <button pButton label="$25/mo" class="p-button-outlined p-button-sm" (click)="recurringAmount = 25"></button>
+                <button pButton label="$50/mo" class="p-button-outlined p-button-sm" (click)="recurringAmount = 50"></button>
+                <button pButton label="$100/mo" class="p-button-outlined p-button-sm" (click)="recurringAmount = 100"></button>
+              </div>
+            </div>
+            <button pButton class="pay-submit"
+                    [label]="recurringAmount && recurringAmount > 0 ? ('Set up $' + (recurringAmount | number:'1.2-2') + '/month') : 'Set up monthly'"
+                    icon="pi pi-external-link"
+                    [disabled]="!recurringAmount || recurringAmount < 5 || submittingRecurring"
+                    [loading]="submittingRecurring" (click)="startRecurring()"></button>
+            <p class="secure"><i class="pi pi-shield"></i> You'll be redirected to Stripe to securely enter your card.</p>
           </div>
         </p-card>
 
@@ -150,6 +190,13 @@ import { firstValueFrom } from 'rxjs';
     .pay-submit { width: 100%; justify-content: center; background:#d4782f !important; border-color:#d4782f !important; font-weight:700; }
     ::ng-deep .pay-submit.p-button:hover { background:#b8651f !important; border-color:#b8651f !important; }
     .secure { text-align:center; color:#9aa0a6; font-size: 0.8rem; margin: 0; i { font-size: 0.75rem; margin-right: 0.25rem; } }
+    .recurring-active { display:flex; align-items:flex-start; gap: 0.85rem; padding: 1rem 1.15rem;
+      background: linear-gradient(135deg, #e8f5ec 0%, #d6efdf 100%); border-left: 4px solid #2e9e5b; border-radius: 8px;
+      i { font-size: 1.5rem; color: #2e9e5b; margin-top: 2px; }
+      strong { display:block; color:#1a3a4a; font-size: 1rem; margin-bottom: 0.25rem; }
+      p { margin: 0 0 0.35rem; color: #1a3a4a; font-size: 0.92rem; }
+      small { color: #6c757d; font-size: 0.8rem; }
+    }
     .history { width: 100%; border-collapse: collapse;
       th, td { padding: 0.65rem 0.85rem; text-align: left; border-bottom: 1px solid #eee; font-size: 0.92rem; }
       th { color:#1a3a4a; background: #f8f9fa; font-weight: 600; }
@@ -172,6 +219,8 @@ export class PaymentPlanPortalComponent implements OnInit, AfterViewInit, OnDest
   plan: PaymentPlan | null = null;
   payAmount: number | null = null;
   submitting = false;
+  recurringAmount: number | null = 50;
+  submittingRecurring = false;
 
   stripe: Stripe | null = null;
   stripeLoaded = false;
@@ -193,6 +242,19 @@ export class PaymentPlanPortalComponent implements OnInit, AfterViewInit, OnDest
     this.token = this.route.snapshot.paramMap.get('token') || '';
     if (!this.token) { this.notFound = true; this.loading = false; return; }
     this.loadPlan();
+    // Show a friendly toast when returning from the Stripe Checkout redirect
+    const recurringQs = this.route.snapshot.queryParamMap.get('recurring');
+    if (recurringQs === 'success') {
+      setTimeout(() => this.toast.add({
+        severity: 'success', summary: 'Monthly auto-pay is set up',
+        detail: 'Stripe will charge your card automatically each month. You\'ll see each charge here.'
+      }), 200);
+    } else if (recurringQs === 'canceled') {
+      setTimeout(() => this.toast.add({
+        severity: 'info', summary: 'Monthly setup canceled',
+        detail: 'No card was saved. You can still make one-time payments any time.'
+      }), 200);
+    }
   }
 
   loadPlan(): void {
@@ -241,6 +303,23 @@ export class PaymentPlanPortalComponent implements OnInit, AfterViewInit, OnDest
 
   statusSeverity(s: string | undefined): string {
     switch (s) { case 'paid': return 'success'; case 'pending': return 'warning'; case 'processing': return 'info'; case 'failed': return 'danger'; default: return 'info'; }
+  }
+
+  async startRecurring(): Promise<void> {
+    if (!this.plan || this.recurringAmount == null || this.recurringAmount < 5) return;
+    this.submittingRecurring = true;
+    try {
+      const resp = await firstValueFrom(this.svc.startRecurringCheckout(this.token, this.recurringAmount));
+      if (resp?.url) {
+        window.location.href = resp.url;
+        return; // browser navigates away
+      }
+      this.toast.add({ severity: 'error', summary: 'Error', detail: 'No checkout URL returned.' });
+    } catch (err: any) {
+      this.toast.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || err?.message || 'Could not start monthly setup.' });
+    } finally {
+      this.submittingRecurring = false;
+    }
   }
 
   async pay(): Promise<void> {

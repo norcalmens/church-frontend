@@ -46,4 +46,14 @@ export class PaymentPlanService {
   confirmStripePayment(token: string, paymentId: number): Observable<PaymentPlanPayment> {
     return this.http.post<PaymentPlanPayment>(`/api/payment-plans/by-token/${token}/payments/${paymentId}/confirm`, {});
   }
+
+  /** Public: returns a Stripe Checkout URL for setting up a monthly subscription. */
+  startRecurringCheckout(token: string, amount: number): Observable<{ url: string }> {
+    return this.http.post<{ url: string }>(`/api/payment-plans/by-token/${token}/recurring/checkout`, { amount });
+  }
+
+  /** Admin: cancel a plan's recurring Stripe Subscription. */
+  cancelRecurring(planId: number): Observable<PaymentPlan> {
+    return this.http.post<PaymentPlan>(`/api/payment-plans/${planId}/recurring/cancel`, {});
+  }
 }
