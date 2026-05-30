@@ -16,6 +16,7 @@ import { MerchandiseComponent } from './features/merchandise/merchandise.compone
 import { DonationsComponent } from './features/donations/donations.component';
 import { WorshipComponent } from './features/worship/worship.component';
 import { ZoomLinksAdminComponent } from './features/admin/zoom-links/zoom-links-admin.component';
+import { AllDonationsComponent } from './features/admin/donations/all-donations.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -32,6 +33,7 @@ export const routes: Routes = [
       { path: 'donations', component: DonationsComponent },
       { path: 'worship', component: WorshipComponent },
       { path: 'admin/zoom-links', component: ZoomLinksAdminComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'admin/donations', component: AllDonationsComponent, canActivate: [authGuard, adminGuard] },
       { path: 'theme-poll', component: ThemePollComponent, canActivate: [authGuard, adminGuard] },
       { path: 'payment', redirectTo: 'registration', pathMatch: 'full' },
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, adminGuard] },

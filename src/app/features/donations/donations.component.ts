@@ -9,7 +9,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { PaymentService } from '../../services/payment.service';
+import { DonationService } from '../../services/donation.service';
 import { StripeService } from '../../services/stripe.service';
 import { Stripe, StripeCardElement } from '@stripe/stripe-js';
 import { firstValueFrom } from 'rxjs';
@@ -154,7 +154,7 @@ import { firstValueFrom } from 'rxjs';
 })
 export class DonationsComponent implements AfterViewInit, OnDestroy {
   private messageService = inject(MessageService);
-  private paymentService = inject(PaymentService);
+  private donationService = inject(DonationService);
   private stripeService = inject(StripeService);
   private ngZone = inject(NgZone);
 
@@ -246,20 +246,16 @@ export class DonationsComponent implements AfterViewInit, OnDestroy {
     const amount = this.amount;
     try {
       if (this.stripe && this.cardElement) {
-        const description = this.message.trim()
-          ? `Donation — NorCal Men's Retreat 2026: ${this.message.trim()}`
-          : "Donation — NorCal Men's Retreat 2026";
-
-        const payment = await firstValueFrom(this.paymentService.createPaymentIntent({
-          amount: amount * 100,
-          currency: 'usd',
-          description,
+        const created = await firstValueFrom(this.donationService.create({
           donorName: this.donorName.trim(),
-          donorEmail: this.donorEmail.trim()
+          donorEmail: this.donorEmail.trim(),
+          amount: amount,
+          currency: 'usd',
+          message: this.message.trim() || undefined,
         }));
 
         const { error, paymentIntent } = await this.stripe.confirmCardPayment(
-          payment.clientSecret,
+          created.clientSecret,
           {
             payment_method: {
               card: this.cardElement,
@@ -272,6 +268,10 @@ export class DonationsComponent implements AfterViewInit, OnDestroy {
           this.messageService.add({ severity: 'error', summary: 'Payment Failed', detail: error.message || 'Card payment failed' });
           this.isSubmitting = false;
           return;
+        }
+        if (created.donation.id != null) {
+          // Tell the backend to verify with Stripe and mark the donation paid.
+          try { await firstValueFrom(this.donationService.confirm(created.donation.id)); } catch { /* non-fatal */ }
         }
         if (paymentIntent?.status !== 'succeeded') {
           this.messageService.add({ severity: 'warn', summary: 'Pending', detail: 'Payment is still processing. We will email your receipt once it clears.' });
