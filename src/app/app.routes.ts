@@ -17,6 +17,8 @@ import { DonationsComponent } from './features/donations/donations.component';
 import { WorshipComponent } from './features/worship/worship.component';
 import { ZoomLinksAdminComponent } from './features/admin/zoom-links/zoom-links-admin.component';
 import { AllDonationsComponent } from './features/admin/donations/all-donations.component';
+import { PaymentPlansAdminComponent } from './features/admin/payment-plans/payment-plans-admin.component';
+import { PaymentPlanPortalComponent } from './features/payment-plan/payment-plan-portal.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -34,6 +36,8 @@ export const routes: Routes = [
       { path: 'worship', component: WorshipComponent },
       { path: 'admin/zoom-links', component: ZoomLinksAdminComponent, canActivate: [authGuard, adminGuard] },
       { path: 'admin/donations', component: AllDonationsComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'admin/payment-plans', component: PaymentPlansAdminComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'plan/:token', component: PaymentPlanPortalComponent },
       { path: 'theme-poll', component: ThemePollComponent, canActivate: [authGuard, adminGuard] },
       { path: 'payment', redirectTo: 'registration', pathMatch: 'full' },
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, adminGuard] },

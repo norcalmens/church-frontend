@@ -52,6 +52,7 @@ interface SearchItem {
               <a routerLink="/admin/dashboard" (click)="adminMenuOpen = false"><i class="pi pi-chart-line"></i> Dashboard</a>
               <a routerLink="/admin/registrations" (click)="adminMenuOpen = false"><i class="pi pi-list"></i> View All Registrations</a>
               <a routerLink="/admin/donations" (click)="adminMenuOpen = false"><i class="pi pi-heart"></i> View All Donations</a>
+              <a routerLink="/admin/payment-plans" (click)="adminMenuOpen = false"><i class="pi pi-credit-card"></i> Payment Plans</a>
               <a routerLink="/admin/users" (click)="adminMenuOpen = false"><i class="pi pi-users"></i> Manage Users</a>
               <a routerLink="/admin/zoom-links" (click)="adminMenuOpen = false"><i class="pi pi-video"></i> Manage Zoom Links</a>
             </div>
@@ -282,6 +283,7 @@ export class TopbarComponent {
     { label: 'Worship', description: 'Zoom meetings for worship and fellowship', icon: 'pi-video', route: '/worship' },
     { label: 'Manage Zoom Links', description: 'Add, edit, or remove Worship Zoom meetings', icon: 'pi-video', route: '/admin/zoom-links', adminOnly: true },
     { label: 'All Donations', description: 'View every donation processed through the site', icon: 'pi-heart', route: '/admin/donations', adminOnly: true },
+    { label: 'Payment Plans', description: 'Manage installment payment plans for future retreats', icon: 'pi-credit-card', route: '/admin/payment-plans', adminOnly: true },
     { label: 'Merchandise', description: 'Official retreat gear and apparel', icon: 'pi-shopping-bag', route: '/merchandise', adminOnly: true },
     { label: 'Payment', description: 'Retreat registration and payment', icon: 'pi-credit-card', route: '/registration' },
     { label: 'Theme Poll', description: 'Vote on retreat theme', icon: 'pi-chart-bar', route: '/theme-poll', adminOnly: true },

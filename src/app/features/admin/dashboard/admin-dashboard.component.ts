@@ -26,6 +26,7 @@ import { RegistrationService } from '../../../services/registration.service';
         <div class="actions-grid">
           <a routerLink="/admin/registrations" class="action-card"><i class="pi pi-list"></i><span>View All Registrations</span></a>
           <a routerLink="/admin/donations" class="action-card"><i class="pi pi-heart"></i><span>View All Donations</span></a>
+          <a routerLink="/admin/payment-plans" class="action-card"><i class="pi pi-credit-card"></i><span>Payment Plans</span></a>
           <a routerLink="/admin/users" class="action-card"><i class="pi pi-users"></i><span>Manage Users</span></a>
           <a routerLink="/registration" class="action-card"><i class="pi pi-pencil"></i><span>New Registration</span></a>
         </div>
