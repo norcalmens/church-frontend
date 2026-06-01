@@ -15,6 +15,7 @@ import { UserManagementComponent } from './features/admin/user-management/user-m
 import { MerchandiseComponent } from './features/merchandise/merchandise.component';
 import { DonationsComponent } from './features/donations/donations.component';
 import { WorshipComponent } from './features/worship/worship.component';
+import { ItineraryComponent } from './features/itinerary/itinerary.component';
 import { ZoomLinksAdminComponent } from './features/admin/zoom-links/zoom-links-admin.component';
 import { AllDonationsComponent } from './features/admin/donations/all-donations.component';
 import { PaymentPlansAdminComponent } from './features/admin/payment-plans/payment-plans-admin.component';
@@ -31,6 +32,7 @@ export const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'registration', component: RetreatRegistrationComponent },
       { path: 'venue', component: VenueShowcaseComponent },
+      { path: 'itinerary', component: ItineraryComponent },
       { path: 'merchandise', component: MerchandiseComponent },
       { path: 'donations', component: DonationsComponent },
       { path: 'worship', component: WorshipComponent },

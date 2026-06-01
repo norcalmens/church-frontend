@@ -36,6 +36,8 @@ interface SearchItem {
            *ngIf="menuVisibility.isVisible('registration')">Register</a>
         <a routerLink="/venue" routerLinkActive="active"
            *ngIf="menuVisibility.isVisible('venue')">Venue</a>
+        <a routerLink="/itinerary" routerLinkActive="active"
+           *ngIf="menuVisibility.isVisible('itinerary')">Itinerary</a>
         <a routerLink="/worship" routerLinkActive="active"
            *ngIf="menuVisibility.isVisible('worship')">Worship</a>
         <a routerLink="/donations" routerLinkActive="active" class="donate-link"
@@ -279,6 +281,7 @@ export class TopbarComponent {
     { label: 'Home', description: 'Main landing page', icon: 'pi-home', route: '/' },
     { label: 'Registration', description: 'Register for the retreat and pay', icon: 'pi-pencil', route: '/registration' },
     { label: 'Venue', description: 'Alliance Redwoods venue details', icon: 'pi-map-marker', route: '/venue' },
+    { label: 'Itinerary', description: 'Draft retreat schedule (subject to change)', icon: 'pi-calendar', route: '/itinerary' },
     { label: 'Donate', description: 'Make a donation to support the retreat', icon: 'pi-heart', route: '/donations' },
     { label: 'Worship', description: 'Zoom meetings for worship and fellowship', icon: 'pi-video', route: '/worship' },
     { label: 'Manage Zoom Links', description: 'Add, edit, or remove Worship Zoom meetings', icon: 'pi-video', route: '/admin/zoom-links', adminOnly: true },
