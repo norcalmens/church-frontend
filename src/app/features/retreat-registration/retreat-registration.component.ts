@@ -20,8 +20,6 @@ import { AuthService } from '../../core/auth/auth.service';
 import { Attendee, RetreatDay } from '../../core/models/attendee.model';
 import { Stripe, StripeCardElement } from '@stripe/stripe-js';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import * as GeocoderAutocomplete from '@geoapify/geocoder-autocomplete';
 
 const FULL_RETREAT_PRICE = 248;
 const PER_DAY_PRICE = 85;
@@ -62,9 +60,6 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
   private cardElement: StripeCardElement | null = null;
   cardError = '';
   cardComplete = false;
-  private autocomplete: any;
-  geoapifyEnabled = !!environment.geoapifyApiKey;
-  addressSelected = false;
 
   readonly fullRetreatPrice = FULL_RETREAT_PRICE;
   readonly perDayPrice = PER_DAY_PRICE;
@@ -169,7 +164,6 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
 
   async ngAfterViewInit(): Promise<void> {
     if (!this.canRegister) return;
-    setTimeout(() => this.initGeoapify(), 0);
     try {
       this.stripe = await this.stripeService.getStripe();
     } catch {
@@ -204,43 +198,6 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
     if (this.cardElement) {
       this.cardElement.destroy();
     }
-  }
-
-  private initGeoapify(): void {
-    const apiKey = environment.geoapifyApiKey;
-    if (!apiKey) return;
-    const container = document.getElementById('address-autocomplete');
-    if (!container) return;
-    this.autocomplete = new GeocoderAutocomplete.GeocoderAutocomplete(container, apiKey, {
-      placeholder: 'Start typing an address...'
-    });
-    this.autocomplete.addFilterByCountry(['us']);
-    this.autocomplete.on('select', (location: any) => {
-      if (location?.properties) {
-        const p = location.properties;
-        const streetAddress = p.address_line1 || [p.housenumber, p.street].filter(Boolean).join(' ');
-        this.ngZone.run(() => {
-          this.registrationForm.patchValue({
-            address: streetAddress,
-            city: p.city || p.town || p.village || '',
-            state: p.state_code?.toUpperCase() || p.state || '',
-            zipCode: p.postcode || ''
-          });
-        });
-        this.autocomplete.setValue(streetAddress);
-        this.addressSelected = true;
-      } else {
-        this.ngZone.run(() => {
-          this.addressSelected = false;
-          this.registrationForm.patchValue({
-            address: '',
-            city: '',
-            state: '',
-            zipCode: ''
-          });
-        });
-      }
-    });
   }
 
   addAttendee(): void {

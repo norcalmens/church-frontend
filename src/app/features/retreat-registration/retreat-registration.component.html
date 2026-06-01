@@ -47,16 +47,10 @@
       <div class="field"><label>Last Name *</label><input type="text" pInputText formControlName="lastName" class="w-full" /></div>
       <div class="field"><label>Email *</label><input type="email" pInputText formControlName="email" class="w-full" /></div>
       <div class="field"><label>Phone *</label><p-inputMask formControlName="phone" mask="(999) 999-9999" placeholder="(555) 123-4567" styleClass="w-full"></p-inputMask></div>
-      <div class="field address-field" [class.full-width]="geoapifyEnabled"><label>Address *</label>
-        <div id="address-autocomplete" class="w-full" *ngIf="geoapifyEnabled"></div>
-        <input *ngIf="!geoapifyEnabled" type="text" pInputText formControlName="address" class="w-full" />
-        <input type="hidden" formControlName="address" *ngIf="geoapifyEnabled" />
-        <small *ngIf="geoapifyEnabled" class="address-hint"><i class="pi pi-info-circle"></i> If you see your address in the list but it still won't validate, try spelling out the street suffix in full &mdash; e.g. <strong>Circle</strong> instead of <em>Cir</em>, <strong>Street</strong> instead of <em>St</em>, <strong>Avenue</strong> instead of <em>Ave</em>.</small>
-        <small *ngIf="geoapifyEnabled" class="geoapify-attribution">Powered by <a href="https://www.geoapify.com/" target="_blank" rel="noopener">Geoapify</a></small>
-      </div>
-      <div class="field"><label>City *</label><input type="text" pInputText formControlName="city" class="w-full" [readonly]="addressSelected" [class.autofilled]="addressSelected" /></div>
-      <div class="field"><label>State *</label><input type="text" pInputText formControlName="state" class="w-full" [readonly]="addressSelected" [class.autofilled]="addressSelected" /></div>
-      <div class="field"><label>Zip Code *</label><input type="text" pInputText formControlName="zipCode" class="w-full" [readonly]="addressSelected" [class.autofilled]="addressSelected" /></div>
+      <div class="field"><label>Address *</label><input type="text" pInputText formControlName="address" class="w-full" placeholder="123 Main St" /></div>
+      <div class="field"><label>City *</label><input type="text" pInputText formControlName="city" class="w-full" /></div>
+      <div class="field"><label>State *</label><input type="text" pInputText formControlName="state" class="w-full" maxlength="2" placeholder="CA" /></div>
+      <div class="field"><label>Zip Code *</label><input type="text" pInputText formControlName="zipCode" class="w-full" /></div>
       <div class="field"><label>Congregation</label><input type="text" pInputText formControlName="congregation" class="w-full" placeholder="e.g., Community Church of Christ" /></div>
     </div>
   </p-card>
