@@ -28,6 +28,39 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
   p { font-size: 1.1rem; margin: 0; opacity: 0.9; }
 }
 
+// Help banner — "Trouble registering? Call Bro. Washington..."
+.help-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #f0e6d0 0%, #faf2dc 100%);
+  border: 1px solid #e8a832;
+  border-left: 4px solid #d4782f;
+  border-radius: 10px;
+  color: #1a3a4a;
+  box-shadow: 0 2px 8px rgba(26, 58, 74, 0.06);
+
+  > i {
+    font-size: 1.4rem;
+    color: #d4782f;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .help-banner-text {
+    strong { color: #1a3a4a; font-size: 1.02rem; display: block; margin-bottom: 0.2rem; }
+    p { margin: 0; line-height: 1.55; color: #1a3a4a; }
+    a {
+      color: #d4782f;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(212, 120, 47, 0.5);
+      &:hover { color: #b8651f; border-bottom-color: #b8651f; }
+    }
+  }
+}
+
 // Testing banner
 .testing-banner {
   background: linear-gradient(135deg, rgba($warm-amber, 0.1) 0%, rgba($sunset-orange, 0.08) 100%);
