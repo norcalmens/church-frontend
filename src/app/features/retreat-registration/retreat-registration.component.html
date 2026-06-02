@@ -26,15 +26,6 @@
     <p class="header-pricing-sub">Linen &amp; towel package $25 (or $5/item) &middot; Single-day meals $50 (2) / $65 (3)</p>
   </div>
 
-  <!-- Help banner -->
-  <div class="help-banner" role="note">
-    <i class="pi pi-phone"></i>
-    <div class="help-banner-text">
-      <strong>Trouble registering?</strong>
-      <p>Call <strong>Bro. Washington</strong> at <a href="tel:+17076563789">(707) 656-3789</a> &mdash; he's happy to walk you through any step of the process.</p>
-    </div>
-  </div>
-
   <!-- Admin Testing Mode Banner -->
   <div class="testing-banner" *ngIf="testingMode && isAdmin">
     <div class="testing-banner-content">
@@ -270,6 +261,15 @@
               [disabled]="!agreedToTerms || attendees.length === 0 || !cardReady || registrationForm.invalid"
               (click)="submitRegistration()"></button>
     </p-card>
+
+    <!-- Help banner — placed at the bottom, where people are most likely to be stuck -->
+    <div class="help-banner" role="note">
+      <i class="pi pi-phone"></i>
+      <div class="help-banner-text">
+        <strong>Trouble registering?</strong>
+        <p>Call <strong>Bro. Washington</strong> at <a href="tel:+17076563789">(707) 656-3789</a> &mdash; he's happy to walk you through any step of the process.</p>
+      </div>
+    </div>
   </ng-container>
 
 </div>
