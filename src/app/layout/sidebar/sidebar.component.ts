@@ -30,6 +30,18 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
            *ngIf="menuVisibility.isVisible('venue')">
           <i class="pi pi-map"></i> Venue
         </a>
+        <a routerLink="/itinerary" routerLinkActive="active" (click)="close()"
+           *ngIf="menuVisibility.isVisible('itinerary')">
+          <i class="pi pi-calendar"></i> Itinerary
+        </a>
+        <a routerLink="/worship" routerLinkActive="active" (click)="close()"
+           *ngIf="menuVisibility.isVisible('worship')">
+          <i class="pi pi-video"></i> Worship
+        </a>
+        <a routerLink="/donations" routerLinkActive="active" class="donate-link" (click)="close()"
+           *ngIf="menuVisibility.isVisible('donations')">
+          <i class="pi pi-heart"></i> Donate
+        </a>
         <ng-container *ngIf="authService.isAdmin()">
           <div class="sidebar-divider"></div>
           <div class="sidebar-section-title">Admin</div>
@@ -40,6 +52,26 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
           <a routerLink="/admin/registrations" routerLinkActive="active" (click)="close()"
              *ngIf="menuVisibility.isVisible('admin/registrations')">
             <i class="pi pi-list"></i> All Registrations
+          </a>
+          <a routerLink="/admin/donations" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('admin/donations')">
+            <i class="pi pi-heart"></i> All Donations
+          </a>
+          <a routerLink="/admin/payment-plans" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('admin/payment-plans')">
+            <i class="pi pi-credit-card"></i> Payment Plans
+          </a>
+          <a routerLink="/admin/users" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('admin/users')">
+            <i class="pi pi-users"></i> Manage Users
+          </a>
+          <a routerLink="/admin/zoom-links" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('admin/zoom-links')">
+            <i class="pi pi-video"></i> Manage Zoom Links
+          </a>
+          <a routerLink="/merchandise" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('merchandise')">
+            <i class="pi pi-shopping-bag"></i> Merch
           </a>
           <a routerLink="/theme-poll" routerLinkActive="active" (click)="close()"
              *ngIf="menuVisibility.isVisible('theme-poll')">
@@ -64,6 +96,11 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
         i { width: 20px; text-align: center; color: #1a3a4a; }
         &:hover { background: rgba(26, 58, 74, 0.08); }
         &.active { background: rgba(26, 58, 74, 0.12); color: #1a3a4a; font-weight: 600; }
+      }
+      a.donate-link {
+        background: #d4782f; color: #fff; font-weight: 700; margin-top: 0.35rem;
+        i { color: #fff; }
+        &:hover, &.active { background: #b8651f; color: #fff; i { color: #fff; } }
       }
     }
     .sidebar-divider { height: 1px; background: #e0e0e0; margin: 0.75rem 0; }
