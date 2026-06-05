@@ -14,13 +14,22 @@ export interface MenuItem {
 }
 
 export const MENU_ITEMS: MenuItem[] = [
-  { key: 'home', label: 'Home', icon: 'pi-home', adminOnly: false },
-  { key: 'registration', label: 'Register', icon: 'pi-pencil', adminOnly: false },
-  { key: 'venue', label: 'Venue', icon: 'pi-map', adminOnly: false },
-  { key: 'payment', label: 'Payment', icon: 'pi-credit-card', adminOnly: false },
-  { key: 'theme-poll', label: 'Theme Poll', icon: 'pi-chart-bar', adminOnly: true },
-  { key: 'admin/dashboard', label: 'Dashboard', icon: 'pi-chart-line', adminOnly: true },
-  { key: 'admin/registrations', label: 'All Registrations', icon: 'pi-list', adminOnly: true },
+  // Public nav
+  { key: 'home',                 label: 'Home',               icon: 'pi-home',          adminOnly: false },
+  { key: 'registration',         label: 'Register',           icon: 'pi-pencil',        adminOnly: false },
+  { key: 'venue',                label: 'Venue',              icon: 'pi-map',           adminOnly: false },
+  { key: 'itinerary',            label: 'Itinerary',          icon: 'pi-calendar',      adminOnly: false },
+  { key: 'worship',              label: 'Worship',            icon: 'pi-video',         adminOnly: false },
+  { key: 'donations',            label: 'Donate',             icon: 'pi-heart',         adminOnly: false },
+  // Admin-only top-level + admin dropdown
+  { key: 'merchandise',          label: 'Merch',              icon: 'pi-shopping-bag',  adminOnly: true  },
+  { key: 'theme-poll',           label: 'Theme Poll',         icon: 'pi-chart-bar',     adminOnly: true  },
+  { key: 'admin/dashboard',      label: 'Dashboard',          icon: 'pi-chart-line',    adminOnly: true  },
+  { key: 'admin/registrations',  label: 'All Registrations',  icon: 'pi-list',          adminOnly: true  },
+  { key: 'admin/donations',      label: 'All Donations',      icon: 'pi-heart',         adminOnly: true  },
+  { key: 'admin/payment-plans',  label: 'Payment Plans',      icon: 'pi-credit-card',   adminOnly: true  },
+  { key: 'admin/users',          label: 'Manage Users',       icon: 'pi-users',         adminOnly: true  },
+  { key: 'admin/zoom-links',     label: 'Manage Zoom Links',  icon: 'pi-video',         adminOnly: true  },
 ];
 
 interface MenuCheckboxItem extends MenuItem {

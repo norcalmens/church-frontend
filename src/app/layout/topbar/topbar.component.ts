@@ -51,12 +51,18 @@ interface SearchItem {
           <a routerLink="/admin/dashboard" routerLinkActive="active" class="admin-nav-link">Admin <i class="pi pi-chevron-down chevron-icon"></i></a>
           <div class="admin-dropdown-menu" *ngIf="adminMenuOpen">
             <div class="admin-dropdown-panel">
-              <a routerLink="/admin/dashboard" (click)="adminMenuOpen = false"><i class="pi pi-chart-line"></i> Dashboard</a>
-              <a routerLink="/admin/registrations" (click)="adminMenuOpen = false"><i class="pi pi-list"></i> View All Registrations</a>
-              <a routerLink="/admin/donations" (click)="adminMenuOpen = false"><i class="pi pi-heart"></i> View All Donations</a>
-              <a routerLink="/admin/payment-plans" (click)="adminMenuOpen = false"><i class="pi pi-credit-card"></i> Payment Plans</a>
-              <a routerLink="/admin/users" (click)="adminMenuOpen = false"><i class="pi pi-users"></i> Manage Users</a>
-              <a routerLink="/admin/zoom-links" (click)="adminMenuOpen = false"><i class="pi pi-video"></i> Manage Zoom Links</a>
+              <a routerLink="/admin/dashboard" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/dashboard')"><i class="pi pi-chart-line"></i> Dashboard</a>
+              <a routerLink="/admin/registrations" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/registrations')"><i class="pi pi-list"></i> View All Registrations</a>
+              <a routerLink="/admin/donations" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/donations')"><i class="pi pi-heart"></i> View All Donations</a>
+              <a routerLink="/admin/payment-plans" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/payment-plans')"><i class="pi pi-credit-card"></i> Payment Plans</a>
+              <a routerLink="/admin/users" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/users')"><i class="pi pi-users"></i> Manage Users</a>
+              <a routerLink="/admin/zoom-links" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/zoom-links')"><i class="pi pi-video"></i> Manage Zoom Links</a>
             </div>
           </div>
         </div>
