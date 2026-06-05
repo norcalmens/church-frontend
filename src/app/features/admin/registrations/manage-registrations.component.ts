@@ -41,6 +41,7 @@ import { Registration } from '../../../core/models/registration.model';
               <th pSortableColumn="firstName">Name <p-sortIcon field="firstName"></p-sortIcon></th>
               <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
               <th>Phone</th>
+              <th pSortableColumn="congregation">Congregation <p-sortIcon field="congregation"></p-sortIcon></th>
               <th>Attendees</th>
               <th pSortableColumn="totalAmount">Total <p-sortIcon field="totalAmount"></p-sortIcon></th>
               <th pSortableColumn="paymentStatus">Status <p-sortIcon field="paymentStatus"></p-sortIcon></th>
@@ -53,6 +54,7 @@ import { Registration } from '../../../core/models/registration.model';
               <td>{{ reg.firstName }} {{ reg.lastName }}</td>
               <td>{{ reg.email }}</td>
               <td>{{ reg.phone }}</td>
+              <td>{{ reg.congregation || '—' }}</td>
               <td>{{ reg.attendees?.length || 0 }}</td>
               <td>\${{ reg.totalAmount }}</td>
               <td><p-tag [value]="reg.paymentStatus || 'pending'" [severity]="getStatusSeverity(reg.paymentStatus)"></p-tag></td>
@@ -60,7 +62,7 @@ import { Registration } from '../../../core/models/registration.model';
               <td><button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm" (click)="confirmDelete(reg)"></button></td>
             </tr>
           </ng-template>
-          <ng-template pTemplate="emptymessage"><tr><td colspan="8" style="text-align: center; padding: 2rem; color: #999;">No registrations found.</td></tr></ng-template>
+          <ng-template pTemplate="emptymessage"><tr><td colspan="9" style="text-align: center; padding: 2rem; color: #999;">No registrations found.</td></tr></ng-template>
         </p-table>
       </p-card>
     </div>
@@ -101,7 +103,12 @@ export class ManageRegistrationsComponent implements OnInit {
 
   filterRegistrations(): void {
     const term = this.searchTerm.toLowerCase();
-    this.filteredRegistrations = this.registrations.filter(r => r.firstName.toLowerCase().includes(term) || r.lastName.toLowerCase().includes(term) || r.email.toLowerCase().includes(term));
+    this.filteredRegistrations = this.registrations.filter(r =>
+      r.firstName.toLowerCase().includes(term) ||
+      r.lastName.toLowerCase().includes(term) ||
+      r.email.toLowerCase().includes(term) ||
+      (r.congregation || '').toLowerCase().includes(term)
+    );
   }
 
   getStatusSeverity(status: string | undefined): string {
