@@ -25,15 +25,6 @@ interface Day {
   template: `
     <div class="itinerary-container">
 
-      <!-- DRAFT banner — top -->
-      <div class="draft-banner" role="alert">
-        <i class="pi pi-exclamation-triangle"></i>
-        <div>
-          <strong>DRAFT — Not a final document</strong>
-          <p>This itinerary is a tentative working schedule and is subject to change. Final times, sessions, and speakers will be confirmed closer to the retreat.</p>
-        </div>
-      </div>
-
       <div class="hero-section">
         <i class="pi pi-calendar"></i>
         <h1>Retreat Itinerary</h1>
@@ -88,15 +79,16 @@ interface Day {
         </ul>
       </div>
 
-      <!-- Footer note -->
-      <div class="draft-footer">
-        <i class="pi pi-info-circle"></i>
+      <!-- Next steps -->
+      <div class="next-steps">
+        <i class="pi pi-arrow-right"></i>
         <div>
-          <strong>Remember &mdash; this is a draft.</strong>
-          <p>Times, sessions, meals, and speaker assignments may shift. Check back closer to June 11 for the final schedule, or reach out to the retreat team with questions.</p>
+          <strong>Ready for June 11?</strong>
+          <p>If you haven't already, register, review the venue, and double-check your route. Questions? Call <strong>Bro. Washington</strong> at <a href="tel:+17076563789">(707) 656-3789</a>.</p>
           <div class="cta-row">
             <a routerLink="/registration"><button pButton label="Register Now" icon="pi pi-pencil"></button></a>
             <a routerLink="/venue"><button pButton label="See the Venue" icon="pi pi-map" class="p-button-outlined"></button></a>
+            <a routerLink="/directions"><button pButton label="Get Directions" icon="pi pi-map-marker" class="p-button-outlined"></button></a>
           </div>
         </div>
       </div>
@@ -105,17 +97,19 @@ interface Day {
   styles: [`
     .itinerary-container { max-width: 920px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.25rem; }
 
-    /* DRAFT banner — top + footer */
-    .draft-banner, .draft-footer {
+    /* Next-steps footer */
+    .next-steps {
       display: flex; gap: 1rem; align-items: flex-start;
-      background: repeating-linear-gradient(45deg, #fff7e0, #fff7e0 12px, #fff0c4 12px, #fff0c4 24px);
-      border: 2px solid #e8a832; border-radius: 12px; padding: 1rem 1.25rem; color: #6e4b08;
-      box-shadow: 0 2px 8px rgba(232, 168, 50, 0.18);
-      i { font-size: 1.6rem; color: #b8651f; flex-shrink: 0; }
-      strong { display: block; font-size: 1.05rem; color: #8a4a08; letter-spacing: 0.03em; text-transform: uppercase; }
-      p { margin: 0.35rem 0 0; color: #6e4b08; line-height: 1.55; }
+      background: #fff; border: 1px solid #e6e6e6; border-left: 4px solid #d4782f;
+      border-radius: 12px; padding: 1.25rem 1.4rem; color: #495057;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      i { font-size: 1.4rem; color: #d4782f; flex-shrink: 0; margin-top: 0.15rem; }
+      strong { display: block; font-size: 1.1rem; color: #1a3a4a; }
+      p { margin: 0.35rem 0 0; color: #495057; line-height: 1.55;
+        a { color: #b8651f; font-weight: 600; }
+      }
     }
-    .draft-footer .cta-row { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;
+    .next-steps .cta-row { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;
       a { text-decoration: none; }
     }
 

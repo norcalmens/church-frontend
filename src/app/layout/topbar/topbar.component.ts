@@ -319,7 +319,7 @@ export class TopbarComponent {
     { label: 'Home', description: 'Main landing page', icon: 'pi-home', route: '/' },
     { label: 'Registration', description: 'Register for the retreat and pay', icon: 'pi-pencil', route: '/registration' },
     { label: 'Venue', description: 'Alliance Redwoods venue details', icon: 'pi-map-marker', route: '/venue' },
-    { label: 'Itinerary', description: 'Draft retreat schedule (subject to change)', icon: 'pi-calendar', route: '/itinerary' },
+    { label: 'Itinerary', description: 'Retreat schedule — speakers, sessions, and meals', icon: 'pi-calendar', route: '/itinerary' },
     { label: 'Directions', description: 'How to drive to Alliance Redwoods — look for the Sonoma Zipline sign', icon: 'pi-map-marker', route: '/directions' },
     { label: 'Feedback', description: 'Share how the retreat went', icon: 'pi-comments', route: '/feedback' },
     { label: 'QR Codes', description: 'Printable QR codes for itinerary, feedback, donate, etc.', icon: 'pi-qrcode', route: '/qr-codes' },
