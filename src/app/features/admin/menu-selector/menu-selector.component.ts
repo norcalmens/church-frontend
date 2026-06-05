@@ -48,6 +48,7 @@ interface MenuCheckboxItem extends MenuItem {
               [resizable]="false"
               [appendTo]="'body'"
               [style]="{width: '450px'}"
+              [breakpoints]="{'640px': '95vw'}"
               styleClass="menu-selector-dialog">
 
       <p class="text-sm text-color-secondary mb-3">
@@ -89,28 +90,46 @@ interface MenuCheckboxItem extends MenuItem {
       </ng-container>
 
       <ng-template pTemplate="footer">
-        <div class="flex justify-content-between w-full">
-          <div>
+        <div class="menu-selector-footer">
+          <div class="footer-actions">
             <button pButton label="Hide All" icon="pi pi-eye-slash"
-                    class="p-button-outlined p-button-danger p-button-sm mr-2"
+                    class="p-button-outlined p-button-danger p-button-sm"
                     (click)="onHideAll()"></button>
             <button pButton label="Show All" icon="pi pi-eye"
-                    class="p-button-outlined p-button-success p-button-sm mr-2"
+                    class="p-button-outlined p-button-success p-button-sm"
                     (click)="onShowAll()"></button>
             <button pButton label="Reset" icon="pi pi-refresh"
                     class="p-button-outlined p-button-sm"
                     (click)="onReset()"></button>
           </div>
           <button pButton label="Close" icon="pi pi-times"
-                  class="p-button-text p-button-sm"
+                  class="p-button-text p-button-sm close-btn"
                   (click)="visible = false"></button>
         </div>
       </ng-template>
     </p-dialog>
   `,
   styles: [`
-    :host ::ng-deep .menu-selector-dialog .p-dialog-content {
-      padding-bottom: 0;
+    :host ::ng-deep .menu-selector-dialog {
+      .p-dialog-content {
+        padding-bottom: 0;
+        max-height: 65vh;
+        overflow-y: auto;
+      }
+      .p-dialog-footer { padding: 0.75rem 1.25rem; }
+    }
+    .menu-selector-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 0.5rem; flex-wrap: wrap; width: 100%;
+    }
+    .footer-actions {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+    }
+    @media (max-width: 640px) {
+      .menu-selector-footer { justify-content: stretch; }
+      .footer-actions { flex: 1; }
+      .footer-actions ::ng-deep .p-button { flex: 1; min-width: 0; }
+      .close-btn { width: 100%; }
     }
   `]
 })
