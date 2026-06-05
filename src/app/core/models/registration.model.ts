@@ -17,6 +17,7 @@ export interface Registration {
   emergencyPhone: string;
   specialRequests?: string;
   agreedToTerms: boolean;
+  speaker?: boolean;
   stripePaymentId?: string;
   paymentStatus?: string;
   totalAmount?: number;

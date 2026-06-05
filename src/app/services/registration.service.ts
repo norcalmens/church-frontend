@@ -58,6 +58,12 @@ export class RegistrationService {
     );
   }
 
+  setSpeaker(id: number, speaker: boolean): Observable<Registration> {
+    return this.http.patch<ApiResponse<Registration>>(`/api/registrations/admin/${id}/speaker`, { speaker }).pipe(
+      map(res => res.data)
+    );
+  }
+
   getAllRegistrations(): Observable<Registration[]> {
     return this.http.get<ApiResponse<Registration[]>>('/api/registrations/all').pipe(
       map(res => res.data)

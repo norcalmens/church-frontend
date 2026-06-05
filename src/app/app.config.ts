@@ -5,11 +5,12 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
 import { apiUrlInterceptor } from './core/auth/api-url.interceptor';
 import { jwtInterceptor } from './core/auth/jwt.interceptor';
+import { backendErrorInterceptor } from './core/auth/backend-error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimations(),
-    provideHttpClient(withInterceptors([apiUrlInterceptor, jwtInterceptor]))
+    provideHttpClient(withInterceptors([apiUrlInterceptor, jwtInterceptor, backendErrorInterceptor]))
   ]
 };

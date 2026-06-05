@@ -42,6 +42,7 @@ import { Registration } from '../../../core/models/registration.model';
               <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
               <th>Phone</th>
               <th pSortableColumn="congregation">Congregation <p-sortIcon field="congregation"></p-sortIcon></th>
+              <th pSortableColumn="speaker" style="width: 90px; text-align: center;">Speaker <p-sortIcon field="speaker"></p-sortIcon></th>
               <th>Attendees</th>
               <th pSortableColumn="totalAmount">Total <p-sortIcon field="totalAmount"></p-sortIcon></th>
               <th pSortableColumn="paymentStatus">Status <p-sortIcon field="paymentStatus"></p-sortIcon></th>
@@ -55,6 +56,14 @@ import { Registration } from '../../../core/models/registration.model';
               <td>{{ reg.email }}</td>
               <td>{{ reg.phone }}</td>
               <td>{{ reg.congregation || '—' }}</td>
+              <td style="text-align: center;">
+                <button type="button" class="speaker-toggle" [class.is-speaker]="reg.speaker"
+                        (click)="toggleSpeaker(reg)"
+                        [attr.aria-label]="reg.speaker ? 'Unmark as speaker' : 'Mark as speaker'"
+                        [title]="reg.speaker ? 'Speaker — click to remove' : 'Click to mark as speaker'">
+                  <i class="pi" [class.pi-star-fill]="reg.speaker" [class.pi-star]="!reg.speaker"></i>
+                </button>
+              </td>
               <td>{{ reg.attendees?.length || 0 }}</td>
               <td>\${{ reg.totalAmount }}</td>
               <td><p-tag [value]="reg.paymentStatus || 'pending'" [severity]="getStatusSeverity(reg.paymentStatus)"></p-tag></td>
@@ -62,7 +71,7 @@ import { Registration } from '../../../core/models/registration.model';
               <td><button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm" (click)="confirmDelete(reg)"></button></td>
             </tr>
           </ng-template>
-          <ng-template pTemplate="emptymessage"><tr><td colspan="9" style="text-align: center; padding: 2rem; color: #999;">No registrations found.</td></tr></ng-template>
+          <ng-template pTemplate="emptymessage"><tr><td colspan="10" style="text-align: center; padding: 2rem; color: #999;">No registrations found.</td></tr></ng-template>
         </p-table>
       </p-card>
     </div>
@@ -82,6 +91,15 @@ import { Registration } from '../../../core/models/registration.model';
     .csv-btn { margin-left: auto; }
     ::ng-deep .registrations-container .p-card { border-radius: 12px; overflow: hidden; .p-card-header { padding: 0; border-bottom: none; } .p-card-body { padding: 1.5rem; } .p-card-content { padding: 0; } }
     ::ng-deep .p-datatable .p-datatable-thead > tr > th { background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%); color: #f0e6d0; }
+    .speaker-toggle {
+      background: transparent; border: none; cursor: pointer; padding: 0.25rem 0.5rem;
+      border-radius: 6px; transition: all 0.15s;
+      i { font-size: 1.25rem; color: #ccc; transition: color 0.15s; }
+      &:hover { background: rgba(232, 168, 50, 0.12);
+        i { color: #e8a832; }
+      }
+      &.is-speaker i { color: #e8a832; text-shadow: 0 0 8px rgba(232, 168, 50, 0.4); }
+    }
   `]
 })
 export class ManageRegistrationsComponent implements OnInit {
@@ -107,8 +125,30 @@ export class ManageRegistrationsComponent implements OnInit {
       r.firstName.toLowerCase().includes(term) ||
       r.lastName.toLowerCase().includes(term) ||
       r.email.toLowerCase().includes(term) ||
-      (r.congregation || '').toLowerCase().includes(term)
+      (r.congregation || '').toLowerCase().includes(term) ||
+      (r.speaker && 'speaker'.includes(term))
     );
+  }
+
+  toggleSpeaker(reg: Registration): void {
+    if (!reg.id) return;
+    const newValue = !reg.speaker;
+    // Optimistic update for snappy UX
+    reg.speaker = newValue;
+    this.registrationService.setSpeaker(reg.id, newValue).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: newValue ? 'success' : 'info',
+          summary: newValue ? 'Marked as speaker' : 'Speaker flag removed',
+          detail: `${reg.firstName} ${reg.lastName}`,
+          life: 2000,
+        });
+      },
+      error: () => {
+        reg.speaker = !newValue;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update speaker flag' });
+      }
+    });
   }
 
   getStatusSeverity(status: string | undefined): string {
@@ -128,6 +168,7 @@ export class ManageRegistrationsComponent implements OnInit {
       ['State', r => r.state],
       ['Zip', r => r.zipCode],
       ['Congregation', r => r.congregation],
+      ['Speaker', r => r.speaker ? 'Yes' : 'No'],
       ['Room Preference', r => r.roomPreference],
       ['Attendee Count', r => r.attendees?.length || 0],
       ['Attendees', r => (r.attendees || []).map(a => `${a.firstName} ${a.lastName} (${a.age})`).join('; ')],
