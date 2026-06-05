@@ -36,10 +36,27 @@ interface SearchItem {
            *ngIf="menuVisibility.isVisible('registration')">Register</a>
         <a routerLink="/venue" routerLinkActive="active"
            *ngIf="menuVisibility.isVisible('venue')">Venue</a>
+        <a routerLink="/directions" routerLinkActive="active"
+           *ngIf="menuVisibility.isVisible('directions')">Directions</a>
         <a routerLink="/itinerary" routerLinkActive="active"
            *ngIf="menuVisibility.isVisible('itinerary')">Itinerary</a>
         <a routerLink="/worship" routerLinkActive="active"
            *ngIf="menuVisibility.isVisible('worship')">Worship</a>
+        <div class="resources-dropdown"
+             *ngIf="menuVisibility.isVisible('qr-codes') || menuVisibility.isVisible('feedback')"
+             (mouseenter)="resourcesMenuOpen = true" (mouseleave)="resourcesMenuOpen = false">
+          <a class="resources-nav-link" (click)="resourcesMenuOpen = !resourcesMenuOpen">
+            Resources <i class="pi pi-chevron-down chevron-icon"></i>
+          </a>
+          <div class="dropdown-menu" *ngIf="resourcesMenuOpen">
+            <div class="dropdown-panel">
+              <a routerLink="/qr-codes" (click)="resourcesMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('qr-codes')"><i class="pi pi-qrcode"></i> QR Codes</a>
+              <a routerLink="/feedback" (click)="resourcesMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('feedback')"><i class="pi pi-comments"></i> Feedback</a>
+            </div>
+          </div>
+        </div>
         <a routerLink="/donations" routerLinkActive="active" class="donate-link"
            *ngIf="menuVisibility.isVisible('donations')">Donate</a>
         <a routerLink="/merchandise" routerLinkActive="active"
@@ -153,11 +170,11 @@ interface SearchItem {
         &.active { background: #b8651f; border-color: #b8651f; color: #fff; }
       }
     }
-    /* Admin Dropdown */
-    .admin-dropdown {
+    /* Dropdowns (Admin + Resources) */
+    .admin-dropdown, .resources-dropdown {
       position: relative;
     }
-    .admin-nav-link {
+    .admin-nav-link, .resources-nav-link {
       display: flex; align-items: center;
       color: rgba(240, 230, 208, 0.8); text-decoration: none;
       padding: 0.5rem 1rem; border-radius: 6px;
@@ -166,11 +183,11 @@ interface SearchItem {
       &.active { color: #e8a832; background: rgba(232, 168, 50, 0.15); }
       .chevron-icon { font-size: 0.65rem; margin-left: 0.35rem; }
     }
-    .admin-dropdown-menu {
+    .admin-dropdown-menu, .dropdown-menu {
       position: absolute; top: 100%; left: 0; padding-top: 0.35rem;
       min-width: 220px; z-index: 1050;
     }
-    .admin-dropdown-panel {
+    .admin-dropdown-panel, .dropdown-panel {
       background: white; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
       overflow: hidden;
       animation: slideDown 0.15s ease;
@@ -263,10 +280,24 @@ interface SearchItem {
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* Tighten nav padding on small laptops so all 9+ items fit without wrapping */
+    @media (max-width: 1100px) and (min-width: 769px) {
+      .topbar { padding: 0 1rem; }
+      .topbar-logo { font-size: 1.1rem;
+        i { font-size: 1.3rem; }
+      }
+      .topbar-nav { gap: 0.15rem;
+        a { padding: 0.5rem 0.6rem; font-size: 0.92rem; }
+      }
+      .admin-nav-link, .resources-nav-link { padding: 0.5rem 0.6rem; font-size: 0.92rem; }
+      .topbar-right { gap: 0.35rem; }
+    }
+
     @media (max-width: 768px) {
       .mobile-menu-btn { display: block; }
       .topbar-nav { display: none; }
       .user-greeting { display: none; }
+      .topbar-logo span { display: none; }
       .search-overlay { padding-top: 70px; padding-left: 1rem; padding-right: 1rem; }
     }
   `]
@@ -280,6 +311,7 @@ export class TopbarComponent {
 
   searchOpen = false;
   adminMenuOpen = false;
+  resourcesMenuOpen = false;
   searchQuery = '';
   filteredItems: SearchItem[] = [];
 
@@ -288,6 +320,9 @@ export class TopbarComponent {
     { label: 'Registration', description: 'Register for the retreat and pay', icon: 'pi-pencil', route: '/registration' },
     { label: 'Venue', description: 'Alliance Redwoods venue details', icon: 'pi-map-marker', route: '/venue' },
     { label: 'Itinerary', description: 'Draft retreat schedule (subject to change)', icon: 'pi-calendar', route: '/itinerary' },
+    { label: 'Directions', description: 'How to drive to Alliance Redwoods — look for the Sonoma Zipline sign', icon: 'pi-map-marker', route: '/directions' },
+    { label: 'Feedback', description: 'Share how the retreat went', icon: 'pi-comments', route: '/feedback' },
+    { label: 'QR Codes', description: 'Printable QR codes for itinerary, feedback, donate, etc.', icon: 'pi-qrcode', route: '/qr-codes' },
     { label: 'Donate', description: 'Make a donation to support the retreat', icon: 'pi-heart', route: '/donations' },
     { label: 'Worship', description: 'Zoom meetings for worship and fellowship', icon: 'pi-video', route: '/worship' },
     { label: 'Manage Zoom Links', description: 'Add, edit, or remove Worship Zoom meetings', icon: 'pi-video', route: '/admin/zoom-links', adminOnly: true },

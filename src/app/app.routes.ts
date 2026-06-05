@@ -16,6 +16,9 @@ import { MerchandiseComponent } from './features/merchandise/merchandise.compone
 import { DonationsComponent } from './features/donations/donations.component';
 import { WorshipComponent } from './features/worship/worship.component';
 import { ItineraryComponent } from './features/itinerary/itinerary.component';
+import { DirectionsComponent } from './features/directions/directions.component';
+import { FeedbackComponent } from './features/feedback/feedback.component';
+import { QrCodesComponent } from './features/qr-codes/qr-codes.component';
 import { ZoomLinksAdminComponent } from './features/admin/zoom-links/zoom-links-admin.component';
 import { AllDonationsComponent } from './features/admin/donations/all-donations.component';
 import { PaymentPlansAdminComponent } from './features/admin/payment-plans/payment-plans-admin.component';
@@ -32,7 +35,10 @@ export const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'registration', component: RetreatRegistrationComponent },
       { path: 'venue', component: VenueShowcaseComponent },
+      { path: 'directions', component: DirectionsComponent },
       { path: 'itinerary', component: ItineraryComponent },
+      { path: 'feedback', component: FeedbackComponent },
+      { path: 'qr-codes', component: QrCodesComponent },
       { path: 'merchandise', component: MerchandiseComponent },
       { path: 'donations', component: DonationsComponent },
       { path: 'worship', component: WorshipComponent },

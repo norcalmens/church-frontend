@@ -30,6 +30,10 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
            *ngIf="menuVisibility.isVisible('venue')">
           <i class="pi pi-map"></i> Venue
         </a>
+        <a routerLink="/directions" routerLinkActive="active" (click)="close()"
+           *ngIf="menuVisibility.isVisible('directions')">
+          <i class="pi pi-map-marker"></i> Directions
+        </a>
         <a routerLink="/itinerary" routerLinkActive="active" (click)="close()"
            *ngIf="menuVisibility.isVisible('itinerary')">
           <i class="pi pi-calendar"></i> Itinerary
@@ -38,6 +42,17 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
            *ngIf="menuVisibility.isVisible('worship')">
           <i class="pi pi-video"></i> Worship
         </a>
+        <ng-container *ngIf="menuVisibility.isVisible('qr-codes') || menuVisibility.isVisible('feedback')">
+          <div class="sidebar-section-title">Resources</div>
+          <a routerLink="/qr-codes" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('qr-codes')">
+            <i class="pi pi-qrcode"></i> QR Codes
+          </a>
+          <a routerLink="/feedback" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('feedback')">
+            <i class="pi pi-comments"></i> Feedback
+          </a>
+        </ng-container>
         <a routerLink="/donations" routerLinkActive="active" class="donate-link" (click)="close()"
            *ngIf="menuVisibility.isVisible('donations')">
           <i class="pi pi-heart"></i> Donate

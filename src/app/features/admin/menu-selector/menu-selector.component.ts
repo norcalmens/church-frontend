@@ -18,8 +18,11 @@ export const MENU_ITEMS: MenuItem[] = [
   { key: 'home',                 label: 'Home',               icon: 'pi-home',          adminOnly: false },
   { key: 'registration',         label: 'Register',           icon: 'pi-pencil',        adminOnly: false },
   { key: 'venue',                label: 'Venue',              icon: 'pi-map',           adminOnly: false },
+  { key: 'directions',           label: 'Directions',         icon: 'pi-map-marker',    adminOnly: false },
   { key: 'itinerary',            label: 'Itinerary',          icon: 'pi-calendar',      adminOnly: false },
   { key: 'worship',              label: 'Worship',            icon: 'pi-video',         adminOnly: false },
+  { key: 'qr-codes',             label: 'QR Codes',           icon: 'pi-qrcode',        adminOnly: false },
+  { key: 'feedback',             label: 'Feedback',           icon: 'pi-comments',      adminOnly: false },
   { key: 'donations',            label: 'Donate',             icon: 'pi-heart',         adminOnly: false },
   // Admin-only top-level + admin dropdown
   { key: 'merchandise',          label: 'Merch',              icon: 'pi-shopping-bag',  adminOnly: true  },
