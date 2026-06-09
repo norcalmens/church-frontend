@@ -14,7 +14,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { RegistrationService } from '../../services/registration.service';
+import { RegistrationService, Availability } from '../../services/registration.service';
 import { StripeService } from '../../services/stripe.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { Attendee, RetreatDay } from '../../core/models/attendee.model';
@@ -54,6 +54,16 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
   isSubmitting = false;
   agreedToTerms = false;
   paymentSuccess = false;
+
+  availability: Availability | null = null;
+
+  get isFull(): boolean { return !!this.availability?.isFull; }
+  get spacesLeft(): number { return this.availability?.spacesLeft ?? 0; }
+  get totalAttendees(): number { return this.availability?.totalAttendees ?? 0; }
+  get capacity(): number { return this.availability?.capacity ?? 35; }
+  get notEnoughSpaces(): boolean {
+    return !!this.availability && this.attendees.length > this.availability.spacesLeft;
+  }
 
   stripe: Stripe | null = null;
   stripeLoaded = false;
@@ -164,6 +174,7 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
 
   async ngAfterViewInit(): Promise<void> {
     if (!this.canRegister) return;
+    this.loadAvailability();
     try {
       this.stripe = await this.stripeService.getStripe();
     } catch {
@@ -198,6 +209,15 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
     if (this.cardElement) {
       this.cardElement.destroy();
     }
+  }
+
+  loadAvailability(): void {
+    this.registrationService.getAvailability().subscribe({
+      next: (a) => { this.availability = a; },
+      // If the call fails, just leave the form open -- backend will still
+      // reject an over-capacity submission.
+      error: () => {}
+    });
   }
 
   addAttendee(): void {

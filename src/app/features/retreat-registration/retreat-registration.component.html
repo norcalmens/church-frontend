@@ -26,6 +26,25 @@
     <p class="header-pricing-sub">Linen &amp; towel package $25 (or $5/item) &middot; Single-day meals $50 (2) / $65 (3)</p>
   </div>
 
+  <!-- Capacity counter -->
+  <div *ngIf="availability" class="capacity-banner"
+       [class.capacity-full]="isFull"
+       [class.capacity-low]="!isFull && spacesLeft <= 5"
+       role="status" aria-live="polite">
+    <i class="pi" [class.pi-users]="!isFull" [class.pi-times-circle]="isFull"></i>
+    <div class="capacity-body">
+      <ng-container *ngIf="isFull; else hasSpaces">
+        <strong>All spaces have been filled.</strong>
+        <p>Registration is closed &mdash; the retreat has reached its {{ capacity }}-person capacity. Call <a href="tel:+17076563789">(707) 656-3789</a> to ask about the waitlist.</p>
+      </ng-container>
+      <ng-template #hasSpaces>
+        <strong *ngIf="spacesLeft === 1">Only 1 space left.</strong>
+        <strong *ngIf="spacesLeft > 1">Only {{ spacesLeft }} space{{ spacesLeft === 1 ? '' : 's' }} left.</strong>
+        <p>{{ totalAttendees }} of {{ capacity }} spots filled. Register soon to secure your place.</p>
+      </ng-template>
+    </div>
+  </div>
+
   <!-- Admin Testing Mode Banner -->
   <div class="testing-banner" *ngIf="testingMode && isAdmin">
     <div class="testing-banner-content">
@@ -255,10 +274,19 @@
           </li>
         </ul>
       </div>
-      <button pButton [label]="attendees.length > 0 ? 'Register & Pay $' + totalCost : 'Register & Pay'"
-              icon="pi pi-lock" class="w-full mt-3"
+      <div *ngIf="isFull" class="full-notice">
+        <i class="pi pi-times-circle"></i>
+        <span><strong>Registration closed.</strong> All {{ capacity }} spaces have been filled.</span>
+      </div>
+      <div *ngIf="!isFull && notEnoughSpaces" class="full-notice not-enough">
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>Only <strong>{{ spacesLeft }}</strong> space{{ spacesLeft === 1 ? '' : 's' }} left &mdash; please reduce attendees to fit.</span>
+      </div>
+      <button pButton
+              [label]="isFull ? 'Registration Closed' : (attendees.length > 0 ? 'Register & Pay $' + totalCost : 'Register & Pay')"
+              [icon]="isFull ? 'pi pi-times-circle' : 'pi pi-lock'" class="w-full mt-3"
               size="large" [loading]="isSubmitting"
-              [disabled]="!agreedToTerms || attendees.length === 0 || !cardReady || registrationForm.invalid"
+              [disabled]="isFull || notEnoughSpaces || !agreedToTerms || attendees.length === 0 || !cardReady || registrationForm.invalid"
               (click)="submitRegistration()"></button>
     </p-card>
 

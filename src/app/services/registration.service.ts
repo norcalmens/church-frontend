@@ -75,4 +75,17 @@ export class RegistrationService {
       map(res => res.data)
     );
   }
+
+  getAvailability(): Observable<Availability> {
+    return this.http.get<ApiResponse<Availability>>('/api/registrations/availability').pipe(
+      map(res => res.data)
+    );
+  }
+}
+
+export interface Availability {
+  capacity: number;
+  totalAttendees: number;
+  spacesLeft: number;
+  isFull: boolean;
 }

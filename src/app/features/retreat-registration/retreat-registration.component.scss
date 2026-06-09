@@ -28,6 +28,58 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
   p { font-size: 1.1rem; margin: 0; opacity: 0.9; }
 }
 
+// Capacity counter — shows "Only X spaces left" or "All spaces have been filled"
+.capacity-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  background: #e6f4ea;
+  border: 1px solid #b6e0c2;
+  border-left: 4px solid #2e9e5b;
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1rem;
+  color: #1a4a2e;
+  i { font-size: 1.35rem; color: #2e9e5b; flex-shrink: 0; margin-top: 0.15rem; }
+  strong { display: block; font-size: 1.02rem; color: #1a4a2e; }
+  p { margin: 0.2rem 0 0; line-height: 1.45; color: #1a4a2e;
+    a { color: #1a4a2e; font-weight: 700; text-decoration: underline; }
+  }
+  &.capacity-low {
+    background: #fff7e0; border-color: #f1d889; border-left-color: #d4782f; color: #6e4b08;
+    i { color: #d4782f; }
+    strong { color: #8a4a08; }
+    p { color: #6e4b08; }
+  }
+  &.capacity-full {
+    background: #fdecea; border-color: #f6c5c0; border-left-color: #c0392b; color: #6e1a13;
+    i { color: #c0392b; }
+    strong { color: #8a1a13; }
+    p { color: #6e1a13;
+      a { color: #6e1a13; }
+    }
+  }
+}
+
+.full-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #fdecea;
+  border: 1px solid #f6c5c0;
+  border-left: 4px solid #c0392b;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  margin-top: 1rem;
+  color: #6e1a13;
+  font-size: 0.95rem;
+  i { color: #c0392b; font-size: 1.15rem; }
+  &.not-enough {
+    background: #fff7e0; border-color: #f1d889; border-left-color: #d4782f; color: #6e4b08;
+    i { color: #d4782f; }
+  }
+}
+
 // Help banner — "Trouble registering? Call Bro. Washington..."
 .help-banner {
   display: flex;
