@@ -58,7 +58,25 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
     p { color: #6e1a13;
       a { color: #6e1a13; }
     }
+    .waitlist-cta { display: inline-block; margin-top: 0.6rem; text-decoration: none;
+      ::ng-deep .p-button { background: #c0392b; border-color: #c0392b; font-weight: 700;
+        &:hover { background: #8a1a13; border-color: #8a1a13; }
+      }
+    }
   }
+}
+
+.position-badge {
+  background: rgba(232, 168, 50, 0.18);
+  border: 1px solid rgba(232, 168, 50, 0.4);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  margin: 1rem auto;
+  max-width: 460px;
+  color: #1a3a4a;
+  font-size: 1.05rem;
+  text-align: center;
+  strong { color: #d4782f; font-size: 1.2rem; }
 }
 
 .full-notice {
@@ -74,6 +92,9 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
   color: #6e1a13;
   font-size: 0.95rem;
   i { color: #c0392b; font-size: 1.15rem; }
+  a { color: #6e1a13; font-weight: 700; text-decoration: underline; margin-left: 0.25rem;
+    &:hover { color: #8a1a13; }
+  }
   &.not-enough {
     background: #fff7e0; border-color: #f1d889; border-left-color: #d4782f; color: #6e4b08;
     i { color: #d4782f; }

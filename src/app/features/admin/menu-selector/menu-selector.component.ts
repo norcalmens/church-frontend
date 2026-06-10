@@ -30,6 +30,8 @@ export const MENU_ITEMS: MenuItem[] = [
   { key: 'admin/dashboard',      label: 'Dashboard',          icon: 'pi-chart-line',    adminOnly: true  },
   { key: 'admin/registrations',  label: 'All Registrations',  icon: 'pi-list',          adminOnly: true  },
   { key: 'admin/badges',         label: 'Print Name Badges',  icon: 'pi-id-card',       adminOnly: true  },
+  { key: 'admin/waitlist',       label: 'Waitlist (Admin)',   icon: 'pi-list',          adminOnly: true  },
+  { key: 'admin/settings',       label: 'Settings',           icon: 'pi-cog',           adminOnly: true  },
   { key: 'admin/donations',      label: 'All Donations',      icon: 'pi-heart',         adminOnly: true  },
   { key: 'admin/payment-plans',  label: 'Payment Plans',      icon: 'pi-credit-card',   adminOnly: true  },
   { key: 'admin/users',          label: 'Manage Users',       icon: 'pi-users',         adminOnly: true  },

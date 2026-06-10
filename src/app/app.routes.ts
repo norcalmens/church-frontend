@@ -22,6 +22,9 @@ import { QrCodesComponent } from './features/qr-codes/qr-codes.component';
 import { ZoomLinksAdminComponent } from './features/admin/zoom-links/zoom-links-admin.component';
 import { AllDonationsComponent } from './features/admin/donations/all-donations.component';
 import { BadgesAdminComponent } from './features/admin/badges/badges-admin.component';
+import { WaitlistComponent } from './features/waitlist/waitlist.component';
+import { WaitlistAdminComponent } from './features/admin/waitlist/waitlist-admin.component';
+import { AdminSettingsComponent } from './features/admin/settings/admin-settings.component';
 import { PaymentPlansAdminComponent } from './features/admin/payment-plans/payment-plans-admin.component';
 import { PaymentPlanPortalComponent } from './features/payment-plan/payment-plan-portal.component';
 
@@ -40,6 +43,7 @@ export const routes: Routes = [
       { path: 'itinerary', component: ItineraryComponent },
       { path: 'feedback', component: FeedbackComponent },
       { path: 'qr-codes', component: QrCodesComponent },
+      { path: 'waitlist', component: WaitlistComponent },
       { path: 'merchandise', component: MerchandiseComponent },
       { path: 'donations', component: DonationsComponent },
       { path: 'worship', component: WorshipComponent },
@@ -52,6 +56,8 @@ export const routes: Routes = [
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, adminGuard] },
       { path: 'admin/registrations', component: ManageRegistrationsComponent, canActivate: [authGuard, adminGuard] },
       { path: 'admin/badges', component: BadgesAdminComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'admin/waitlist', component: WaitlistAdminComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'admin/settings', component: AdminSettingsComponent, canActivate: [authGuard, adminGuard] },
       { path: 'admin/users', component: UserManagementComponent, canActivate: [authGuard, adminGuard] }
     ]
   },

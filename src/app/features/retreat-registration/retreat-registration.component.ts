@@ -55,6 +55,12 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
   agreedToTerms = false;
   paymentSuccess = false;
 
+  // Position info from create() response, shown on the success screen.
+  successPositionFirst: number | null = null;
+  successPositionLast: number | null = null;
+  successCapacity: number | null = null;
+  successTotalAttendees: number | null = null;
+
   availability: Availability | null = null;
 
   get isFull(): boolean { return !!this.availability?.isFull; }
@@ -372,6 +378,10 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
         attendees: this.attendees
       };
       const created = await firstValueFrom(this.registrationService.createRegistration(registration));
+      this.successPositionFirst = created.positionFirst ?? null;
+      this.successPositionLast = created.positionLast ?? null;
+      this.successCapacity = created.capacity ?? null;
+      this.successTotalAttendees = created.totalAttendees ?? null;
 
       if (this.stripe && this.cardElement) {
         const paymentResponse = await firstValueFrom(

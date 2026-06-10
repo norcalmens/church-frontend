@@ -7,6 +7,14 @@
     <h2>Registration Complete!</h2>
     <p>Thank you for registering for the NorCal Men's Retreat 2026.</p>
     <p>A confirmation email has been sent to <strong>{{ registrationForm.value.email }}</strong>.</p>
+    <div *ngIf="successCapacity && successPositionLast" class="position-badge">
+      <ng-container *ngIf="successPositionFirst === successPositionLast; else multi">
+        You are <strong>#{{ successPositionLast }}</strong> of <strong>{{ successCapacity }}</strong> on the registration roster.
+      </ng-container>
+      <ng-template #multi>
+        Your group is <strong>#{{ successPositionFirst }}&ndash;{{ successPositionLast }}</strong> of <strong>{{ successCapacity }}</strong> on the registration roster.
+      </ng-template>
+    </div>
     <div class="success-details">
       <div><i class="pi pi-users"></i> {{ attendees.length }} attendee(s)</div>
       <div><i class="pi pi-dollar"></i> ${{ totalCost }} paid</div>
@@ -35,7 +43,10 @@
     <div class="capacity-body">
       <ng-container *ngIf="isFull; else hasSpaces">
         <strong>All spaces have been filled.</strong>
-        <p>Registration is closed &mdash; the retreat has reached its {{ capacity }}-person capacity. Call <a href="tel:+17076563789">(707) 656-3789</a> to ask about the waitlist.</p>
+        <p>Registration is closed &mdash; the retreat has reached its {{ capacity }}-person capacity. Add yourself to the waitlist and we'll reach out the moment a spot opens up.</p>
+        <a routerLink="/waitlist" class="waitlist-cta">
+          <button pButton label="Join the Waitlist" icon="pi pi-list"></button>
+        </a>
       </ng-container>
       <ng-template #hasSpaces>
         <strong *ngIf="spacesLeft === 1">Only 1 space left.</strong>
@@ -276,7 +287,7 @@
       </div>
       <div *ngIf="isFull" class="full-notice">
         <i class="pi pi-times-circle"></i>
-        <span><strong>Registration closed.</strong> All {{ capacity }} spaces have been filled.</span>
+        <span><strong>Registration closed.</strong> All {{ capacity }} spaces have been filled. <a routerLink="/waitlist">Join the waitlist &rarr;</a></span>
       </div>
       <div *ngIf="!isFull && notEnoughSpaces" class="full-notice not-enough">
         <i class="pi pi-exclamation-triangle"></i>

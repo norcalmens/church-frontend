@@ -74,6 +74,10 @@ interface SearchItem {
                  *ngIf="menuVisibility.isVisible('admin/registrations')"><i class="pi pi-list"></i> View All Registrations</a>
               <a routerLink="/admin/badges" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/badges')"><i class="pi pi-id-card"></i> Print Name Badges</a>
+              <a routerLink="/admin/waitlist" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/waitlist')"><i class="pi pi-list"></i> Waitlist</a>
+              <a routerLink="/admin/settings" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/settings')"><i class="pi pi-cog"></i> Settings</a>
               <a routerLink="/admin/donations" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/donations')"><i class="pi pi-heart"></i> View All Donations</a>
               <a routerLink="/admin/payment-plans" (click)="adminMenuOpen = false"
@@ -336,6 +340,9 @@ export class TopbarComponent {
     { label: 'Admin Dashboard', description: 'View registrations and statistics', icon: 'pi-chart-line', route: '/admin/dashboard', adminOnly: true },
     { label: 'Manage Registrations', description: 'View and manage all registrations', icon: 'pi-users', route: '/admin/registrations', adminOnly: true },
     { label: 'Print Name Badges', description: 'Printable Avery 5392 name badges, one per attendee', icon: 'pi-id-card', route: '/admin/badges', adminOnly: true },
+    { label: 'Waitlist', description: 'Manage attendees waiting for a spot to open up', icon: 'pi-list', route: '/admin/waitlist', adminOnly: true },
+    { label: 'Settings', description: 'Edit retreat capacity and other admin knobs', icon: 'pi-cog', route: '/admin/settings', adminOnly: true },
+    { label: 'Join Waitlist', description: 'Sign up to be notified if a spot opens up', icon: 'pi-list', route: '/waitlist' },
     { label: 'User Management', description: 'Create and manage user accounts', icon: 'pi-user-edit', route: '/admin/users', adminOnly: true },
     { label: 'Login', description: 'Sign in to your account', icon: 'pi-sign-in', route: '/login' },
     { label: 'Complete Registration', description: 'Activate your admin account', icon: 'pi-user-plus', route: '/register' },
