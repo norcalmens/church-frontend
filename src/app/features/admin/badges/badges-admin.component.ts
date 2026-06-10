@@ -63,16 +63,41 @@ interface BadgeData {
           <div class="sheet-inner">
             <div *ngFor="let badge of sheet" class="badge"
                  [class.badge-speaker]="badge.isSpeaker">
-              <div class="badge-stripe">
-                <span>{{ badge.isSpeaker ? 'SPEAKER' : 'HELLO, MY NAME IS' }}</span>
+
+              <!-- Decorative top ribbon: scripture / role tag -->
+              <div class="badge-ribbon">
+                <i class="pi" [class.pi-sun]="!badge.isSpeaker" [class.pi-star-fill]="badge.isSpeaker"></i>
+                <span>{{ badge.isSpeaker ? 'INVITED SPEAKER' : 'Standing in the Gap' }}</span>
+                <i class="pi" [class.pi-sun]="!badge.isSpeaker" [class.pi-star-fill]="badge.isSpeaker"></i>
               </div>
+
+              <!-- "Hello my name is" line with gold ornaments on each side -->
+              <div class="badge-greeting">
+                <span class="ornament"></span>
+                <span class="greeting-text">{{ badge.isSpeaker ? 'PLEASE WELCOME' : 'Hello, my name is' }}</span>
+                <span class="ornament"></span>
+              </div>
+
+              <!-- Name -->
               <div class="badge-name">
                 <div class="first">{{ badge.firstName }}</div>
                 <div class="last">{{ badge.lastName }}</div>
               </div>
+
+              <!-- Decorative double rule -->
+              <div class="badge-rule"></div>
+
+              <!-- Congregation -->
+              <div class="badge-congregation" *ngIf="badge.congregation">
+                <i class="pi pi-bookmark-fill"></i>
+                <span>{{ badge.congregation }}</span>
+              </div>
+
+              <!-- Footer: event + date -->
               <div class="badge-foot">
-                <div class="congregation" *ngIf="badge.congregation">{{ badge.congregation }}</div>
-                <div class="event">NorCal Men's Retreat 2026</div>
+                <span class="event">NorCal Men's Retreat</span>
+                <span class="dot">&bull;</span>
+                <span class="date">June 11&ndash;13, 2026</span>
               </div>
             </div>
             <!-- Fill empty slots so the sheet keeps grid layout -->
@@ -150,55 +175,174 @@ interface BadgeData {
     .badge {
       width: 4in; height: 3in;
       box-sizing: border-box;
-      padding: 0.18in;
-      display: flex; flex-direction: column;
+      padding: 0.15in 0.18in;
+      display: flex; flex-direction: column; align-items: stretch;
       border: 1px dashed #c8c8c8;       /* screen guide only -- hidden when printing */
-      background: #fff;
+      background:
+        /* faint sunburst behind everything, anchored top-center */
+        radial-gradient(circle at 50% 0%, rgba(232, 168, 50, 0.12) 0%, rgba(232, 168, 50, 0) 55%),
+        /* cream paper tone */
+        linear-gradient(180deg, #fffaf0 0%, #fff 100%);
       color: #1a3a4a;
       overflow: hidden;
       position: relative;
+      font-family: 'Georgia', 'Times New Roman', serif;
     }
-    .badge-empty { background: transparent; }
+    /* Subtle double-line teal frame inside the cut edge */
+    .badge::before {
+      content: '';
+      position: absolute; inset: 0.06in;
+      border: 0.012in solid #1a3a4a;
+      border-radius: 0.04in;
+      pointer-events: none;
+    }
+    .badge::after {
+      content: '';
+      position: absolute; inset: 0.09in;
+      border: 0.005in solid #e8a832;
+      border-radius: 0.025in;
+      pointer-events: none;
+    }
+    .badge-empty {
+      background: transparent;
+      &::before, &::after { display: none; }
+    }
 
-    .badge-stripe {
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
-      color: #e8a832;
-      text-align: center;
-      padding: 0.13in 0.1in;
-      font-weight: 800;
+    /* Top ribbon -- gold script-style with sun icon flourishes */
+    .badge-ribbon {
+      display: flex; align-items: center; justify-content: center; gap: 0.1in;
+      color: #b8651f;
+      font-family: 'Georgia', serif;
+      font-style: italic;
       font-size: 0.16in;
-      letter-spacing: 0.02in;
-      text-transform: uppercase;
-      border-radius: 0.08in;
+      font-weight: 600;
+      letter-spacing: 0.01in;
+      padding: 0.04in 0 0.06in;
+      position: relative; z-index: 1;
+      i { font-size: 0.13in; color: #e8a832; font-style: normal; }
     }
+
+    /* "Hello, my name is" with gold side-ornaments */
+    .badge-greeting {
+      display: flex; align-items: center; justify-content: center; gap: 0.1in;
+      margin: 0.02in 0 0.06in;
+      position: relative; z-index: 1;
+      .greeting-text {
+        font-family: 'Georgia', serif;
+        font-style: italic;
+        font-size: 0.11in;
+        font-weight: 500;
+        color: #1a3a4a;
+        opacity: 0.85;
+        text-transform: none;
+        letter-spacing: 0.01in;
+      }
+      .ornament {
+        flex: 0 0 0.5in;
+        height: 0.012in;
+        background: linear-gradient(90deg, transparent 0%, #e8a832 50%, transparent 100%);
+        position: relative;
+        &::after {
+          content: '';
+          position: absolute;
+          left: 50%; top: 50%;
+          width: 0.04in; height: 0.04in;
+          transform: translate(-50%, -50%) rotate(45deg);
+          background: #e8a832;
+        }
+      }
+    }
+
     .badge-name {
       flex: 1;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       text-align: center;
-      padding: 0.08in 0;
-      .first { font-size: 0.42in; font-weight: 800; line-height: 1.05; color: #1a3a4a; }
-      .last  { font-size: 0.36in; font-weight: 700; line-height: 1.1;  color: #1a3a4a; margin-top: 0.04in; }
-    }
-    .badge-foot {
-      text-align: center;
-      .congregation { font-size: 0.14in; font-weight: 600; color: #d4782f; line-height: 1.2; }
-      .event { font-size: 0.11in; color: #6c757d; margin-top: 0.03in; }
+      padding: 0.02in 0;
+      position: relative; z-index: 1;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      .first {
+        font-size: 0.42in; font-weight: 700; line-height: 1.0; color: #1a3a4a;
+        letter-spacing: -0.005in;
+      }
+      .last  {
+        font-size: 0.32in; font-weight: 700; line-height: 1.05; color: #1a3a4a;
+        margin-top: 0.04in;
+        letter-spacing: -0.005in;
+      }
     }
 
-    /* Speaker variant -- gold stripe, gold border accent */
+    /* Decorative gold double rule */
+    .badge-rule {
+      width: 1.4in;
+      height: 0.05in;
+      margin: 0.05in auto 0.06in;
+      background:
+        linear-gradient(180deg, transparent 0 38%, #e8a832 38% 48%, transparent 48% 52%, #e8a832 52% 62%, transparent 62% 100%);
+      position: relative; z-index: 1;
+    }
+
+    .badge-congregation {
+      display: flex; align-items: center; justify-content: center; gap: 0.05in;
+      font-size: 0.13in; font-weight: 600; color: #b8651f; line-height: 1.2;
+      font-family: 'Georgia', serif;
+      font-style: italic;
+      padding: 0 0.1in;
+      position: relative; z-index: 1;
+      i { font-size: 0.1in; color: #d4782f; font-style: normal; }
+      span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 3in; }
+    }
+
+    .badge-foot {
+      display: flex; align-items: center; justify-content: center; gap: 0.05in;
+      margin-top: 0.04in;
+      font-family: 'Georgia', serif;
+      font-size: 0.1in;
+      color: #1a3a4a;
+      opacity: 0.7;
+      position: relative; z-index: 1;
+      .event { font-weight: 600; }
+      .dot { color: #e8a832; opacity: 1; }
+      .date { font-style: italic; }
+    }
+
+    /* === Speaker variant: regal gold accents === */
     .badge-speaker {
-      .badge-stripe {
-        background: linear-gradient(135deg, #d4782f 0%, #e8a832 100%);
-        color: #fff;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(232, 168, 50, 0.22) 0%, rgba(232, 168, 50, 0) 60%),
+        linear-gradient(180deg, #fff7e0 0%, #fffaf0 100%);
+      &::before {
+        border: 0.018in solid #b8651f;
       }
-      .badge-name .first, .badge-name .last { color: #8a4a08; }
-      .badge-foot .congregation { color: #b8651f; }
       &::after {
-        content: '';
-        position: absolute; inset: 0;
-        border: 0.04in solid #e8a832;
-        border-radius: 0.04in;
-        pointer-events: none;
+        border: 0.008in solid #e8a832;
+      }
+      .badge-ribbon {
+        color: #8a4a08;
+        font-style: normal;
+        font-weight: 800;
+        font-size: 0.15in;
+        letter-spacing: 0.04in;
+        text-transform: uppercase;
+        i { color: #d4782f; }
+      }
+      .badge-greeting .greeting-text {
+        color: #8a4a08; font-style: italic; opacity: 0.95;
+        font-weight: 600;
+      }
+      .badge-greeting .ornament { background: linear-gradient(90deg, transparent 0%, #b8651f 50%, transparent 100%);
+        &::after { background: #b8651f; }
+      }
+      .badge-name .first, .badge-name .last { color: #5a3608; }
+      .badge-rule {
+        background:
+          linear-gradient(180deg, transparent 0 30%, #b8651f 30% 42%, transparent 42% 50%, #e8a832 50% 62%, transparent 62% 70%, #b8651f 70% 82%, transparent 82% 100%);
+        height: 0.08in;
+      }
+      .badge-congregation { color: #5a3608;
+        i { color: #b8651f; }
+      }
+      .badge-foot { color: #5a3608; opacity: 0.85;
+        .dot { color: #d4782f; }
       }
     }
 
