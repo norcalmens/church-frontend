@@ -68,6 +68,10 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
              *ngIf="menuVisibility.isVisible('admin/registrations')">
             <i class="pi pi-list"></i> All Registrations
           </a>
+          <a routerLink="/admin/badges" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('admin/badges')">
+            <i class="pi pi-id-card"></i> Print Name Badges
+          </a>
           <a routerLink="/admin/donations" routerLinkActive="active" (click)="close()"
              *ngIf="menuVisibility.isVisible('admin/donations')">
             <i class="pi pi-heart"></i> All Donations

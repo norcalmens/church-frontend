@@ -72,6 +72,8 @@ interface SearchItem {
                  *ngIf="menuVisibility.isVisible('admin/dashboard')"><i class="pi pi-chart-line"></i> Dashboard</a>
               <a routerLink="/admin/registrations" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/registrations')"><i class="pi pi-list"></i> View All Registrations</a>
+              <a routerLink="/admin/badges" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/badges')"><i class="pi pi-id-card"></i> Print Name Badges</a>
               <a routerLink="/admin/donations" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/donations')"><i class="pi pi-heart"></i> View All Donations</a>
               <a routerLink="/admin/payment-plans" (click)="adminMenuOpen = false"
@@ -333,6 +335,7 @@ export class TopbarComponent {
     { label: 'Theme Poll', description: 'Vote on retreat theme', icon: 'pi-chart-bar', route: '/theme-poll', adminOnly: true },
     { label: 'Admin Dashboard', description: 'View registrations and statistics', icon: 'pi-chart-line', route: '/admin/dashboard', adminOnly: true },
     { label: 'Manage Registrations', description: 'View and manage all registrations', icon: 'pi-users', route: '/admin/registrations', adminOnly: true },
+    { label: 'Print Name Badges', description: 'Printable Avery 5392 name badges, one per attendee', icon: 'pi-id-card', route: '/admin/badges', adminOnly: true },
     { label: 'User Management', description: 'Create and manage user accounts', icon: 'pi-user-edit', route: '/admin/users', adminOnly: true },
     { label: 'Login', description: 'Sign in to your account', icon: 'pi-sign-in', route: '/login' },
     { label: 'Complete Registration', description: 'Activate your admin account', icon: 'pi-user-plus', route: '/register' },
