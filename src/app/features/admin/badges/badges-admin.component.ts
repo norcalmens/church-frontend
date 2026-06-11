@@ -63,13 +63,23 @@ interface BadgeData {
             <span *ngIf="filteredBadges.length !== allBadges.length" class="of-total"> of {{ allBadges.length }}</span>
             &middot; {{ sheetCount }} sheet{{ sheetCount === 1 ? '' : 's' }}
           </span>
-          <button pButton label="Print" icon="pi pi-print" (click)="print()" [disabled]="!filteredBadges.length"></button>
+          <button *ngIf="selectedCount > 0" pButton
+                  [label]="'Clear (' + selectedCount + ')'"
+                  icon="pi pi-times"
+                  class="p-button-sm p-button-text"
+                  (click)="clearSelection()"></button>
+          <button *ngIf="selectedCount > 0" pButton
+                  [label]="'Print ' + selectedCount + ' Selected'"
+                  icon="pi pi-print"
+                  (click)="printSelected()"></button>
+          <button *ngIf="selectedCount === 0" pButton label="Print All" icon="pi pi-print"
+                  (click)="print()" [disabled]="!filteredBadges.length"></button>
         </div>
 
         <div class="hint">
           <i class="pi pi-info-circle"></i>
-          <span *ngIf="orientation === 'landscape'">Showing one badge per attendee &mdash; including extras registered under someone else. When printing, set scale to <strong>100% / Actual Size</strong> and margins to <strong>None</strong>. Print a single test sheet on plain paper first to confirm alignment before loading Avery 5392 stock.</span>
-          <span *ngIf="orientation === 'portrait'">Portrait 3&times;4&Prime; layout, 4 per sheet &mdash; for vertical badge holders. Doesn't match a stock Avery SKU; print on plain cardstock and trim along the inner border. Use scale <strong>100% / Actual Size</strong> and margins <strong>None</strong>.</span>
+          <span *ngIf="orientation === 'landscape'"><strong>Click any badge</strong> to mark it for selective printing, or hover and click the small printer icon to print just that one. <strong>Print All</strong> prints every badge below. When printing, set scale to <strong>100% / Actual Size</strong> and margins to <strong>None</strong>. Print a single test sheet on plain paper first to confirm alignment before loading Avery 5392 stock.</span>
+          <span *ngIf="orientation === 'portrait'"><strong>Click any badge</strong> to mark it for selective printing, or hover and click the small printer icon to print just that one. Portrait 3&times;4&Prime; layout, 4 per sheet &mdash; for vertical badge holders. Doesn't match a stock Avery SKU; print on plain cardstock and trim along the inner border. Use scale <strong>100% / Actual Size</strong> and margins <strong>None</strong>.</span>
         </div>
       </div>
 
@@ -92,7 +102,19 @@ interface BadgeData {
             <div class="sheet-print-stamp print-only">Page {{ i + 1 }} of {{ sheets.length }}</div>
             <div class="sheet-inner">
             <div *ngFor="let badge of sheet" class="badge"
-                 [class.badge-speaker]="badge.isSpeaker">
+                 [class.badge-speaker]="badge.isSpeaker"
+                 [class.badge-selected]="isSelected(badge)"
+                 (click)="toggleBadgeSelection(badge)">
+
+              <!-- Screen-only selection checkmark + per-badge print button (hidden on print) -->
+              <div class="badge-select-mark no-print" *ngIf="isSelected(badge)">
+                <i class="pi pi-check"></i>
+              </div>
+              <button type="button" class="badge-print-one no-print"
+                      (click)="$event.stopPropagation(); printOne(badge)"
+                      title="Print just this one badge">
+                <i class="pi pi-print"></i>
+              </button>
 
               <!-- Decorative top ribbon: scripture / role tag -->
               <div class="badge-ribbon">
@@ -282,6 +304,34 @@ interface BadgeData {
     .badge-empty {
       background: transparent;
       &::before, &::after { display: none; }
+    }
+    /* Click-to-select visual */
+    .badge { cursor: pointer; transition: transform 0.1s, box-shadow 0.15s;
+      &:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(26, 58, 74, 0.22); }
+      &:hover .badge-print-one { opacity: 1; }
+    }
+    .badge.badge-selected { box-shadow: 0 0 0 0.05in #d4782f, 0 6px 18px rgba(212, 120, 47, 0.35); }
+    .badge-select-mark {
+      position: absolute; top: 0.12in; left: 0.12in;
+      width: 0.32in; height: 0.32in;
+      background: #d4782f; color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 3;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      i { font-size: 0.18in; font-weight: 900; }
+    }
+    .badge-print-one {
+      position: absolute; top: 0.1in; right: 0.1in;
+      width: 0.32in; height: 0.32in;
+      background: #1a3a4a; color: #fff;
+      border: none; border-radius: 50%;
+      cursor: pointer; opacity: 0; transition: opacity 0.15s, background 0.15s;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 3;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      &:hover { background: #d4782f; opacity: 1 !important; }
+      i { font-size: 0.16in; }
     }
 
     /* Top ribbon -- gold script-style with sun icon flourishes */
@@ -545,6 +595,17 @@ export class BadgesAdminComponent implements OnInit {
   get sheetCount(): number { return this.sheets.length; }
   get pendingCount(): number { return this.allBadges.filter(b => !b.paid).length; }
 
+  // Per-badge selection so admins can print one (or a few) without
+  // sending the whole filtered set to the printer.
+  selectedBadges = new Set<BadgeData>();
+  get selectedCount(): number { return this.selectedBadges.size; }
+  isSelected(b: BadgeData): boolean { return this.selectedBadges.has(b); }
+  toggleBadgeSelection(b: BadgeData): void {
+    if (this.selectedBadges.has(b)) this.selectedBadges.delete(b);
+    else this.selectedBadges.add(b);
+  }
+  clearSelection(): void { this.selectedBadges.clear(); }
+
   setOrientation(o: 'landscape' | 'portrait'): void {
     if (this.orientation === o) return;
     this.orientation = o;
@@ -618,5 +679,33 @@ export class BadgesAdminComponent implements OnInit {
 
   print(): void {
     window.print();
+  }
+
+  /** Print only the selected badges -- re-paginates into sheets so the
+   *  layout stays consistent (6/sheet landscape, 4/sheet portrait) and
+   *  page-number stamps still make sense. */
+  printSelected(): void {
+    if (!this.selectedBadges.size) return;
+    this.printSubset(Array.from(this.selectedBadges));
+  }
+
+  /** Print a single badge (the "print just this one" button on each card). */
+  printOne(b: BadgeData): void {
+    this.printSubset([b]);
+  }
+
+  private printSubset(subset: BadgeData[]): void {
+    const savedSheets = this.sheets;
+    const subsetSheets: BadgeData[][] = [];
+    for (let i = 0; i < subset.length; i += this.badgesPerSheet) {
+      subsetSheets.push(subset.slice(i, i + this.badgesPerSheet));
+    }
+    this.sheets = subsetSheets;
+    // Wait for Angular to render the temporary sheets before opening the
+    // print dialog, then restore the full preview afterward.
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => { this.sheets = savedSheets; }, 100);
+    }, 50);
   }
 }
