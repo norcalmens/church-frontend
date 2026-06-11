@@ -12,6 +12,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { forkJoin } from 'rxjs';
 import { RegistrationService } from '../../../services/registration.service';
 import { Registration } from '../../../core/models/registration.model';
 import { Attendee } from '../../../core/models/attendee.model';
@@ -35,12 +36,17 @@ import { Attendee } from '../../../core/models/attendee.model';
         </ng-template>
         <div class="table-toolbar">
           <span class="p-input-icon-left"><i class="pi pi-search"></i><input type="text" pInputText [(ngModel)]="searchTerm" placeholder="Search..." (input)="filterRegistrations()" /></span>
+          <button *ngIf="selected.length" pButton
+                  [label]="'Delete ' + selected.length + ' selected'" icon="pi pi-trash"
+                  class="p-button-danger" (click)="confirmBulkDelete()"></button>
           <button pButton label="Download CSV" icon="pi pi-download" class="p-button-outlined csv-btn"
                   (click)="exportCsv()" [disabled]="!registrations.length"></button>
         </div>
-        <p-table [value]="filteredRegistrations" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [sortField]="'registeredAt'" [sortOrder]="-1" [tableStyle]="{'min-width': '60rem'}" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}">
+        <p-table [value]="filteredRegistrations" [(selection)]="selected" dataKey="id"
+                 [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [sortField]="'registeredAt'" [sortOrder]="-1" [tableStyle]="{'min-width': '60rem'}" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}">
           <ng-template pTemplate="header">
             <tr>
+              <th style="width: 3rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
               <th pSortableColumn="firstName">Name <p-sortIcon field="firstName"></p-sortIcon></th>
               <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
               <th>Phone</th>
@@ -55,6 +61,7 @@ import { Attendee } from '../../../core/models/attendee.model';
           </ng-template>
           <ng-template pTemplate="body" let-reg>
             <tr>
+              <td><p-tableCheckbox [value]="reg"></p-tableCheckbox></td>
               <td>{{ reg.firstName | titlecase }} {{ reg.lastName | titlecase }}</td>
               <td>{{ reg.email }}</td>
               <td>{{ reg.phone }}</td>
@@ -101,7 +108,7 @@ import { Attendee } from '../../../core/models/attendee.model';
               </td>
             </tr>
           </ng-template>
-          <ng-template pTemplate="emptymessage"><tr><td colspan="10" style="text-align: center; padding: 2rem; color: #999;">No registrations found.</td></tr></ng-template>
+          <ng-template pTemplate="emptymessage"><tr><td colspan="11" style="text-align: center; padding: 2rem; color: #999;">No registrations found.</td></tr></ng-template>
         </p-table>
       </p-card>
 
@@ -251,6 +258,7 @@ export class ManageRegistrationsComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   registrations: Registration[] = [];
   filteredRegistrations: Registration[] = [];
+  selected: Registration[] = [];
   searchTerm = '';
 
   regEditOpen = false;
@@ -432,6 +440,36 @@ export class ManageRegistrationsComponent implements OnInit {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  }
+
+  confirmBulkDelete(): void {
+    const n = this.selected.length;
+    if (!n) return;
+    const paidCount = this.selected.filter(r => r.paymentStatus === 'paid').length;
+    const paidWarn = paidCount
+      ? ` ${paidCount} of these ${paidCount === 1 ? 'is' : 'are'} marked PAID -- the local record will be removed but the Stripe charge stays on the books.`
+      : '';
+    this.confirmationService.confirm({
+      header: 'Delete Selected',
+      icon: 'pi pi-exclamation-triangle',
+      message: `Delete ${n} registration${n === 1 ? '' : 's'}?${paidWarn} This also removes every attendee on those registrations. This cannot be undone.`,
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        const calls = this.selected.filter(r => r.id).map(r => this.registrationService.adminDeleteRegistration(r.id!));
+        if (!calls.length) return;
+        forkJoin(calls).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Deleted', detail: `${n} registration${n === 1 ? '' : 's'} removed`, life: 2000 });
+            this.selected = [];
+            this.loadRegistrations();
+          },
+          error: () => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Some registrations failed to delete -- reloading' });
+            this.loadRegistrations();
+          }
+        });
+      }
+    });
   }
 
   confirmDelete(reg: Registration): void {

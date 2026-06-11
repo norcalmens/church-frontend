@@ -9,6 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { forkJoin } from 'rxjs';
 import { FeedbackService, FeedbackEntry } from '../../../services/feedback.service';
 
 @Component({
@@ -53,14 +54,19 @@ import { FeedbackService, FeedbackEntry } from '../../../services/feedback.servi
             <i class="pi pi-search"></i>
             <input pInputText [(ngModel)]="searchTerm" placeholder="Search name, email, or text..." (input)="filter()" />
           </span>
+          <button *ngIf="selected.length" pButton
+                  [label]="'Delete ' + selected.length + ' selected'" icon="pi pi-trash"
+                  class="p-button-danger" (click)="confirmBulkDelete()"></button>
           <button pButton label="Download CSV" icon="pi pi-download" class="p-button-outlined"
                   (click)="exportCsv()" [disabled]="!entries.length"></button>
         </div>
 
-        <p-table [value]="filtered" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+        <p-table [value]="filtered" [(selection)]="selected" dataKey="id"
+                 [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
                  [sortField]="'submittedAt'" [sortOrder]="-1" [tableStyle]="{'min-width': '60rem'}">
           <ng-template pTemplate="header">
             <tr>
+              <th style="width: 3rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
               <th pSortableColumn="submittedAt" style="width: 140px">Submitted <p-sortIcon field="submittedAt"></p-sortIcon></th>
               <th style="width: 180px">From</th>
               <th pSortableColumn="rating" style="width: 100px">Rating <p-sortIcon field="rating"></p-sortIcon></th>
@@ -72,6 +78,7 @@ import { FeedbackService, FeedbackEntry } from '../../../services/feedback.servi
           </ng-template>
           <ng-template pTemplate="body" let-e>
             <tr>
+              <td><p-tableCheckbox [value]="e"></p-tableCheckbox></td>
               <td>{{ e.submittedAt | date:'short' }}</td>
               <td>
                 <div *ngIf="e.name; else anon"><strong>{{ e.name }}</strong></div>
@@ -98,7 +105,7 @@ import { FeedbackService, FeedbackEntry } from '../../../services/feedback.servi
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
-            <tr><td colspan="7" style="text-align: center; padding: 2rem; color: #999;">No feedback yet.</td></tr>
+            <tr><td colspan="8" style="text-align: center; padding: 2rem; color: #999;">No feedback yet.</td></tr>
           </ng-template>
         </p-table>
       </p-card>
@@ -163,6 +170,7 @@ export class FeedbackAdminComponent implements OnInit {
 
   entries: FeedbackEntry[] = [];
   filtered: FeedbackEntry[] = [];
+  selected: FeedbackEntry[] = [];
   searchTerm = '';
 
   get ratedCount(): number { return this.entries.filter(e => e.rating != null).length; }
@@ -186,6 +194,32 @@ export class FeedbackAdminComponent implements OnInit {
     this.filtered = !term ? [...this.entries] : this.entries.filter(e => {
       const hay = `${e.name || ''} ${e.email || ''} ${e.worked || ''} ${e.improve || ''} ${e.other || ''}`.toLowerCase();
       return hay.includes(term);
+    });
+  }
+
+  confirmBulkDelete(): void {
+    const n = this.selected.length;
+    if (!n) return;
+    this.confirmationService.confirm({
+      header: 'Delete Selected',
+      icon: 'pi pi-exclamation-triangle',
+      message: `Delete ${n} feedback ${n === 1 ? 'entry' : 'entries'}? This cannot be undone.`,
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        const calls = this.selected.filter(e => e.id).map(e => this.feedbackService.delete(e.id!));
+        if (!calls.length) return;
+        forkJoin(calls).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Deleted', detail: `${n} ${n === 1 ? 'entry' : 'entries'} removed`, life: 2000 });
+            this.selected = [];
+            this.load();
+          },
+          error: () => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Some entries failed to delete -- reloading' });
+            this.load();
+          }
+        });
+      }
     });
   }
 

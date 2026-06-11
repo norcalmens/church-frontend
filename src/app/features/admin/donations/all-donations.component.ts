@@ -14,6 +14,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { forkJoin } from 'rxjs';
 import { DonationService } from '../../../services/donation.service';
 import { Donation } from '../../../core/models/donation.model';
 
@@ -53,15 +54,20 @@ import { Donation } from '../../../core/models/donation.model';
         </ng-template>
         <div class="table-toolbar">
           <span class="p-input-icon-left"><i class="pi pi-search"></i><input type="text" pInputText [(ngModel)]="searchTerm" placeholder="Search donor name or email..." (input)="filter()" /></span>
+          <button *ngIf="selected.length" pButton
+                  [label]="'Delete ' + selected.length + ' selected'" icon="pi pi-trash"
+                  class="p-button-danger bulk-btn" (click)="confirmBulkDelete()"></button>
           <button pButton label="Add Donation" icon="pi pi-plus" class="p-button-outlined add-btn" (click)="openAdd()"></button>
           <button pButton label="Download CSV" icon="pi pi-download" class="p-button-outlined csv-btn"
                   (click)="exportCsv()" [disabled]="!donations.length"></button>
         </div>
-        <p-table [value]="filteredDonations" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+        <p-table [value]="filteredDonations" [(selection)]="selected" dataKey="id"
+                 [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
                  [sortField]="'createdAt'" [sortOrder]="-1" [tableStyle]="{'min-width': '55rem'}"
                  [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}">
           <ng-template pTemplate="header">
             <tr>
+              <th style="width: 3rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
               <th pSortableColumn="donorName">Donor <p-sortIcon field="donorName"></p-sortIcon></th>
               <th>Email</th>
               <th pSortableColumn="amount">Amount <p-sortIcon field="amount"></p-sortIcon></th>
@@ -73,6 +79,7 @@ import { Donation } from '../../../core/models/donation.model';
           </ng-template>
           <ng-template pTemplate="body" let-d>
             <tr>
+              <td><p-tableCheckbox [value]="d"></p-tableCheckbox></td>
               <td>{{ d.donorName }}</td>
               <td>{{ d.donorEmail }}</td>
               <td><strong>{{'$'}}{{ d.amount | number:'1.2-2' }}</strong></td>
@@ -88,7 +95,7 @@ import { Donation } from '../../../core/models/donation.model';
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
-            <tr><td colspan="7" style="text-align: center; padding: 2rem; color: #999;">No donations yet.</td></tr>
+            <tr><td colspan="8" style="text-align: center; padding: 2rem; color: #999;">No donations yet.</td></tr>
           </ng-template>
         </p-table>
       </p-card>
@@ -195,6 +202,7 @@ export class AllDonationsComponent implements OnInit {
   private fb = inject(FormBuilder);
   donations: Donation[] = [];
   filteredDonations: Donation[] = [];
+  selected: Donation[] = [];
   searchTerm = '';
 
   dialogVisible = false;
@@ -294,6 +302,36 @@ export class AllDonationsComponent implements OnInit {
         this.saving = false;
         const msg = e?.error?.message || (this.editing?.id ? 'Failed to update donation' : 'Failed to record donation');
         this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
+      }
+    });
+  }
+
+  confirmBulkDelete(): void {
+    const n = this.selected.length;
+    if (!n) return;
+    const paidCount = this.selected.filter(d => d.paymentStatus === 'paid').length;
+    const paidWarn = paidCount
+      ? ` ${paidCount} of these ${paidCount === 1 ? 'is' : 'are'} marked PAID -- the local record will be removed but the Stripe charge stays on the books.`
+      : '';
+    this.confirmationService.confirm({
+      header: 'Delete Selected',
+      icon: 'pi pi-exclamation-triangle',
+      message: `Delete ${n} donation${n === 1 ? '' : 's'}?${paidWarn} This cannot be undone.`,
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        const calls = this.selected.filter(d => d.id).map(d => this.donationService.delete(d.id!));
+        if (!calls.length) return;
+        forkJoin(calls).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Deleted', detail: `${n} donation${n === 1 ? '' : 's'} removed`, life: 2000 });
+            this.selected = [];
+            this.load();
+          },
+          error: () => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Some donations failed to delete -- reloading' });
+            this.load();
+          }
+        });
       }
     });
   }
