@@ -7,6 +7,8 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService } from 'primeng/api';
 import { RegistrationService } from '../../../services/registration.service';
 import { Attendee } from '../../../core/models/attendee.model';
@@ -14,7 +16,7 @@ import { Attendee } from '../../../core/models/attendee.model';
 @Component({
   selector: 'app-all-attendees',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, CardModule, TableModule, ButtonModule, InputTextModule, ToastModule],
+  imports: [CommonModule, FormsModule, RouterLink, CardModule, TableModule, ButtonModule, InputTextModule, InputNumberModule, ToastModule, DialogModule],
   providers: [MessageService],
   template: `
     <p-toast></p-toast>
@@ -58,6 +60,7 @@ import { Attendee } from '../../../core/models/attendee.model';
               <th>Registered Under (email)</th>
               <th pSortableColumn="attendanceType" style="width: 100px">Days <p-sortIcon field="attendanceType"></p-sortIcon></th>
               <th pSortableColumn="speaker" style="width: 90px; text-align: center;">Speaker <p-sortIcon field="speaker"></p-sortIcon></th>
+              <th style="width: 60px"></th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-a>
@@ -77,13 +80,46 @@ import { Attendee } from '../../../core/models/attendee.model';
                   <i class="pi" [class.pi-star-fill]="a.speaker" [class.pi-star]="!a.speaker"></i>
                 </button>
               </td>
+              <td>
+                <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                        pTooltip="Edit name / age" (click)="openEdit(a)"></button>
+              </td>
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
-            <tr><td colspan="6" style="text-align: center; padding: 2rem; color: #999;">No attendees yet.</td></tr>
+            <tr><td colspan="7" style="text-align: center; padding: 2rem; color: #999;">No attendees yet.</td></tr>
           </ng-template>
         </p-table>
       </p-card>
+
+      <p-dialog header="Edit Attendee" [(visible)]="editOpen" [modal]="true"
+                [draggable]="false" [resizable]="false" [style]="{width: '400px'}"
+                [breakpoints]="{'640px': '95vw'}">
+        <div class="edit-form" *ngIf="draft">
+          <div class="edit-row two">
+            <div>
+              <label>First Name</label>
+              <input pInputText [(ngModel)]="draft.firstName" />
+            </div>
+            <div>
+              <label>Last Name</label>
+              <input pInputText [(ngModel)]="draft.lastName" />
+            </div>
+          </div>
+          <div class="edit-row">
+            <label>Age</label>
+            <p-inputNumber [(ngModel)]="draft.age" [min]="1" [max]="120"></p-inputNumber>
+          </div>
+          <div class="edit-row">
+            <label>Dietary Restrictions</label>
+            <input pInputText [(ngModel)]="draft.dietaryRestrictions" />
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <button pButton label="Cancel" class="p-button-text" (click)="editOpen = false" [disabled]="saving"></button>
+          <button pButton label="Save" icon="pi pi-check" (click)="saveEdit()" [loading]="saving"></button>
+        </ng-template>
+      </p-dialog>
     </div>
   `,
   styles: [`
@@ -133,6 +169,14 @@ import { Attendee } from '../../../core/models/attendee.model';
       }
       &.is-speaker i { color: #e8a832; text-shadow: 0 0 8px rgba(232, 168, 50, 0.4); }
     }
+    .edit-form { display: flex; flex-direction: column; gap: 0.85rem; padding: 0.25rem 0; }
+    .edit-row { display: flex; flex-direction: column; gap: 0.35rem;
+      label { font-size: 0.85rem; font-weight: 600; color: #1a3a4a; }
+      input, ::ng-deep .p-inputnumber, ::ng-deep .p-inputnumber input { width: 100%; }
+    }
+    .edit-row.two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;
+      > div { display: flex; flex-direction: column; gap: 0.35rem; }
+    }
   `]
 })
 export class AllAttendeesComponent implements OnInit {
@@ -142,6 +186,11 @@ export class AllAttendeesComponent implements OnInit {
   attendees: Attendee[] = [];
   filtered: Attendee[] = [];
   searchTerm = '';
+
+  editOpen = false;
+  saving = false;
+  draft: Partial<Attendee> | null = null;
+  private editTarget: Attendee | null = null;
 
   get speakerCount(): number { return this.attendees.filter(a => a.speaker).length; }
 
@@ -167,6 +216,35 @@ export class AllAttendeesComponent implements OnInit {
       return a.days.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
     }
     return 'All 3';
+  }
+
+  openEdit(a: Attendee): void {
+    this.editTarget = a;
+    this.draft = {
+      firstName: a.firstName,
+      lastName: a.lastName,
+      age: a.age,
+      dietaryRestrictions: a.dietaryRestrictions,
+    };
+    this.editOpen = true;
+  }
+
+  saveEdit(): void {
+    if (!this.editTarget?.id || !this.draft) return;
+    this.saving = true;
+    this.registrationService.adminUpdateAttendee(this.editTarget.id, this.draft).subscribe({
+      next: (updated) => {
+        Object.assign(this.editTarget!, updated);
+        this.filter();
+        this.saving = false;
+        this.editOpen = false;
+        this.messageService.add({ severity: 'success', summary: 'Saved', detail: 'Attendee updated', life: 2000 });
+      },
+      error: (err) => {
+        this.saving = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Failed to save' });
+      }
+    });
   }
 
   toggleSpeaker(a: Attendee): void {

@@ -76,6 +76,18 @@ export class RegistrationService {
     );
   }
 
+  adminUpdateRegistration(id: number, patch: Partial<Registration>): Observable<Registration> {
+    return this.http.put<ApiResponse<Registration>>(`/api/registrations/admin/${id}`, patch).pipe(
+      map(res => res.data)
+    );
+  }
+
+  adminUpdateAttendee(attendeeId: number, patch: Partial<import('../core/models/attendee.model').Attendee>): Observable<import('../core/models/attendee.model').Attendee> {
+    return this.http.patch<ApiResponse<import('../core/models/attendee.model').Attendee>>(`/api/registrations/admin/attendees/${attendeeId}`, patch).pipe(
+      map(res => res.data)
+    );
+  }
+
   getAllRegistrations(): Observable<Registration[]> {
     return this.http.get<ApiResponse<Registration[]>>('/api/registrations/all').pipe(
       map(res => res.data)

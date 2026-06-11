@@ -9,6 +9,8 @@ import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { RegistrationService } from '../../../services/registration.service';
 import { Registration } from '../../../core/models/registration.model';
@@ -17,7 +19,7 @@ import { Attendee } from '../../../core/models/attendee.model';
 @Component({
   selector: 'app-manage-registrations',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, CardModule, TableModule, ButtonModule, TagModule, InputTextModule, ToastModule, ConfirmDialogModule],
+  imports: [CommonModule, FormsModule, RouterLink, CardModule, TableModule, ButtonModule, TagModule, InputTextModule, InputNumberModule, ToastModule, ConfirmDialogModule, DialogModule],
   providers: [MessageService, ConfirmationService],
   template: `
     <p-toast></p-toast>
@@ -77,6 +79,11 @@ import { Attendee } from '../../../core/models/attendee.model';
                       </button>
                       <span class="attendee-name">{{ a.firstName | titlecase }} {{ a.lastName | titlecase }}</span>
                       <span class="attendee-age" *ngIf="a.age">({{ a.age }})</span>
+                      <button type="button" class="attendee-edit-btn"
+                              (click)="openAttendeeEdit(a)"
+                              title="Edit name / age">
+                        <i class="pi pi-pencil"></i>
+                      </button>
                     </li>
                   </ul>
                 </div>
@@ -85,12 +92,82 @@ import { Attendee } from '../../../core/models/attendee.model';
               <td>\${{ reg.totalAmount }}</td>
               <td><p-tag [value]="reg.paymentStatus || 'pending'" [severity]="getStatusSeverity(reg.paymentStatus)"></p-tag></td>
               <td>{{ reg.registeredAt | date:'short' }}</td>
-              <td><button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm" (click)="confirmDelete(reg)"></button></td>
+              <td class="row-actions">
+                <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                        pTooltip="Edit registration" tooltipPosition="left"
+                        (click)="openRegEdit(reg)"></button>
+                <button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm"
+                        (click)="confirmDelete(reg)"></button>
+              </td>
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage"><tr><td colspan="10" style="text-align: center; padding: 2rem; color: #999;">No registrations found.</td></tr></ng-template>
         </p-table>
       </p-card>
+
+      <!-- Edit Registration dialog -->
+      <p-dialog header="Edit Registration" [(visible)]="regEditOpen" [modal]="true"
+                [draggable]="false" [resizable]="false" [style]="{width: '460px'}"
+                [breakpoints]="{'640px': '95vw'}" styleClass="edit-dialog">
+        <div class="edit-form" *ngIf="regEditDraft">
+          <div class="edit-row two">
+            <div>
+              <label>First Name</label>
+              <input pInputText [(ngModel)]="regEditDraft.firstName" />
+            </div>
+            <div>
+              <label>Last Name</label>
+              <input pInputText [(ngModel)]="regEditDraft.lastName" />
+            </div>
+          </div>
+          <div class="edit-row">
+            <label>Email</label>
+            <input pInputText type="email" [(ngModel)]="regEditDraft.email" />
+          </div>
+          <div class="edit-row">
+            <label>Phone</label>
+            <input pInputText [(ngModel)]="regEditDraft.phone" />
+          </div>
+          <div class="edit-row">
+            <label>Congregation</label>
+            <input pInputText [(ngModel)]="regEditDraft.congregation" />
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <button pButton label="Cancel" class="p-button-text" (click)="regEditOpen = false" [disabled]="regEditSaving"></button>
+          <button pButton label="Save" icon="pi pi-check" (click)="saveRegEdit()" [loading]="regEditSaving"></button>
+        </ng-template>
+      </p-dialog>
+
+      <!-- Edit Attendee dialog -->
+      <p-dialog header="Edit Attendee" [(visible)]="attEditOpen" [modal]="true"
+                [draggable]="false" [resizable]="false" [style]="{width: '400px'}"
+                [breakpoints]="{'640px': '95vw'}" styleClass="edit-dialog">
+        <div class="edit-form" *ngIf="attEditDraft">
+          <div class="edit-row two">
+            <div>
+              <label>First Name</label>
+              <input pInputText [(ngModel)]="attEditDraft.firstName" />
+            </div>
+            <div>
+              <label>Last Name</label>
+              <input pInputText [(ngModel)]="attEditDraft.lastName" />
+            </div>
+          </div>
+          <div class="edit-row">
+            <label>Age</label>
+            <p-inputNumber [(ngModel)]="attEditDraft.age" [min]="1" [max]="120"></p-inputNumber>
+          </div>
+          <div class="edit-row">
+            <label>Dietary Restrictions</label>
+            <input pInputText [(ngModel)]="attEditDraft.dietaryRestrictions" />
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <button pButton label="Cancel" class="p-button-text" (click)="attEditOpen = false" [disabled]="attEditSaving"></button>
+          <button pButton label="Save" icon="pi pi-check" (click)="saveAttendeeEdit()" [loading]="attEditSaving"></button>
+        </ng-template>
+      </p-dialog>
     </div>
   `,
   styles: [`
@@ -145,6 +222,26 @@ import { Attendee } from '../../../core/models/attendee.model';
       }
       &.is-speaker i { color: #e8a832; }
     }
+    .attendee-edit-btn {
+      background: transparent; border: none; cursor: pointer; padding: 0.1rem 0.3rem;
+      border-radius: 4px; transition: all 0.15s; flex-shrink: 0; margin-left: auto; opacity: 0;
+      i { font-size: 0.78rem; color: #6c757d; }
+      &:hover { background: rgba(26, 58, 74, 0.08);
+        i { color: #1a3a4a; }
+      }
+    }
+    .attendee-list li:hover .attendee-edit-btn { opacity: 1; }
+    .row-actions { white-space: nowrap; }
+
+    /* Edit dialog form */
+    .edit-form { display: flex; flex-direction: column; gap: 0.85rem; padding: 0.25rem 0; }
+    .edit-row { display: flex; flex-direction: column; gap: 0.35rem;
+      label { font-size: 0.85rem; font-weight: 600; color: #1a3a4a; }
+      input, ::ng-deep .p-inputnumber, ::ng-deep .p-inputnumber input { width: 100%; }
+    }
+    .edit-row.two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;
+      > div { display: flex; flex-direction: column; gap: 0.35rem; }
+    }
     .attendees-cell .muted { color: #999; font-style: italic; font-size: 0.85rem; }
   `]
 })
@@ -155,6 +252,16 @@ export class ManageRegistrationsComponent implements OnInit {
   registrations: Registration[] = [];
   filteredRegistrations: Registration[] = [];
   searchTerm = '';
+
+  regEditOpen = false;
+  regEditSaving = false;
+  regEditDraft: Partial<Registration> | null = null;
+  private regEditTarget: Registration | null = null;
+
+  attEditOpen = false;
+  attEditSaving = false;
+  attEditDraft: Partial<Attendee> | null = null;
+  private attEditTarget: Attendee | null = null;
 
   ngOnInit(): void { this.loadRegistrations(); }
 
@@ -174,6 +281,64 @@ export class ManageRegistrationsComponent implements OnInit {
       (r.congregation || '').toLowerCase().includes(term) ||
       (r.speaker && 'speaker'.includes(term))
     );
+  }
+
+  openRegEdit(reg: Registration): void {
+    this.regEditTarget = reg;
+    this.regEditDraft = {
+      firstName: reg.firstName,
+      lastName: reg.lastName,
+      email: reg.email,
+      phone: reg.phone,
+      congregation: reg.congregation,
+    };
+    this.regEditOpen = true;
+  }
+
+  saveRegEdit(): void {
+    if (!this.regEditTarget?.id || !this.regEditDraft) return;
+    this.regEditSaving = true;
+    this.registrationService.adminUpdateRegistration(this.regEditTarget.id, this.regEditDraft).subscribe({
+      next: (updated) => {
+        Object.assign(this.regEditTarget!, updated);
+        this.filterRegistrations();
+        this.regEditSaving = false;
+        this.regEditOpen = false;
+        this.messageService.add({ severity: 'success', summary: 'Saved', detail: 'Registration updated', life: 2000 });
+      },
+      error: (err) => {
+        this.regEditSaving = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Failed to save' });
+      }
+    });
+  }
+
+  openAttendeeEdit(a: Attendee): void {
+    this.attEditTarget = a;
+    this.attEditDraft = {
+      firstName: a.firstName,
+      lastName: a.lastName,
+      age: a.age,
+      dietaryRestrictions: a.dietaryRestrictions,
+    };
+    this.attEditOpen = true;
+  }
+
+  saveAttendeeEdit(): void {
+    if (!this.attEditTarget?.id || !this.attEditDraft) return;
+    this.attEditSaving = true;
+    this.registrationService.adminUpdateAttendee(this.attEditTarget.id, this.attEditDraft).subscribe({
+      next: (updated) => {
+        Object.assign(this.attEditTarget!, updated);
+        this.attEditSaving = false;
+        this.attEditOpen = false;
+        this.messageService.add({ severity: 'success', summary: 'Saved', detail: 'Attendee updated', life: 2000 });
+      },
+      error: (err) => {
+        this.attEditSaving = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Failed to save' });
+      }
+    });
   }
 
   toggleAttendeeSpeaker(a: Attendee): void {
