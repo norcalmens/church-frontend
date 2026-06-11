@@ -62,7 +62,7 @@ import { Attendee } from '../../../core/models/attendee.model';
           </ng-template>
           <ng-template pTemplate="body" let-a>
             <tr [class.speaker-row]="a.speaker">
-              <td><strong>{{ a.firstName }} {{ a.lastName }}</strong></td>
+              <td><strong>{{ a.firstName | titlecase }} {{ a.lastName | titlecase }}</strong></td>
               <td>{{ a.age }}</td>
               <td>{{ a.congregation || '—' }}</td>
               <td>
@@ -188,9 +188,13 @@ export class AllAttendeesComponent implements OnInit {
   }
 
   exportCsv(): void {
+    const titleCase = (s: unknown): string => {
+      const str = s == null ? '' : String(s);
+      return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+    };
     const cols: [string, (a: Attendee) => unknown][] = [
-      ['First Name', a => a.firstName],
-      ['Last Name', a => a.lastName],
+      ['First Name', a => titleCase(a.firstName)],
+      ['Last Name', a => titleCase(a.lastName)],
       ['Age', a => a.age],
       ['Congregation', a => a.congregation],
       ['Speaker', a => a.speaker ? 'Yes' : 'No'],

@@ -84,8 +84,8 @@ interface BadgeData {
 
               <!-- Name -->
               <div class="badge-name">
-                <div class="first">{{ badge.firstName }}</div>
-                <div class="last">{{ badge.lastName }}</div>
+                <div class="first">{{ badge.firstName | titlecase }}</div>
+                <div class="last">{{ badge.lastName | titlecase }}</div>
               </div>
 
               <!-- Decorative double rule -->

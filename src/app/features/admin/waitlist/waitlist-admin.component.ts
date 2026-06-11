@@ -50,7 +50,7 @@ import { WaitlistService, WaitlistEntry } from '../../../services/waitlist.servi
           <ng-template pTemplate="body" let-e let-i="rowIndex">
             <tr [class.contacted-row]="e.contacted">
               <td class="position">{{ positionOf(e) }}</td>
-              <td>{{ e.firstName }} {{ e.lastName }}</td>
+              <td>{{ e.firstName | titlecase }} {{ e.lastName | titlecase }}</td>
               <td><a [href]="'mailto:' + e.email">{{ e.email }}</a></td>
               <td>{{ e.phone || '—' }}</td>
               <td>{{ e.congregation || '—' }}</td>

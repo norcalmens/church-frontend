@@ -53,7 +53,7 @@ import { Attendee } from '../../../core/models/attendee.model';
           </ng-template>
           <ng-template pTemplate="body" let-reg>
             <tr>
-              <td>{{ reg.firstName }} {{ reg.lastName }}</td>
+              <td>{{ reg.firstName | titlecase }} {{ reg.lastName | titlecase }}</td>
               <td>{{ reg.email }}</td>
               <td>{{ reg.phone }}</td>
               <td>{{ reg.congregation || '—' }}</td>
@@ -75,7 +75,7 @@ import { Attendee } from '../../../core/models/attendee.model';
                               [title]="a.speaker ? 'Speaker — click to remove' : 'Click to mark as speaker'">
                         <i class="pi" [class.pi-star-fill]="a.speaker" [class.pi-star]="!a.speaker"></i>
                       </button>
-                      <span class="attendee-name">{{ a.firstName }} {{ a.lastName }}</span>
+                      <span class="attendee-name">{{ a.firstName | titlecase }} {{ a.lastName | titlecase }}</span>
                       <span class="attendee-age" *ngIf="a.age">({{ a.age }})</span>
                     </li>
                   </ul>
@@ -222,11 +222,15 @@ export class ManageRegistrationsComponent implements OnInit {
   }
 
   exportCsv(): void {
+    const titleCase = (s: unknown): string => {
+      const str = s == null ? '' : String(s);
+      return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+    };
     const cols: [string, (r: Registration) => unknown][] = [
       ['ID', r => r.id],
       ['Registered At', r => r.registeredAt],
-      ['First Name', r => r.firstName],
-      ['Last Name', r => r.lastName],
+      ['First Name', r => titleCase(r.firstName)],
+      ['Last Name', r => titleCase(r.lastName)],
       ['Email', r => r.email],
       ['Phone', r => r.phone],
       ['Address', r => r.address],
@@ -237,7 +241,7 @@ export class ManageRegistrationsComponent implements OnInit {
       ['Speaker', r => r.speaker ? 'Yes' : 'No'],
       ['Room Preference', r => r.roomPreference],
       ['Attendee Count', r => r.attendees?.length || 0],
-      ['Attendees', r => (r.attendees || []).map(a => `${a.firstName} ${a.lastName} (${a.age})`).join('; ')],
+      ['Attendees', r => (r.attendees || []).map(a => `${titleCase(a.firstName)} ${titleCase(a.lastName)} (${a.age})`).join('; ')],
       ['Total Amount', r => r.totalAmount],
       ['Payment Status', r => r.paymentStatus || 'pending'],
       ['Stripe Payment ID', r => r.stripePaymentId],
