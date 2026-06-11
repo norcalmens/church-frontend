@@ -413,15 +413,14 @@ export class BadgesAdminComponent implements OnInit {
     for (const r of regs) {
       const paid = r.paymentStatus === 'paid';
       const congregation = (r.congregation || '').trim();
-      const primaryKey = (r.firstName + '|' + r.lastName).toLowerCase().trim();
       for (const a of (r.attendees || [])) {
-        const attendeeKey = ((a.firstName || '') + '|' + (a.lastName || '')).toLowerCase().trim();
-        const isPrimary = attendeeKey === primaryKey;
         out.push({
           firstName: a.firstName,
           lastName: a.lastName,
           congregation,
-          isSpeaker: !!r.speaker && isPrimary,
+          // Per-attendee flag set on /admin/attendees -- covers the case
+          // where the speaker isn't the family's primary contact.
+          isSpeaker: !!a.speaker,
           paid,
         });
       }

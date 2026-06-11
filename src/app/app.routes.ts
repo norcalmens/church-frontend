@@ -25,6 +25,7 @@ import { BadgesAdminComponent } from './features/admin/badges/badges-admin.compo
 import { WaitlistComponent } from './features/waitlist/waitlist.component';
 import { WaitlistAdminComponent } from './features/admin/waitlist/waitlist-admin.component';
 import { AdminSettingsComponent } from './features/admin/settings/admin-settings.component';
+import { AllAttendeesComponent } from './features/admin/attendees/all-attendees.component';
 import { PaymentPlansAdminComponent } from './features/admin/payment-plans/payment-plans-admin.component';
 import { PaymentPlanPortalComponent } from './features/payment-plan/payment-plan-portal.component';
 
@@ -55,6 +56,7 @@ export const routes: Routes = [
       { path: 'payment', redirectTo: 'registration', pathMatch: 'full' },
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, adminGuard] },
       { path: 'admin/registrations', component: ManageRegistrationsComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'admin/attendees', component: AllAttendeesComponent, canActivate: [authGuard, adminGuard] },
       { path: 'admin/badges', component: BadgesAdminComponent, canActivate: [authGuard, adminGuard] },
       { path: 'admin/waitlist', component: WaitlistAdminComponent, canActivate: [authGuard, adminGuard] },
       { path: 'admin/settings', component: AdminSettingsComponent, canActivate: [authGuard, adminGuard] },

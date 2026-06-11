@@ -64,6 +64,18 @@ export class RegistrationService {
     );
   }
 
+  getAllAttendees(): Observable<import('../core/models/attendee.model').Attendee[]> {
+    return this.http.get<ApiResponse<import('../core/models/attendee.model').Attendee[]>>(`/api/registrations/admin/attendees`).pipe(
+      map(res => res.data)
+    );
+  }
+
+  setAttendeeSpeaker(attendeeId: number, speaker: boolean): Observable<import('../core/models/attendee.model').Attendee> {
+    return this.http.patch<ApiResponse<import('../core/models/attendee.model').Attendee>>(`/api/registrations/admin/attendees/${attendeeId}/speaker`, { speaker }).pipe(
+      map(res => res.data)
+    );
+  }
+
   getAllRegistrations(): Observable<Registration[]> {
     return this.http.get<ApiResponse<Registration[]>>('/api/registrations/all').pipe(
       map(res => res.data)

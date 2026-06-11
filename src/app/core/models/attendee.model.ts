@@ -19,4 +19,12 @@ export interface Attendee {
   mealOption?: MealOption;
 
   amountPaid?: number;
+
+  speaker?: boolean;
+
+  // Hoisted from parent registration (populated by the admin flat-attendees endpoint)
+  registrationId?: number;
+  congregation?: string;
+  primaryEmail?: string;
+  primaryPhone?: string;
 }

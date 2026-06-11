@@ -43,9 +43,9 @@
     <div class="capacity-body">
       <ng-container *ngIf="isFull; else hasSpaces">
         <strong>All spaces have been filled.</strong>
-        <p>Registration is closed &mdash; the retreat has reached its {{ capacity }}-person capacity. Add yourself to the waitlist and we'll reach out the moment a spot opens up.</p>
+        <p>This year's retreat is at its {{ capacity }}-person capacity. Reserve your spot for <strong>next year (2027)</strong> &mdash; we'll email you the moment registration opens.</p>
         <a routerLink="/waitlist" class="waitlist-cta">
-          <button pButton label="Join the Waitlist" icon="pi pi-list"></button>
+          <button pButton label="Reserve a Spot for 2027" icon="pi pi-calendar-plus"></button>
         </a>
       </ng-container>
       <ng-template #hasSpaces>
@@ -287,7 +287,7 @@
       </div>
       <div *ngIf="isFull" class="full-notice">
         <i class="pi pi-times-circle"></i>
-        <span><strong>Registration closed.</strong> All {{ capacity }} spaces have been filled. <a routerLink="/waitlist">Join the waitlist &rarr;</a></span>
+        <span><strong>Registration closed.</strong> All {{ capacity }} spaces have been filled. <a routerLink="/waitlist">Reserve a spot for 2027 &rarr;</a></span>
       </div>
       <div *ngIf="!isFull && notEnoughSpaces" class="full-notice not-enough">
         <i class="pi pi-exclamation-triangle"></i>

@@ -15,9 +15,9 @@ import { WaitlistService } from '../../services/waitlist.service';
   template: `
     <div class="waitlist-container">
       <div class="hero">
-        <i class="pi pi-list"></i>
-        <h1>Join the Waitlist</h1>
-        <p class="subtitle">The retreat is full &mdash; but seats often open up as plans change. Leave your info and we'll reach out the moment a spot frees.</p>
+        <i class="pi pi-calendar-plus"></i>
+        <h1>Reserve Your Spot for Next Year</h1>
+        <p class="subtitle">This year's retreat is full. Leave your info and we'll reach out as soon as <strong>2027</strong> registration opens &mdash; you'll be first in line.</p>
       </div>
 
       <form *ngIf="!submitted" class="form-card" (ngSubmit)="onSubmit()" #form="ngForm">
@@ -60,7 +60,7 @@ import { WaitlistService } from '../../services/waitlist.service';
         </div>
 
         <div class="actions">
-          <button pButton type="submit" label="Add Me to the Waitlist" icon="pi pi-check"
+          <button pButton type="submit" label="Notify Me About 2027" icon="pi pi-check"
                   [disabled]="!entry.firstName || !entry.lastName || !entry.email || submitting"
                   [loading]="submitting"></button>
         </div>
@@ -75,11 +75,11 @@ import { WaitlistService } from '../../services/waitlist.service';
       <div *ngIf="submitted" class="thanks-card">
         <i class="pi pi-check-circle"></i>
         <h2>You're on the list!</h2>
-        <p class="position">You are <strong>#{{ position }}</strong> on the waitlist.</p>
-        <p>We'll email <strong>{{ entry.email }}</strong> the moment a seat opens up that fits your request ({{ entry.requestedSeats }} seat{{ entry.requestedSeats === 1 ? '' : 's' }}).</p>
+        <p class="position">You are <strong>#{{ position }}</strong> in line for next year.</p>
+        <p>We'll email <strong>{{ entry.email }}</strong> the moment 2027 registration opens &mdash; your {{ entry.requestedSeats }} seat{{ entry.requestedSeats === 1 ? '' : 's' }} will be held for early signup.</p>
         <div class="thanks-actions">
           <a routerLink="/"><button pButton label="Return Home" icon="pi pi-home" class="p-button-outlined"></button></a>
-          <a routerLink="/itinerary"><button pButton label="See the Itinerary" icon="pi pi-calendar"></button></a>
+          <a routerLink="/itinerary"><button pButton label="See This Year's Itinerary" icon="pi pi-calendar"></button></a>
         </div>
       </div>
     </div>
@@ -90,7 +90,7 @@ import { WaitlistService } from '../../services/waitlist.service';
     .hero {
       background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
       border-radius: 16px; padding: 2rem; text-align: center; color: #f0e6d0;
-      i.pi-list { font-size: 2.25rem; color: #e8a832; }
+      i.pi-calendar-plus { font-size: 2.25rem; color: #e8a832; }
       h1 { font-size: 1.9rem; font-weight: 800; margin: 0.5rem 0 0.35rem; }
       .subtitle { font-size: 1rem; margin: 0; opacity: 0.92; line-height: 1.5; }
     }

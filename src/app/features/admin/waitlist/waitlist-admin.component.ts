@@ -24,7 +24,7 @@ import { WaitlistService, WaitlistEntry } from '../../../services/waitlist.servi
       <div class="back-bar">
         <a routerLink="/admin/dashboard" class="back-link"><i class="pi pi-arrow-left"></i> Back to Dashboard</a>
       </div>
-      <div class="page-header"><h1>Waitlist</h1><p>Manage attendees waiting for a spot to open up</p></div>
+      <div class="page-header"><h1>2027 Interest List</h1><p>People who signed up to be notified when next year's registration opens</p></div>
       <p-card>
         <ng-template pTemplate="header">
           <div class="card-header-bar"><i class="pi pi-list"></i><span>Waitlist ({{ entries.length }})</span></div>
