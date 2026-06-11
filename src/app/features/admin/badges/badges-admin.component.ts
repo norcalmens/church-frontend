@@ -97,11 +97,21 @@ interface BadgeData {
                 <span>{{ badge.congregation }}</span>
               </div>
 
-              <!-- Footer: event + date -->
+              <!-- Footer: QR codes flanking the event stamp -->
               <div class="badge-foot">
-                <span class="event">NorCal Men's Retreat</span>
-                <span class="dot">&bull;</span>
-                <span class="date">June 11&ndash;13, 2026</span>
+                <div class="qr-cell">
+                  <img [src]="qrItineraryUrl" alt="Itinerary QR" loading="lazy" />
+                  <span class="qr-label">Itinerary</span>
+                </div>
+                <div class="event-stamp">
+                  <span class="event">NorCal Men's</span>
+                  <span class="event">Retreat 2026</span>
+                  <span class="date">June 11&ndash;13</span>
+                </div>
+                <div class="qr-cell">
+                  <img [src]="qrFeedbackUrl" alt="Feedback QR" loading="lazy" />
+                  <span class="qr-label">Feedback</span>
+                </div>
               </div>
             </div>
             <!-- Fill empty slots so the sheet keeps grid layout -->
@@ -301,16 +311,37 @@ interface BadgeData {
     }
 
     .badge-foot {
-      display: flex; align-items: center; justify-content: center; gap: 0.05in;
-      margin-top: 0.04in;
+      display: flex; align-items: center; justify-content: space-between; gap: 0.08in;
+      margin-top: 0.05in;
+      padding: 0 0.05in;
       font-family: 'Georgia', serif;
-      font-size: 0.1in;
       color: #1a3a4a;
-      opacity: 0.7;
       position: relative; z-index: 1;
-      .event { font-weight: 600; }
-      .dot { color: #e8a832; opacity: 1; }
-      .date { font-style: italic; }
+      .qr-cell {
+        display: flex; flex-direction: column; align-items: center; gap: 0.015in;
+        flex-shrink: 0;
+        img {
+          width: 0.62in; height: 0.62in;
+          display: block;
+          /* Print-safe -- forces the browser to render the raster crisply */
+          image-rendering: -webkit-optimize-contrast;
+          image-rendering: crisp-edges;
+        }
+        .qr-label {
+          font-size: 0.085in;
+          font-weight: 700;
+          color: #1a3a4a;
+          letter-spacing: 0.01in;
+          text-transform: uppercase;
+        }
+      }
+      .event-stamp {
+        flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 0.01in; line-height: 1.1;
+        text-align: center;
+        .event { font-size: 0.11in; font-weight: 700; color: #1a3a4a; opacity: 0.85; }
+        .date { font-size: 0.1in; font-style: italic; color: #d4782f; margin-top: 0.02in; }
+      }
     }
 
     /* === Speaker variant: regal gold accents === */
@@ -403,12 +434,22 @@ export class BadgesAdminComponent implements OnInit {
   filteredBadges: BadgeData[] = [];
   sheets: BadgeData[][] = [];
 
+  // Captured once in ngOnInit so the QR codes point at the same host the
+  // admin is currently viewing -- works in dev, staging, and prod without
+  // any hardcoded URL.
+  private origin = '';
+  qrItineraryUrl = '';
+  qrFeedbackUrl = '';
+
   readonly BADGES_PER_SHEET = 6;
 
   get sheetCount(): number { return this.sheets.length; }
   get pendingCount(): number { return this.allBadges.filter(b => !b.paid).length; }
 
   ngOnInit(): void {
+    this.origin = typeof window !== 'undefined' ? window.location.origin : '';
+    this.qrItineraryUrl = this.qrUrlFor('/itinerary');
+    this.qrFeedbackUrl = this.qrUrlFor('/feedback');
     this.registrationService.getAllRegistrations().subscribe({
       next: (regs) => {
         this.allBadges = this.flatten(regs);
@@ -460,6 +501,13 @@ export class BadgesAdminComponent implements OnInit {
   emptySlotsFor(sheet: BadgeData[]): number[] {
     const remaining = this.BADGES_PER_SHEET - sheet.length;
     return remaining > 0 ? Array(remaining).fill(0) : [];
+  }
+
+  qrUrlFor(path: string): string {
+    const target = encodeURIComponent(this.origin + path);
+    // 250x250 at ~0.62 inch print size ~= 400 DPI -- well above the 200 DPI
+    // floor where phone scanners reliably read.
+    return `https://api.qrserver.com/v1/create-qr-code/?size=250x250&margin=0&data=${target}`;
   }
 
   print(): void {

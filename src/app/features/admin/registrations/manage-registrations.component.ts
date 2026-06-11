@@ -12,6 +12,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { RegistrationService } from '../../../services/registration.service';
 import { Registration } from '../../../core/models/registration.model';
+import { Attendee } from '../../../core/models/attendee.model';
 
 @Component({
   selector: 'app-manage-registrations',
@@ -69,8 +70,12 @@ import { Registration } from '../../../core/models/registration.model';
                   <span class="attendee-count">{{ reg.attendees!.length }}</span>
                   <ul>
                     <li *ngFor="let a of reg.attendees">
-                      <i *ngIf="a.speaker" class="pi pi-star-fill speaker-mark" title="Speaker"></i>
-                      <span>{{ a.firstName }} {{ a.lastName }}</span>
+                      <button type="button" class="attendee-speaker-toggle" [class.is-speaker]="a.speaker"
+                              (click)="toggleAttendeeSpeaker(a)"
+                              [title]="a.speaker ? 'Speaker — click to remove' : 'Click to mark as speaker'">
+                        <i class="pi" [class.pi-star-fill]="a.speaker" [class.pi-star]="!a.speaker"></i>
+                      </button>
+                      <span class="attendee-name">{{ a.firstName }} {{ a.lastName }}</span>
                       <span class="attendee-age" *ngIf="a.age">({{ a.age }})</span>
                     </li>
                   </ul>
@@ -126,10 +131,19 @@ import { Registration } from '../../../core/models/registration.model';
           display: flex; align-items: center; gap: 0.3rem;
           padding: 0.08rem 0;
           font-size: 0.92rem; color: #1a3a4a;
-          .speaker-mark { color: #e8a832; font-size: 0.78rem; flex-shrink: 0; }
+          .attendee-name { flex-shrink: 0; }
           .attendee-age { color: #6c757d; font-size: 0.82rem; }
         }
       }
+    }
+    .attendee-speaker-toggle {
+      background: transparent; border: none; cursor: pointer; padding: 0.1rem 0.3rem;
+      border-radius: 4px; transition: all 0.15s; flex-shrink: 0;
+      i { font-size: 0.82rem; color: #d0d0d0; transition: color 0.15s; }
+      &:hover { background: rgba(232, 168, 50, 0.18);
+        i { color: #e8a832; }
+      }
+      &.is-speaker i { color: #e8a832; }
     }
     .attendees-cell .muted { color: #999; font-style: italic; font-size: 0.85rem; }
   `]
@@ -160,6 +174,26 @@ export class ManageRegistrationsComponent implements OnInit {
       (r.congregation || '').toLowerCase().includes(term) ||
       (r.speaker && 'speaker'.includes(term))
     );
+  }
+
+  toggleAttendeeSpeaker(a: Attendee): void {
+    if (!a.id) return;
+    const newValue = !a.speaker;
+    a.speaker = newValue;
+    this.registrationService.setAttendeeSpeaker(a.id, newValue).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: newValue ? 'success' : 'info',
+          summary: newValue ? 'Marked as speaker' : 'Speaker flag removed',
+          detail: `${a.firstName} ${a.lastName}`,
+          life: 2000,
+        });
+      },
+      error: () => {
+        a.speaker = !newValue;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update speaker flag' });
+      }
+    });
   }
 
   toggleSpeaker(reg: Registration): void {
