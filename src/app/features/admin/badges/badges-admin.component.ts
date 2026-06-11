@@ -75,9 +75,22 @@ interface BadgeData {
 
       <!-- The sheets (shown on screen as preview, used as-is when printing) -->
       <div class="sheets" [class.portrait]="orientation === 'portrait'">
-        <div *ngFor="let sheet of sheets; let i = index" class="sheet"
-             [class.sheet-portrait]="orientation === 'portrait'">
-          <div class="sheet-inner">
+        <div *ngFor="let sheet of sheets; let i = index" class="sheet-wrap">
+          <!-- Screen-only header: print page number + content count.
+               Use these numbers in your print dialog's "Pages:" field. -->
+          <div class="sheet-header no-print">
+            <span class="sheet-num">Page {{ i + 1 }} <span class="of">of {{ sheets.length }}</span></span>
+            <span class="sheet-meta">
+              <strong>{{ sheet.length }}</strong> badge{{ sheet.length === 1 ? '' : 's' }}
+              <em *ngIf="sheet.length < badgesPerSheet">
+                &middot; {{ badgesPerSheet - sheet.length }} empty slot{{ (badgesPerSheet - sheet.length) === 1 ? '' : 's' }}
+              </em>
+            </span>
+          </div>
+          <div class="sheet" [class.sheet-portrait]="orientation === 'portrait'">
+            <!-- Print-only corner stamp so the actual paper has its page number too -->
+            <div class="sheet-print-stamp print-only">Page {{ i + 1 }} of {{ sheets.length }}</div>
+            <div class="sheet-inner">
             <div *ngFor="let badge of sheet" class="badge"
                  [class.badge-speaker]="badge.isSpeaker">
 
@@ -129,6 +142,7 @@ interface BadgeData {
             </div>
             <!-- Fill empty slots so the sheet keeps grid layout -->
             <div *ngFor="let _ of emptySlotsFor(sheet)" class="badge badge-empty"></div>
+            </div>
           </div>
         </div>
 
@@ -447,19 +461,56 @@ interface BadgeData {
       .sheet { transform: scale(0.42); margin-bottom: -6.4in; }
     }
 
+    /* ===== Screen-only sheet header (page number + content count) ===== */
+    .sheet-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+    .sheet-header {
+      width: 8.5in; max-width: 100%;
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding: 0.35rem 0.5rem;
+      color: #1a3a4a; font-size: 0.92rem;
+      border-bottom: 1px dashed #d4782f;
+      .sheet-num { font-weight: 700; color: #1a3a4a;
+        .of { color: #6c757d; font-weight: 500; }
+      }
+      .sheet-meta { color: #495057;
+        strong { color: #1a3a4a; }
+        em { color: #b8651f; font-style: italic; }
+      }
+    }
+    /* Print-only stamp lives inside the sheet area so it sits in the
+       margin without touching the badge grid. */
+    .sheet-print-stamp {
+      display: none;
+      position: absolute; right: 0.1in; bottom: 0.05in;
+      font-family: 'Georgia', serif;
+      font-size: 0.09in; color: #6c757d;
+    }
+    .sheet { position: relative; }
+    .print-only { display: none; }
+
+    @media (max-width: 900px) {
+      .sheet-header { font-size: 0.85rem; padding: 0.3rem 0.4rem; }
+    }
+
     /* ===== Print rules ===== */
     @media print {
       .no-print { display: none !important; }
+      .print-only { display: block !important; }
       .badges-container { max-width: none; }
       .sheets { gap: 0; }
+      .sheet-wrap { gap: 0; }
       .sheet {
         box-shadow: none;
-        page-break-after: always;
         margin: 0;
         transform: none !important;
       }
+      /* Force a page break BETWEEN sheets but not after the last one --
+         "page-break-after: always" on the last sheet produces a trailing
+         blank page in many browsers (Chrome, Edge). */
+      .sheet-wrap:not(:last-child) { page-break-after: always; }
       .badge { border: none; }
       .empty { display: none; }
+      .sheet-print-stamp { display: block; }
     }
     @page { size: letter; margin: 0; }
   `]
