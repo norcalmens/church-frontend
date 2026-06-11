@@ -43,7 +43,7 @@ import { Registration } from '../../../core/models/registration.model';
               <th>Phone</th>
               <th pSortableColumn="congregation">Congregation <p-sortIcon field="congregation"></p-sortIcon></th>
               <th pSortableColumn="speaker" style="width: 90px; text-align: center;">Speaker <p-sortIcon field="speaker"></p-sortIcon></th>
-              <th>Attendees</th>
+              <th style="min-width: 220px;">Attendees</th>
               <th pSortableColumn="totalAmount">Total <p-sortIcon field="totalAmount"></p-sortIcon></th>
               <th pSortableColumn="paymentStatus">Status <p-sortIcon field="paymentStatus"></p-sortIcon></th>
               <th pSortableColumn="registeredAt">Date <p-sortIcon field="registeredAt"></p-sortIcon></th>
@@ -64,7 +64,19 @@ import { Registration } from '../../../core/models/registration.model';
                   <i class="pi" [class.pi-star-fill]="reg.speaker" [class.pi-star]="!reg.speaker"></i>
                 </button>
               </td>
-              <td>{{ reg.attendees?.length || 0 }}</td>
+              <td class="attendees-cell">
+                <div *ngIf="reg.attendees?.length; else noAttendees" class="attendee-list">
+                  <span class="attendee-count">{{ reg.attendees!.length }}</span>
+                  <ul>
+                    <li *ngFor="let a of reg.attendees">
+                      <i *ngIf="a.speaker" class="pi pi-star-fill speaker-mark" title="Speaker"></i>
+                      <span>{{ a.firstName }} {{ a.lastName }}</span>
+                      <span class="attendee-age" *ngIf="a.age">({{ a.age }})</span>
+                    </li>
+                  </ul>
+                </div>
+                <ng-template #noAttendees><span class="muted">none</span></ng-template>
+              </td>
               <td>\${{ reg.totalAmount }}</td>
               <td><p-tag [value]="reg.paymentStatus || 'pending'" [severity]="getStatusSeverity(reg.paymentStatus)"></p-tag></td>
               <td>{{ reg.registeredAt | date:'short' }}</td>
@@ -100,6 +112,26 @@ import { Registration } from '../../../core/models/registration.model';
       }
       &.is-speaker i { color: #e8a832; text-shadow: 0 0 8px rgba(232, 168, 50, 0.4); }
     }
+    .attendees-cell { vertical-align: top; }
+    .attendee-list { display: flex; gap: 0.5rem; align-items: flex-start;
+      .attendee-count {
+        background: #1a3a4a; color: #f0e6d0;
+        font-weight: 700; font-size: 0.78rem;
+        padding: 0.1rem 0.5rem; border-radius: 999px;
+        min-width: 1.4rem; text-align: center;
+        flex-shrink: 0; margin-top: 0.1rem;
+      }
+      ul { list-style: none; margin: 0; padding: 0; flex: 1;
+        li {
+          display: flex; align-items: center; gap: 0.3rem;
+          padding: 0.08rem 0;
+          font-size: 0.92rem; color: #1a3a4a;
+          .speaker-mark { color: #e8a832; font-size: 0.78rem; flex-shrink: 0; }
+          .attendee-age { color: #6c757d; font-size: 0.82rem; }
+        }
+      }
+    }
+    .attendees-cell .muted { color: #999; font-style: italic; font-size: 0.85rem; }
   `]
 })
 export class ManageRegistrationsComponent implements OnInit {
