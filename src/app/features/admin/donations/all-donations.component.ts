@@ -13,6 +13,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import { DonationService } from '../../../services/donation.service';
@@ -22,7 +23,7 @@ import { Donation } from '../../../core/models/donation.model';
   selector: 'app-all-donations',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, CardModule, TableModule, ButtonModule,
-            TagModule, InputTextModule, InputTextareaModule, InputNumberModule, DropdownModule, DialogModule, ToastModule, ConfirmDialogModule],
+            TagModule, InputTextModule, InputTextareaModule, InputNumberModule, DropdownModule, DialogModule, ToastModule, ConfirmDialogModule, TooltipModule],
   providers: [MessageService, ConfirmationService],
   template: `
     <p-toast></p-toast>
@@ -80,7 +81,14 @@ import { Donation } from '../../../core/models/donation.model';
           <ng-template pTemplate="body" let-d>
             <tr>
               <td><p-tableCheckbox [value]="d"></p-tableCheckbox></td>
-              <td>{{ d.donorName }}</td>
+              <td>
+                <div class="donor-name">
+                  {{ d.donorName }}
+                  <i *ngIf="d.adminNotes" class="pi pi-comment notes-marker"
+                     [pTooltip]="d.adminNotes" tooltipStyleClass="notes-tooltip"></i>
+                </div>
+                <div *ngIf="d.adminNotes" class="admin-note-inline">{{ d.adminNotes }}</div>
+              </td>
               <td>{{ d.donorEmail }}</td>
               <td><strong>{{'$'}}{{ d.amount | number:'1.2-2' }}</strong></td>
               <td class="message-cell" [pTooltip]="d.message || ''">{{ d.message || '—' }}</td>
@@ -133,8 +141,14 @@ import { Donation } from '../../../core/models/donation.model';
           <small>For past Stripe charges, paste the payment intent ID from your Stripe dashboard.</small>
         </div>
         <div class="field">
-          <label>Message / Note <span class="optional">(optional)</span></label>
+          <label>Donor Message <span class="optional">(visible on donor confirmation)</span></label>
           <textarea pInputTextarea formControlName="message" rows="2" maxlength="500"></textarea>
+        </div>
+        <div class="field admin-only-field">
+          <label><i class="pi pi-lock"></i> Admin Notes <span class="optional">(internal only)</span></label>
+          <textarea pInputTextarea formControlName="adminNotes" rows="3" maxlength="2000"
+                    placeholder="Sent thank-you letter 6/15 · Check reconciled · Donor prefers anonymity"></textarea>
+          <small>Never shown to the donor &mdash; use for internal bookkeeping, follow-ups, or context.</small>
         </div>
       </form>
       <ng-template pTemplate="footer">
@@ -175,6 +189,31 @@ import { Donation } from '../../../core/models/donation.model';
     .csv-btn { margin-left: 0; }
     .message-cell { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .row-actions { white-space: nowrap; }
+    .donor-name { display: flex; align-items: center; gap: 0.4rem; color: #1a3a4a; font-weight: 500;
+      .notes-marker { color: #d4782f; font-size: 0.85rem; cursor: help; }
+    }
+    .admin-note-inline {
+      margin-top: 0.2rem;
+      color: #6e4b08;
+      background: rgba(232, 168, 50, 0.12);
+      border-left: 3px solid #e8a832;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-style: italic;
+      line-height: 1.35;
+      max-width: 22rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .admin-only-field {
+      background: rgba(232, 168, 50, 0.08);
+      border: 1px solid rgba(232, 168, 50, 0.3);
+      border-radius: 8px;
+      padding: 0.75rem;
+      label i { color: #d4782f; margin-right: 0.3rem; }
+    }
+    ::ng-deep .notes-tooltip .p-tooltip-text { max-width: 320px; white-space: pre-wrap; }
     .dialog-hint { color: #6c757d; font-size: 0.9rem; margin: 0 0 1rem; }
     .donation-form { display: flex; flex-direction: column; gap: 0.85rem; }
     .donation-form .field { display: flex; flex-direction: column; gap: 0.35rem;
@@ -221,6 +260,7 @@ export class AllDonationsComponent implements OnInit {
     paymentStatus: ['paid'],
     stripePaymentId: [''],
     message: [''],
+    adminNotes: [''],
   });
 
   get paidCount(): number { return this.donations.filter(d => d.paymentStatus === 'paid').length; }
@@ -258,7 +298,7 @@ export class AllDonationsComponent implements OnInit {
 
   openAdd(): void {
     this.editing = null;
-    this.form.reset({ donorName: '', donorEmail: '', amount: null, paymentStatus: 'paid', stripePaymentId: '', message: '' });
+    this.form.reset({ donorName: '', donorEmail: '', amount: null, paymentStatus: 'paid', stripePaymentId: '', message: '', adminNotes: '' });
     this.dialogVisible = true;
   }
 
@@ -271,6 +311,7 @@ export class AllDonationsComponent implements OnInit {
       paymentStatus: d.paymentStatus || 'paid',
       stripePaymentId: d.stripePaymentId || '',
       message: d.message || '',
+      adminNotes: d.adminNotes || '',
     });
     this.dialogVisible = true;
   }
@@ -286,6 +327,7 @@ export class AllDonationsComponent implements OnInit {
       paymentStatus: v.paymentStatus,
       stripePaymentId: v.stripePaymentId?.trim() || undefined,
       message: v.message?.trim() || undefined,
+      adminNotes: v.adminNotes?.trim() || undefined,
     };
     const obs = this.editing?.id
       ? this.donationService.update(this.editing.id, payload)
@@ -372,6 +414,7 @@ export class AllDonationsComponent implements OnInit {
       ['Currency', d => (d.currency || 'usd').toUpperCase()],
       ['Status', d => d.paymentStatus || 'pending'],
       ['Message', d => d.message],
+      ['Admin Notes', d => d.adminNotes],
       ['Stripe Payment ID', d => d.stripePaymentId],
     ];
     const esc = (v: unknown): string => {

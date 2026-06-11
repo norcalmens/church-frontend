@@ -5,6 +5,8 @@ export interface Donation {
   amount: number;
   currency?: string;
   message?: string;
+  /** Admin-only internal notes — never shown to the donor. */
+  adminNotes?: string;
   stripePaymentId?: string;
   paymentStatus?: string;
   createdAt?: string;
