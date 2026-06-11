@@ -40,20 +40,24 @@ interface BadgeData {
           </span>
           <label class="filter">
             <p-checkbox [(ngModel)]="onlyPaid" [binary]="true" (onChange)="recompute()"></p-checkbox>
-            <span>Paid registrations only</span>
+            <span>Paid only <em *ngIf="pendingCount">({{ pendingCount }} pending hidden)</em></span>
           </label>
           <label class="filter">
             <p-checkbox [(ngModel)]="onlySpeakers" [binary]="true" (onChange)="recompute()"></p-checkbox>
             <span>Speakers only</span>
           </label>
           <div class="spacer"></div>
-          <span class="count">{{ filteredBadges.length }} badge{{ filteredBadges.length === 1 ? '' : 's' }} &middot; {{ sheetCount }} sheet{{ sheetCount === 1 ? '' : 's' }}</span>
+          <span class="count">
+            <strong>{{ filteredBadges.length }}</strong> badge{{ filteredBadges.length === 1 ? '' : 's' }}
+            <span *ngIf="filteredBadges.length !== allBadges.length" class="of-total"> of {{ allBadges.length }}</span>
+            &middot; {{ sheetCount }} sheet{{ sheetCount === 1 ? '' : 's' }}
+          </span>
           <button pButton label="Print" icon="pi pi-print" (click)="print()" [disabled]="!filteredBadges.length"></button>
         </div>
 
         <div class="hint">
           <i class="pi pi-info-circle"></i>
-          <span>When printing, set scale to <strong>100% / Actual Size</strong> and margins to <strong>None</strong>. Print a single test sheet on plain paper first to confirm alignment before loading Avery 5392 stock.</span>
+          <span>Showing one badge per attendee &mdash; including extras registered under someone else (e.g. spouse, friend). When printing, set scale to <strong>100% / Actual Size</strong> and margins to <strong>None</strong>. Print a single test sheet on plain paper first to confirm alignment before loading Avery 5392 stock.</span>
         </div>
       </div>
 
@@ -138,7 +142,11 @@ interface BadgeData {
       .search-wrap { min-width: 240px; }
       .filter { display: flex; align-items: center; gap: 0.45rem; cursor: pointer; color: #1a3a4a; font-weight: 500; font-size: 0.95rem; }
       .spacer { flex: 1; }
-      .count { color: #6c757d; font-size: 0.9rem; }
+      .count { color: #6c757d; font-size: 0.92rem;
+        strong { color: #1a3a4a; font-size: 1rem; }
+        .of-total { color: #b8651f; font-weight: 600; }
+      }
+      .filter em { color: #b8651f; font-style: italic; font-size: 0.85rem; font-weight: 500; }
     }
     .hint {
       display: flex; gap: 0.6rem; align-items: flex-start;
@@ -385,17 +393,20 @@ export class BadgesAdminComponent implements OnInit {
   private registrationService = inject(RegistrationService);
 
   searchTerm = '';
-  onlyPaid = true;
+  // Default OFF so EVERY registered attendee gets a badge, including
+  // pending registrations -- they still need a badge at check-in.
+  onlyPaid = false;
   onlySpeakers = false;
   loading = true;
 
-  private allBadges: BadgeData[] = [];
+  allBadges: BadgeData[] = [];
   filteredBadges: BadgeData[] = [];
   sheets: BadgeData[][] = [];
 
   readonly BADGES_PER_SHEET = 6;
 
   get sheetCount(): number { return this.sheets.length; }
+  get pendingCount(): number { return this.allBadges.filter(b => !b.paid).length; }
 
   ngOnInit(): void {
     this.registrationService.getAllRegistrations().subscribe({
