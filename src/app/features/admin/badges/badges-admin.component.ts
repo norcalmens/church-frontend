@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { RegistrationService } from '../../../services/registration.service';
 import { Registration } from '../../../core/models/registration.model';
 
@@ -14,12 +15,16 @@ interface BadgeData {
   congregation: string;
   isSpeaker: boolean;
   paid: boolean;
+  /** True for spacer cells -- used to offset the start position when feeding
+   *  a partial Avery sheet through the printer. Spacers render as a hatched
+   *  "Skipped" cell on screen and a blank cell on paper. */
+  skip?: boolean;
 }
 
 @Component({
   selector: 'app-badges-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, CheckboxModule, InputTextModule],
+  imports: [CommonModule, FormsModule, RouterLink, ButtonModule, CheckboxModule, InputTextModule, InputNumberModule],
   template: `
     <div class="badges-container">
 
@@ -57,6 +62,14 @@ interface BadgeData {
                     icon="pi pi-id-card" label="Portrait 3&times;4"
                     class="p-button-sm" (click)="setOrientation('portrait')"></button>
           </div>
+          <label class="slot-control" [title]="'Skip the first N - 1 slots on the first sheet. Useful when feeding a partial Avery sheet through the printer (e.g., labels 1 and 2 were used last time -- set this to 3).'">
+            <span>Start at slot</span>
+            <p-inputNumber [(ngModel)]="startAtSlot" [min]="1" [max]="badgesPerSheet"
+                           [showButtons]="true" buttonLayout="horizontal"
+                           [step]="1" inputStyleClass="slot-input"
+                           (onInput)="recompute()" (onBlur)="recompute()"></p-inputNumber>
+            <span class="of-total">of {{ badgesPerSheet }}</span>
+          </label>
           <div class="spacer"></div>
           <span class="count">
             <strong>{{ filteredBadges.length }}</strong> badge{{ filteredBadges.length === 1 ? '' : 's' }}
@@ -78,7 +91,7 @@ interface BadgeData {
 
         <div class="hint">
           <i class="pi pi-info-circle"></i>
-          <span *ngIf="orientation === 'landscape'"><strong>Click any badge</strong> to mark it for selective printing, or hover and click the small printer icon to print just that one. <strong>Print All</strong> prints every badge below. When printing, set scale to <strong>100% / Actual Size</strong> and margins to <strong>None</strong>. Print a single test sheet on plain paper first to confirm alignment before loading Avery 5392 stock.</span>
+          <span *ngIf="orientation === 'landscape'"><strong>Click any badge</strong> to mark it for selective printing, or hover and click the small printer icon to print just that one. Feeding a partial Avery sheet through the printer? Set <strong>Start at slot</strong> to the first unused position so the printer only writes ink on the labels that are still blank. When printing, set scale to <strong>100% / Actual Size</strong> and margins to <strong>None</strong>. Print a single test sheet on plain paper first to confirm alignment before loading Avery 5392 stock.</span>
           <span *ngIf="orientation === 'portrait'"><strong>Click any badge</strong> to mark it for selective printing, or hover and click the small printer icon to print just that one. Portrait 3&times;4&Prime; layout, 4 per sheet &mdash; for vertical badge holders. Doesn't match a stock Avery SKU; print on plain cardstock and trim along the inner border. Use scale <strong>100% / Actual Size</strong> and margins <strong>None</strong>.</span>
         </div>
       </div>
@@ -91,9 +104,10 @@ interface BadgeData {
           <div class="sheet-header no-print">
             <span class="sheet-num">Page {{ i + 1 }} <span class="of">of {{ sheets.length }}</span></span>
             <span class="sheet-meta">
-              <strong>{{ sheet.length }}</strong> badge{{ sheet.length === 1 ? '' : 's' }}
-              <em *ngIf="sheet.length < badgesPerSheet">
-                &middot; {{ badgesPerSheet - sheet.length }} empty slot{{ (badgesPerSheet - sheet.length) === 1 ? '' : 's' }}
+              <strong>{{ realBadgeCount(sheet) }}</strong> badge{{ realBadgeCount(sheet) === 1 ? '' : 's' }}
+              <em *ngIf="skipCount(sheet)">&middot; skips {{ skipCount(sheet) }}</em>
+              <em *ngIf="emptyCount(sheet)">
+                &middot; {{ emptyCount(sheet) }} empty slot{{ emptyCount(sheet) === 1 ? '' : 's' }}
               </em>
             </span>
           </div>
@@ -102,10 +116,19 @@ interface BadgeData {
             <div class="sheet-print-stamp print-only">Page {{ i + 1 }} of {{ sheets.length }}</div>
             <div class="sheet-inner">
             <div *ngFor="let badge of sheet" class="badge"
-                 [class.badge-speaker]="badge.isSpeaker"
-                 [class.badge-selected]="isSelected(badge)"
-                 (click)="toggleBadgeSelection(badge)">
+                 [class.badge-speaker]="!badge.skip && badge.isSpeaker"
+                 [class.badge-selected]="!badge.skip && isSelected(badge)"
+                 [class.badge-skip]="badge.skip"
+                 (click)="!badge.skip && toggleBadgeSelection(badge)">
 
+              <!-- Skipped slot (visible on screen with hatching + "Skipped" label,
+                   prints as a fully empty cell so the printer leaves that label alone) -->
+              <div *ngIf="badge.skip" class="skip-overlay no-print">
+                <i class="pi pi-ban"></i>
+                <span>Skipped</span>
+              </div>
+
+              <ng-container *ngIf="!badge.skip">
               <!-- Screen-only selection checkmark + per-badge print button (hidden on print) -->
               <div class="badge-select-mark no-print" *ngIf="isSelected(badge)">
                 <i class="pi pi-check"></i>
@@ -161,6 +184,7 @@ interface BadgeData {
                   <span class="qr-label">Feedback</span>
                 </div>
               </div>
+              </ng-container>
             </div>
             <!-- Fill empty slots so the sheet keeps grid layout -->
             <div *ngFor="let _ of emptySlotsFor(sheet)" class="badge badge-empty"></div>
@@ -208,6 +232,15 @@ interface BadgeData {
       .filter em { color: #b8651f; font-style: italic; font-size: 0.85rem; font-weight: 500; }
       .orientation-toggle { display: flex; gap: 0.35rem; align-items: center;
         ::ng-deep .p-button { padding: 0.35rem 0.75rem; font-size: 0.85rem; }
+      }
+      .slot-control {
+        display: flex; align-items: center; gap: 0.4rem;
+        color: #1a3a4a; font-size: 0.88rem; font-weight: 500;
+        background: rgba(212, 120, 47, 0.08); border: 1px solid rgba(212, 120, 47, 0.25);
+        border-radius: 8px; padding: 0.3rem 0.5rem; cursor: help;
+        .of-total { color: #6c757d; font-size: 0.8rem; }
+        ::ng-deep .slot-input { width: 2.6rem; text-align: center; padding: 0.2rem 0.3rem; }
+        ::ng-deep .p-inputnumber-button { padding: 0.2rem 0.4rem; }
       }
     }
     .hint {
@@ -304,6 +337,30 @@ interface BadgeData {
     .badge-empty {
       background: transparent;
       &::before, &::after { display: none; }
+    }
+    /* Skipped slot -- shown on screen as hatched placeholder so the admin
+       can confirm the offset; prints as a fully empty cell so the printer
+       leaves any pre-used label on the partial Avery sheet untouched. */
+    .badge.badge-skip {
+      cursor: default;
+      background: repeating-linear-gradient(45deg, #f4f4f4, #f4f4f4 6px, #e5e5e5 6px, #e5e5e5 12px);
+      &::before { border-color: #bbb; border-style: dashed; }
+      &::after { display: none; }
+      &:hover { transform: none; box-shadow: none; }
+    }
+    .skip-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0.05in; color: #6c757d;
+      i { font-size: 0.4in; }
+      span { font-size: 0.15in; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02in; }
+    }
+    @media print {
+      .badge.badge-skip {
+        background: none !important;
+        &::before { display: none !important; }
+      }
+      .skip-overlay { display: none !important; }
     }
     /* Click-to-select visual */
     .badge { cursor: pointer; transition: transform 0.1s, box-shadow 0.15s;
@@ -595,6 +652,11 @@ export class BadgesAdminComponent implements OnInit {
   get sheetCount(): number { return this.sheets.length; }
   get pendingCount(): number { return this.allBadges.filter(b => !b.paid).length; }
 
+  /** First-sheet offset: badges start at this slot (1-based). Use when the
+   *  first N - 1 labels on a partial Avery sheet have already been used and
+   *  you only want ink on the remaining slots. */
+  startAtSlot = 1;
+
   // Per-badge selection so admins can print one (or a few) without
   // sending the whole filtered set to the printer.
   selectedBadges = new Set<BadgeData>();
@@ -610,6 +672,8 @@ export class BadgesAdminComponent implements OnInit {
     if (this.orientation === o) return;
     this.orientation = o;
     try { localStorage.setItem(this.ORIENTATION_KEY, o); } catch { /* ignore quota */ }
+    // Portrait has only 4 slots; clamp if the user had startAtSlot = 5 or 6 in landscape.
+    if (this.startAtSlot > this.badgesPerSheet) this.startAtSlot = this.badgesPerSheet;
     this.recompute();
   }
 
@@ -659,16 +723,37 @@ export class BadgesAdminComponent implements OnInit {
       return true;
     });
 
-    this.sheets = [];
-    for (let i = 0; i < this.filteredBadges.length; i += this.badgesPerSheet) {
-      this.sheets.push(this.filteredBadges.slice(i, i + this.badgesPerSheet));
+    this.sheets = this.paginate(this.filteredBadges);
+  }
+
+  /** Lay badges out into sheets, prepending (startAtSlot - 1) "skip" cells
+   *  to the first sheet so a partial Avery sheet can be re-fed cleanly. */
+  private paginate(items: BadgeData[]): BadgeData[][] {
+    const offset = Math.max(0, Math.min(this.badgesPerSheet - 1, (this.startAtSlot || 1) - 1));
+    const padded: BadgeData[] = offset > 0
+      ? [
+          ...Array.from({ length: offset }, () => this.skipBadge()),
+          ...items,
+        ]
+      : items;
+    const out: BadgeData[][] = [];
+    for (let i = 0; i < padded.length; i += this.badgesPerSheet) {
+      out.push(padded.slice(i, i + this.badgesPerSheet));
     }
+    return out;
+  }
+
+  private skipBadge(): BadgeData {
+    return { firstName: '', lastName: '', congregation: '', isSpeaker: false, paid: false, skip: true };
   }
 
   emptySlotsFor(sheet: BadgeData[]): number[] {
     const remaining = this.badgesPerSheet - sheet.length;
     return remaining > 0 ? Array(remaining).fill(0) : [];
   }
+  realBadgeCount(sheet: BadgeData[]): number { return sheet.filter(b => !b.skip).length; }
+  skipCount(sheet: BadgeData[]): number { return sheet.filter(b => b.skip).length; }
+  emptyCount(sheet: BadgeData[]): number { return this.badgesPerSheet - sheet.length; }
 
   qrUrlFor(path: string): string {
     const target = encodeURIComponent(this.origin + path);
@@ -696,11 +781,7 @@ export class BadgesAdminComponent implements OnInit {
 
   private printSubset(subset: BadgeData[]): void {
     const savedSheets = this.sheets;
-    const subsetSheets: BadgeData[][] = [];
-    for (let i = 0; i < subset.length; i += this.badgesPerSheet) {
-      subsetSheets.push(subset.slice(i, i + this.badgesPerSheet));
-    }
-    this.sheets = subsetSheets;
+    this.sheets = this.paginate(subset);
     // Wait for Angular to render the temporary sheets before opening the
     // print dialog, then restore the full preview afterward.
     setTimeout(() => {
