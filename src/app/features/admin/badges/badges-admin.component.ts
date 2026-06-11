@@ -30,7 +30,8 @@ interface BadgeData {
         </div>
         <div class="page-header">
           <h1>Printable Name Badges</h1>
-          <p>Avery 5392 &mdash; 6 badges per sheet (4&times;3&Prime; landscape)</p>
+          <p *ngIf="orientation === 'landscape'">Avery 5392 &mdash; 6 badges per sheet (4&times;3&Prime; landscape)</p>
+          <p *ngIf="orientation === 'portrait'">Portrait holders &mdash; 4 badges per sheet (3&times;4&Prime; portrait)</p>
         </div>
 
         <div class="toolbar">
@@ -46,6 +47,16 @@ interface BadgeData {
             <p-checkbox [(ngModel)]="onlySpeakers" [binary]="true" (onChange)="recompute()"></p-checkbox>
             <span>Speakers only</span>
           </label>
+          <div class="orientation-toggle">
+            <button pButton type="button"
+                    [class.p-button-outlined]="orientation !== 'landscape'"
+                    icon="pi pi-window-maximize" label="Landscape 4&times;3"
+                    class="p-button-sm" (click)="setOrientation('landscape')"></button>
+            <button pButton type="button"
+                    [class.p-button-outlined]="orientation !== 'portrait'"
+                    icon="pi pi-id-card" label="Portrait 3&times;4"
+                    class="p-button-sm" (click)="setOrientation('portrait')"></button>
+          </div>
           <div class="spacer"></div>
           <span class="count">
             <strong>{{ filteredBadges.length }}</strong> badge{{ filteredBadges.length === 1 ? '' : 's' }}
@@ -57,13 +68,15 @@ interface BadgeData {
 
         <div class="hint">
           <i class="pi pi-info-circle"></i>
-          <span>Showing one badge per attendee &mdash; including extras registered under someone else (e.g. spouse, friend). When printing, set scale to <strong>100% / Actual Size</strong> and margins to <strong>None</strong>. Print a single test sheet on plain paper first to confirm alignment before loading Avery 5392 stock.</span>
+          <span *ngIf="orientation === 'landscape'">Showing one badge per attendee &mdash; including extras registered under someone else. When printing, set scale to <strong>100% / Actual Size</strong> and margins to <strong>None</strong>. Print a single test sheet on plain paper first to confirm alignment before loading Avery 5392 stock.</span>
+          <span *ngIf="orientation === 'portrait'">Portrait 3&times;4&Prime; layout, 4 per sheet &mdash; for vertical badge holders. Doesn't match a stock Avery SKU; print on plain cardstock and trim along the inner border. Use scale <strong>100% / Actual Size</strong> and margins <strong>None</strong>.</span>
         </div>
       </div>
 
       <!-- The sheets (shown on screen as preview, used as-is when printing) -->
-      <div class="sheets">
-        <div *ngFor="let sheet of sheets; let i = index" class="sheet">
+      <div class="sheets" [class.portrait]="orientation === 'portrait'">
+        <div *ngFor="let sheet of sheets; let i = index" class="sheet"
+             [class.sheet-portrait]="orientation === 'portrait'">
           <div class="sheet-inner">
             <div *ngFor="let badge of sheet" class="badge"
                  [class.badge-speaker]="badge.isSpeaker">
@@ -157,6 +170,9 @@ interface BadgeData {
         .of-total { color: #b8651f; font-weight: 600; }
       }
       .filter em { color: #b8651f; font-style: italic; font-size: 0.85rem; font-weight: 500; }
+      .orientation-toggle { display: flex; gap: 0.35rem; align-items: center;
+        ::ng-deep .p-button { padding: 0.35rem 0.75rem; font-size: 0.85rem; }
+      }
     }
     .hint {
       display: flex; gap: 0.6rem; align-items: flex-start;
@@ -189,6 +205,34 @@ interface BadgeData {
       width: 8in;
       height: 9in;
     }
+
+    /* Portrait: 3in x 4in badges, 2 columns x 2 rows = 4 per sheet.
+       Three rows of 4in won't fit on Letter (11in tall) so we cap at 2 rows.
+       Generous side + row gaps double as trim margins because this layout
+       doesn't map to a stock Avery SKU. */
+    .sheet.sheet-portrait {
+      padding: 1in 1in;
+    }
+    .sheet.sheet-portrait .sheet-inner {
+      grid-template-columns: 3in 3in;
+      grid-template-rows: 4in 4in;
+      gap: 1in 0.5in;       /* row-gap col-gap */
+      width: 6.5in;
+      height: 9in;
+    }
+    .sheet.sheet-portrait .badge {
+      width: 3in; height: 4in;
+      padding: 0.18in 0.16in;
+    }
+    /* In portrait the name has more vertical room but less horizontal room,
+       so shrink the first/last fonts a touch to keep "Christopher" / longer
+       names on one line. */
+    .sheet.sheet-portrait .badge-name {
+      .first { font-size: 0.36in; }
+      .last  { font-size: 0.28in; }
+    }
+    /* QR row gets a touch more room when there are 4 vertical inches to spend. */
+    .sheet.sheet-portrait .badge-foot { margin-top: 0.08in; }
 
     .badge {
       width: 4in; height: 3in;
@@ -441,10 +485,21 @@ export class BadgesAdminComponent implements OnInit {
   qrItineraryUrl = '';
   qrFeedbackUrl = '';
 
-  readonly BADGES_PER_SHEET = 6;
+  // Persist across sessions so an admin's stock choice sticks.
+  private readonly ORIENTATION_KEY = 'badges:orientation';
+  orientation: 'landscape' | 'portrait' =
+    (typeof window !== 'undefined' && (localStorage.getItem(this.ORIENTATION_KEY) as 'landscape' | 'portrait')) || 'landscape';
 
+  get badgesPerSheet(): number { return this.orientation === 'portrait' ? 4 : 6; }
   get sheetCount(): number { return this.sheets.length; }
   get pendingCount(): number { return this.allBadges.filter(b => !b.paid).length; }
+
+  setOrientation(o: 'landscape' | 'portrait'): void {
+    if (this.orientation === o) return;
+    this.orientation = o;
+    try { localStorage.setItem(this.ORIENTATION_KEY, o); } catch { /* ignore quota */ }
+    this.recompute();
+  }
 
   ngOnInit(): void {
     this.origin = typeof window !== 'undefined' ? window.location.origin : '';
@@ -493,13 +548,13 @@ export class BadgesAdminComponent implements OnInit {
     });
 
     this.sheets = [];
-    for (let i = 0; i < this.filteredBadges.length; i += this.BADGES_PER_SHEET) {
-      this.sheets.push(this.filteredBadges.slice(i, i + this.BADGES_PER_SHEET));
+    for (let i = 0; i < this.filteredBadges.length; i += this.badgesPerSheet) {
+      this.sheets.push(this.filteredBadges.slice(i, i + this.badgesPerSheet));
     }
   }
 
   emptySlotsFor(sheet: BadgeData[]): number[] {
-    const remaining = this.BADGES_PER_SHEET - sheet.length;
+    const remaining = this.badgesPerSheet - sheet.length;
     return remaining > 0 ? Array(remaining).fill(0) : [];
   }
 
