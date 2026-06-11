@@ -78,6 +78,8 @@ interface SearchItem {
                  *ngIf="menuVisibility.isVisible('admin/badges')"><i class="pi pi-id-card"></i> Print Name Badges</a>
               <a routerLink="/admin/waitlist" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/waitlist')"><i class="pi pi-calendar-plus"></i> 2027 Interest List</a>
+              <a routerLink="/admin/feedback" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/feedback')"><i class="pi pi-comments"></i> Feedback</a>
               <a routerLink="/admin/settings" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/settings')"><i class="pi pi-cog"></i> Settings</a>
               <a routerLink="/admin/donations" (click)="adminMenuOpen = false"
@@ -344,6 +346,7 @@ export class TopbarComponent {
     { label: 'All Attendees', description: 'Flat list of every individual attendee with congregation + speaker toggle', icon: 'pi-users', route: '/admin/attendees', adminOnly: true },
     { label: 'Print Name Badges', description: 'Printable Avery 5392 name badges, one per attendee', icon: 'pi-id-card', route: '/admin/badges', adminOnly: true },
     { label: '2027 Interest List', description: 'People notified when next year opens', icon: 'pi-calendar-plus', route: '/admin/waitlist', adminOnly: true },
+    { label: 'Feedback (Admin)', description: 'View what attendees said after the retreat', icon: 'pi-comments', route: '/admin/feedback', adminOnly: true },
     { label: 'Settings', description: 'Edit retreat capacity and other admin knobs', icon: 'pi-cog', route: '/admin/settings', adminOnly: true },
     { label: 'Reserve a Spot for 2027', description: 'Be notified when next year\'s registration opens', icon: 'pi-calendar-plus', route: '/waitlist' },
     { label: 'User Management', description: 'Create and manage user accounts', icon: 'pi-user-edit', route: '/admin/users', adminOnly: true },

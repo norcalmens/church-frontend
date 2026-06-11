@@ -80,6 +80,10 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
              *ngIf="menuVisibility.isVisible('admin/waitlist')">
             <i class="pi pi-calendar-plus"></i> 2027 Interest List
           </a>
+          <a routerLink="/admin/feedback" routerLinkActive="active" (click)="close()"
+             *ngIf="menuVisibility.isVisible('admin/feedback')">
+            <i class="pi pi-comments"></i> Feedback
+          </a>
           <a routerLink="/admin/settings" routerLinkActive="active" (click)="close()"
              *ngIf="menuVisibility.isVisible('admin/settings')">
             <i class="pi pi-cog"></i> Settings

@@ -28,4 +28,10 @@ export class DonationService {
   update(id: number, donation: Donation): Observable<Donation> {
     return this.http.put<Donation>(`/api/donations/${id}`, donation);
   }
+
+  /** Admin-only: delete a donation record. Used for cleaning up pending entries
+   *  (abandoned card flows) or duplicate manual records. Does not touch Stripe. */
+  delete(id: number): Observable<unknown> {
+    return this.http.delete(`/api/donations/${id}`);
+  }
 }

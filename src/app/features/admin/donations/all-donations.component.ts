@@ -12,7 +12,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { DonationService } from '../../../services/donation.service';
 import { Donation } from '../../../core/models/donation.model';
 
@@ -20,10 +21,11 @@ import { Donation } from '../../../core/models/donation.model';
   selector: 'app-all-donations',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, CardModule, TableModule, ButtonModule,
-            TagModule, InputTextModule, InputTextareaModule, InputNumberModule, DropdownModule, DialogModule, ToastModule],
-  providers: [MessageService],
+            TagModule, InputTextModule, InputTextareaModule, InputNumberModule, DropdownModule, DialogModule, ToastModule, ConfirmDialogModule],
+  providers: [MessageService, ConfirmationService],
   template: `
     <p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
     <div class="donations-container">
       <div class="back-bar">
         <a routerLink="/admin/dashboard" class="back-link"><i class="pi pi-arrow-left"></i> Back to Dashboard</a>
@@ -66,7 +68,7 @@ import { Donation } from '../../../core/models/donation.model';
               <th>Message</th>
               <th pSortableColumn="paymentStatus">Status <p-sortIcon field="paymentStatus"></p-sortIcon></th>
               <th pSortableColumn="createdAt">Date <p-sortIcon field="createdAt"></p-sortIcon></th>
-              <th style="width: 70px"></th>
+              <th style="width: 110px"></th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-d>
@@ -77,9 +79,11 @@ import { Donation } from '../../../core/models/donation.model';
               <td class="message-cell" [pTooltip]="d.message || ''">{{ d.message || '—' }}</td>
               <td><p-tag [value]="d.paymentStatus || 'pending'" [severity]="statusSeverity(d.paymentStatus)"></p-tag></td>
               <td>{{ d.createdAt | date:'short' }}</td>
-              <td>
+              <td class="row-actions">
                 <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
                         (click)="openEdit(d)" pTooltip="Edit"></button>
+                <button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm"
+                        (click)="confirmDelete(d)" pTooltip="Delete"></button>
               </td>
             </tr>
           </ng-template>
@@ -163,6 +167,7 @@ import { Donation } from '../../../core/models/donation.model';
     .add-btn { margin-left: auto; }
     .csv-btn { margin-left: 0; }
     .message-cell { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .row-actions { white-space: nowrap; }
     .dialog-hint { color: #6c757d; font-size: 0.9rem; margin: 0 0 1rem; }
     .donation-form { display: flex; flex-direction: column; gap: 0.85rem; }
     .donation-form .field { display: flex; flex-direction: column; gap: 0.35rem;
@@ -186,6 +191,7 @@ import { Donation } from '../../../core/models/donation.model';
 export class AllDonationsComponent implements OnInit {
   private donationService = inject(DonationService);
   private messageService = inject(MessageService);
+  private confirmationService = inject(ConfirmationService);
   private fb = inject(FormBuilder);
   donations: Donation[] = [];
   filteredDonations: Donation[] = [];
@@ -288,6 +294,32 @@ export class AllDonationsComponent implements OnInit {
         this.saving = false;
         const msg = e?.error?.message || (this.editing?.id ? 'Failed to update donation' : 'Failed to record donation');
         this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
+      }
+    });
+  }
+
+  confirmDelete(d: Donation): void {
+    const isPaid = d.paymentStatus === 'paid';
+    const warn = isPaid
+      ? ' This donation is marked PAID — deleting only removes the local record; the Stripe charge stays on the books.'
+      : '';
+    this.confirmationService.confirm({
+      header: 'Delete Donation',
+      icon: 'pi pi-exclamation-triangle',
+      message: `Delete the $${Number(d.amount).toFixed(2)} donation from ${d.donorName}?${warn}`,
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        if (!d.id) return;
+        this.donationService.delete(d.id).subscribe({
+          next: () => {
+            this.messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Donation removed', life: 2000 });
+            this.load();
+          },
+          error: (e) => {
+            const msg = e?.error?.message || 'Failed to delete donation';
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
+          }
+        });
       }
     });
   }
