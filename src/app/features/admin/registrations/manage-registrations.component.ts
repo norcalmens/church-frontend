@@ -47,7 +47,7 @@ import { Attendee } from '../../../core/models/attendee.model';
           <ng-template pTemplate="header">
             <tr>
               <th style="width: 3rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
-              <th pSortableColumn="firstName">Name <p-sortIcon field="firstName"></p-sortIcon></th>
+              <th pSortableColumn="attendeeLastName">Name <p-sortIcon field="attendeeLastName"></p-sortIcon></th>
               <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
               <th>Phone</th>
               <th pSortableColumn="congregation">Congregation <p-sortIcon field="congregation"></p-sortIcon></th>
@@ -275,7 +275,29 @@ export class ManageRegistrationsComponent implements OnInit {
 
   loadRegistrations(): void {
     this.registrationService.getAllRegistrations().subscribe({
-      next: (data) => { this.registrations = data; this.filteredRegistrations = data; },
+      next: (data) => {
+        // Compute a derived "sort by attendee last name" key per row.
+        // Prefer the alphabetically-first attendee's last name so families
+        // file under the right letter even when the registrant entered a
+        // different name (wife signs up the family, etc). Falls back to
+        // the primary registrant's last name when no attendees exist yet.
+        const rows = data.map(r => {
+          // Sort the inline attendee list by last name so the display
+          // matches the row sort key.
+          r.attendees = (r.attendees || []).slice().sort((a, b) =>
+            (a.lastName || '').localeCompare(b.lastName || '') ||
+            (a.firstName || '').localeCompare(b.firstName || ''));
+          const lastNames = r.attendees
+            .map(a => (a.lastName || '').trim().toLowerCase())
+            .filter(Boolean);
+          const attendeeLastName = lastNames.length
+            ? lastNames[0]  // already sorted
+            : (r.lastName || '').toLowerCase();
+          return Object.assign(r, { attendeeLastName });
+        });
+        this.registrations = rows;
+        this.filteredRegistrations = rows;
+      },
       error: () => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load registrations' }); }
     });
   }
