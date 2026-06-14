@@ -42,16 +42,16 @@
     <i class="pi" [class.pi-users]="!isFull" [class.pi-times-circle]="isFull"></i>
     <div class="capacity-body">
       <ng-container *ngIf="isFull; else hasSpaces">
-        <strong>All spaces have been filled.</strong>
-        <p>This year's retreat is at its {{ capacity }}-person capacity. Reserve your spot for <strong>next year (2027)</strong> &mdash; we'll email you the moment registration opens.</p>
+        <strong>Overnight lodging is full.</strong>
+        <p>All {{ capacity }} overnight spots are taken &mdash; but <strong>single-day attendees can still register</strong> below (they don't take a bed). Want to stay overnight next year? Reserve your spot for <strong>2027</strong>.</p>
         <a routerLink="/waitlist" class="waitlist-cta">
-          <button pButton label="Reserve a Spot for 2027" icon="pi pi-calendar-plus"></button>
+          <button pButton label="Reserve a 2027 Overnight Spot" icon="pi pi-calendar-plus"></button>
         </a>
       </ng-container>
       <ng-template #hasSpaces>
-        <strong *ngIf="spacesLeft === 1">Only 1 space left.</strong>
-        <strong *ngIf="spacesLeft > 1">Only {{ spacesLeft }} space{{ spacesLeft === 1 ? '' : 's' }} left.</strong>
-        <p>{{ totalAttendees }} of {{ capacity }} spots filled. Register soon to secure your place.</p>
+        <strong *ngIf="spacesLeft === 1">Only 1 overnight space left.</strong>
+        <strong *ngIf="spacesLeft > 1">{{ spacesLeft }} overnight space{{ spacesLeft === 1 ? '' : 's' }} left.</strong>
+        <p>{{ totalAttendees }} of {{ capacity }} overnight spots filled. Single-day attendees don't take a slot, so they can register anytime.</p>
       </ng-template>
     </div>
   </div>
@@ -285,19 +285,19 @@
           </li>
         </ul>
       </div>
-      <div *ngIf="isFull" class="full-notice">
+      <div *ngIf="blockedByLodging" class="full-notice">
         <i class="pi pi-times-circle"></i>
-        <span><strong>Registration closed.</strong> All {{ capacity }} spaces have been filled. <a routerLink="/waitlist">Reserve a spot for 2027 &rarr;</a></span>
+        <span><strong>Overnight lodging is full.</strong> All {{ capacity }} beds are taken. Either change your overnight attendees to <strong>single-day</strong> in the attendee form above, or <a routerLink="/waitlist">reserve a 2027 overnight spot &rarr;</a></span>
       </div>
-      <div *ngIf="!isFull && notEnoughSpaces" class="full-notice not-enough">
+      <div *ngIf="!blockedByLodging && notEnoughSpaces" class="full-notice not-enough">
         <i class="pi pi-exclamation-triangle"></i>
-        <span>Only <strong>{{ spacesLeft }}</strong> space{{ spacesLeft === 1 ? '' : 's' }} left &mdash; please reduce attendees to fit.</span>
+        <span>Only <strong>{{ spacesLeft }}</strong> overnight space{{ spacesLeft === 1 ? '' : 's' }} left &mdash; reduce overnight attendees or switch some to single-day.</span>
       </div>
       <button pButton
-              [label]="isFull ? 'Registration Closed' : (attendees.length > 0 ? 'Register & Pay $' + totalCost : 'Register & Pay')"
-              [icon]="isFull ? 'pi pi-times-circle' : 'pi pi-lock'" class="w-full mt-3"
+              [label]="blockedByLodging ? 'Lodging Full' : (attendees.length > 0 ? 'Register & Pay $' + totalCost : 'Register & Pay')"
+              [icon]="blockedByLodging ? 'pi pi-times-circle' : 'pi pi-lock'" class="w-full mt-3"
               size="large" [loading]="isSubmitting"
-              [disabled]="isFull || notEnoughSpaces || !agreedToTerms || attendees.length === 0 || !cardReady || registrationForm.invalid"
+              [disabled]="blockedByLodging || notEnoughSpaces || !agreedToTerms || attendees.length === 0 || !cardReady || registrationForm.invalid"
               (click)="submitRegistration()"></button>
     </p-card>
 

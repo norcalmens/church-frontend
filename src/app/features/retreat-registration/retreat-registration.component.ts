@@ -67,8 +67,19 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
   get spacesLeft(): number { return this.availability?.spacesLeft ?? 0; }
   get totalAttendees(): number { return this.availability?.totalAttendees ?? 0; }
   get capacity(): number { return this.availability?.capacity ?? 35; }
+  /** Only overnight (full-retreat) attendees consume the bed cap.
+   *  Day-only ("partial") attendees never count against the 35-person limit. */
+  get overnightAttendeeCount(): number {
+    return this.attendees.filter(a => a.attendanceType !== 'partial').length;
+  }
   get notEnoughSpaces(): boolean {
-    return !!this.availability && this.attendees.length > this.availability.spacesLeft;
+    return !!this.availability && this.overnightAttendeeCount > this.availability.spacesLeft;
+  }
+  /** True when the current registration has *any* overnight attendees and
+   *  lodging is sold out -- those people specifically can't be added.
+   *  Day-only registrations stay submittable. */
+  get blockedByLodging(): boolean {
+    return this.isFull && this.overnightAttendeeCount > 0;
   }
 
   stripe: Stripe | null = null;
