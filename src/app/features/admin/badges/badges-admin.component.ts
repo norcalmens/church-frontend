@@ -233,14 +233,21 @@ interface BadgeData {
           <!-- Demo card shown when there are no real badges to print.
                Save the apartments photo at src/assets/images/kennedy-manor.jpg.
                No retreat branding, no QR codes — image first, then the name. -->
-          <div class="kennedy-manor-card">
+          <div class="kennedy-manor-card"
+               [class.km-cancelled]="kennedyManorCancelled"
+               (click)="kennedyManorCancelled = !kennedyManorCancelled"
+               title="Click to toggle cancellation stamp">
             <div class="km-image">
               <img src="assets/images/kennedy-manor.png" alt="Kennedy Manor Apartments, Richmond, CA" />
             </div>
             <div class="km-name">
               <span class="km-first">El Sean</span>
-              <span class="km-aka">"SJ &middot; The Prof &middot; Grady &middot; Reaper &middot; Cresent Park"</span>
+              <span class="km-aka">"SJ &middot; The Prof &middot; Grady &middot; Reaper &middot; Crescent Park, etc."</span>
               <span class="km-last">Smith</span>
+            </div>
+            <div *ngIf="kennedyManorCancelled" class="cancel-stamp km-cancel-stamp">
+              <span class="cancel-line"></span>
+              <span class="cancel-text">CANCELLED</span>
             </div>
           </div>
           <p class="empty-hint"><i class="pi pi-info-circle"></i> Sample card &mdash; register attendees to see real badges.</p>
@@ -769,6 +776,33 @@ interface BadgeData {
       background: #fff; border-radius: 12px; overflow: hidden;
       box-shadow: 0 12px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06);
       border: 1px solid #e0d8c8;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.15s;
+      &:hover { transform: scale(1.01); }
+    }
+    .kennedy-manor-card.km-cancelled {
+      .km-image img { filter: grayscale(0.4) brightness(0.92); }
+      .km-name { opacity: 0.55; }
+    }
+    /* Cancel stamp spans the FULL card (image + name section), not just the
+       photo at the top -- the line goes corner-to-corner across the whole
+       thing, with the CANCELLED text sized for a ~4in wide card. */
+    .km-cancel-stamp {
+      .cancel-line {
+        background: linear-gradient(to bottom right,
+          transparent calc(50% - 5px),
+          #c0392b calc(50% - 5px),
+          #c0392b calc(50% + 5px),
+          transparent calc(50% + 5px));
+      }
+      .cancel-text {
+        font-size: 2.2rem !important;
+        letter-spacing: 0.25rem !important;
+        padding: 0.3rem 1rem !important;
+        border-width: 3px !important;
+        box-shadow: 0 4px 12px rgba(192, 57, 43, 0.35);
+      }
     }
     .km-image {
       background: #1a1a1a;
