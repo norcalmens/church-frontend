@@ -19,6 +19,10 @@ interface BadgeData {
    *  a partial Avery sheet through the printer. Spacers render as a hatched
    *  "Skipped" cell on screen and a blank cell on paper. */
   skip?: boolean;
+  /** DEMO-ONLY visual state. Toggled by Shift+Click on a badge while demo
+   *  mode is active. Renders a diagonal red "CANCELLED" stamp over the badge.
+   *  Never persisted server-side. */
+  demoCancelled?: boolean;
 }
 
 @Component({
@@ -62,6 +66,10 @@ interface BadgeData {
                     icon="pi pi-id-card" label="Portrait 3&times;4"
                     class="p-button-sm" (click)="setOrientation('portrait')"></button>
           </div>
+          <label class="demo-toggle" title="When on, clicking a badge stamps it with a red CANCELLED overlay (visual only -- not saved).">
+            <p-checkbox [(ngModel)]="demoCancelMode" [binary]="true"></p-checkbox>
+            <span>Demo: cancel stamp</span>
+          </label>
           <label class="slot-control" [title]="'Skip the first N - 1 slots on the first sheet. Useful when feeding a partial Avery sheet through the printer (e.g., labels 1 and 2 were used last time -- set this to 3).'">
             <span>Start at slot</span>
             <p-inputNumber [(ngModel)]="startAtSlot" [min]="1" [max]="badgesPerSheet"
@@ -119,7 +127,15 @@ interface BadgeData {
                  [class.badge-speaker]="!badge.skip && badge.isSpeaker"
                  [class.badge-selected]="!badge.skip && isSelected(badge)"
                  [class.badge-skip]="badge.skip"
+                 [class.badge-cancelled-demo]="!badge.skip && badge.demoCancelled"
                  (click)="!badge.skip && toggleBadgeSelection(badge)">
+
+              <!-- DEMO-ONLY cancellation stamp (rendered on screen + print so the
+                   demo's printout still shows the void mark). -->
+              <div *ngIf="!badge.skip && badge.demoCancelled" class="cancel-stamp">
+                <span class="cancel-line"></span>
+                <span class="cancel-text">CANCELLED</span>
+              </div>
 
               <!-- Skipped slot (visible on screen with hatching + "Skipped" label,
                    prints as a fully empty cell so the printer leaves that label alone) -->
@@ -242,7 +258,48 @@ interface BadgeData {
         ::ng-deep .slot-input { width: 2.6rem; text-align: center; padding: 0.2rem 0.3rem; }
         ::ng-deep .p-inputnumber-button { padding: 0.2rem 0.4rem; }
       }
+      .demo-toggle {
+        display: flex; align-items: center; gap: 0.45rem;
+        color: #8a1a13; font-size: 0.88rem; font-weight: 600;
+        background: rgba(192, 57, 43, 0.08); border: 1px dashed rgba(192, 57, 43, 0.5);
+        border-radius: 8px; padding: 0.3rem 0.6rem; cursor: help;
+      }
     }
+
+    /* === Demo CANCELLED stamp === */
+    .badge-cancelled-demo .badge-name,
+    .badge-cancelled-demo .badge-congregation,
+    .badge-cancelled-demo .badge-foot { opacity: 0.4; }
+    .cancel-stamp {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      z-index: 4;
+      .cancel-line {
+        position: absolute; inset: 0;
+        background: linear-gradient(to bottom right,
+          transparent calc(50% - 0.045in),
+          #c0392b calc(50% - 0.045in),
+          #c0392b calc(50% + 0.045in),
+          transparent calc(50% + 0.045in));
+      }
+      .cancel-text {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%) rotate(-20deg);
+        font-family: 'Georgia', serif;
+        font-size: 0.32in;
+        font-weight: 900;
+        letter-spacing: 0.04in;
+        color: #c0392b;
+        text-transform: uppercase;
+        background: rgba(255, 255, 255, 0.85);
+        padding: 0.04in 0.15in;
+        border: 0.025in solid #c0392b;
+        border-radius: 0.04in;
+        white-space: nowrap;
+      }
+    }
+    .sheet.sheet-portrait .cancel-stamp .cancel-text { font-size: 0.26in; }
     .hint {
       display: flex; gap: 0.6rem; align-items: flex-start;
       background: #fff7e0; border: 1px solid #f1d889; border-left: 4px solid #d4782f;
@@ -657,12 +714,22 @@ export class BadgesAdminComponent implements OnInit {
    *  you only want ink on the remaining slots. */
   startAtSlot = 1;
 
+  /** Demo only: when on, clicking a badge stamps it CANCELLED instead of
+   *  toggling print selection. State lives purely in component memory --
+   *  reloading the page resets every demo stamp. */
+  demoCancelMode = false;
+
   // Per-badge selection so admins can print one (or a few) without
   // sending the whole filtered set to the printer.
   selectedBadges = new Set<BadgeData>();
   get selectedCount(): number { return this.selectedBadges.size; }
   isSelected(b: BadgeData): boolean { return this.selectedBadges.has(b); }
   toggleBadgeSelection(b: BadgeData): void {
+    // Demo mode: clicks flip the CANCELLED stamp instead of selecting for print.
+    if (this.demoCancelMode) {
+      b.demoCancelled = !b.demoCancelled;
+      return;
+    }
     if (this.selectedBadges.has(b)) this.selectedBadges.delete(b);
     else this.selectedBadges.add(b);
   }
