@@ -104,6 +104,27 @@ interface BadgeData {
         </div>
       </div>
 
+      <!-- DEMO card preview: Kennedy Manor Card with toggleable cancellation
+           stamp. Shown only when demo mode is on; never sent to the printer.
+           Click anywhere on the card to flip the stamp on/off. -->
+      <div *ngIf="demoCancelMode" class="demo-card-preview no-print">
+        <div class="demo-card-header">
+          <i class="pi pi-info-circle"></i>
+          <span>Demo: Kennedy Manor Card &mdash; click the card to toggle the cancellation stamp.</span>
+        </div>
+        <div class="demo-card-stage">
+          <div class="demo-card"
+               [class.demo-card-cancelled]="kennedyManorCancelled"
+               (click)="kennedyManorCancelled = !kennedyManorCancelled">
+            <img src="assets/images/kennedy-manor.png" alt="Kennedy Manor Card" />
+            <div *ngIf="kennedyManorCancelled" class="cancel-stamp demo-card-stamp">
+              <span class="cancel-line"></span>
+              <span class="cancel-text">CANCELLED</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- The sheets (shown on screen as preview, used as-is when printing) -->
       <div class="sheets" [class.portrait]="orientation === 'portrait'">
         <div *ngFor="let sheet of sheets; let i = index" class="sheet-wrap">
@@ -209,8 +230,20 @@ interface BadgeData {
         </div>
 
         <div *ngIf="!filteredBadges.length && !loading" class="empty">
-          <i class="pi pi-id-card"></i>
-          <p>No badges to print with the current filters.</p>
+          <!-- Demo card shown when there are no real badges to print.
+               Save the apartments photo at src/assets/images/kennedy-manor.jpg.
+               No retreat branding, no QR codes — image first, then the name. -->
+          <div class="kennedy-manor-card">
+            <div class="km-image">
+              <img src="assets/images/kennedy-manor.png" alt="Kennedy Manor Apartments, Richmond, CA" />
+            </div>
+            <div class="km-name">
+              <span class="km-first">El Sean</span>
+              <span class="km-aka">"SJ &middot; The Prof &middot; Grady &middot; Reaper &middot; Cresent Park"</span>
+              <span class="km-last">Smith</span>
+            </div>
+          </div>
+          <p class="empty-hint"><i class="pi pi-info-circle"></i> Sample card &mdash; register attendees to see real badges.</p>
         </div>
       </div>
     </div>
@@ -300,6 +333,49 @@ interface BadgeData {
       }
     }
     .sheet.sheet-portrait .cancel-stamp .cancel-text { font-size: 0.26in; }
+
+    /* === Demo card preview (Kennedy Manor) === */
+    .demo-card-preview {
+      max-width: 8.5in; margin: 0 auto 1.5rem;
+      background: #fff; border-radius: 12px; padding: 1rem 1.25rem;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+      border: 2px dashed #c0392b;
+    }
+    .demo-card-header {
+      display: flex; align-items: center; gap: 0.55rem;
+      color: #8a1a13; font-weight: 600; font-size: 0.92rem;
+      margin-bottom: 0.85rem;
+      i { color: #c0392b; }
+    }
+    .demo-card-stage {
+      display: flex; justify-content: center; align-items: center;
+      background: linear-gradient(135deg, #f4eede 0%, #ece2c8 100%);
+      padding: 1.5rem; border-radius: 8px;
+    }
+    .demo-card {
+      position: relative; display: inline-block; cursor: pointer;
+      max-width: 100%; transition: transform 0.15s;
+      &:hover { transform: scale(1.02); }
+      img {
+        display: block; max-width: 100%; max-height: 60vh;
+        border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      }
+    }
+    .demo-card.demo-card-cancelled img { filter: grayscale(0.4) brightness(0.92); }
+    .demo-card-stamp .cancel-line {
+      background: linear-gradient(to bottom right,
+        transparent calc(50% - 8px),
+        #c0392b calc(50% - 8px),
+        #c0392b calc(50% + 8px),
+        transparent calc(50% + 8px));
+    }
+    .demo-card-stamp .cancel-text {
+      font-size: 3.5rem !important;
+      letter-spacing: 0.4rem !important;
+      padding: 0.4rem 1.5rem !important;
+      border-width: 4px !important;
+      box-shadow: 0 6px 16px rgba(192, 57, 43, 0.4);
+    }
     .hint {
       display: flex; gap: 0.6rem; align-items: flex-start;
       background: #fff7e0; border: 1px solid #f1d889; border-left: 4px solid #d4782f;
@@ -677,6 +753,45 @@ interface BadgeData {
       .sheet-print-stamp { display: block; }
     }
     @page { size: letter; margin: 0; }
+
+    /* === Kennedy Manor demo card (empty-state preview) === */
+    .empty {
+      display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
+      padding: 2.5rem 1rem; color: #6c757d;
+    }
+    .empty-hint {
+      margin: 0; font-size: 0.92rem; color: #6e4b08;
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      i { color: #d4782f; }
+    }
+    .kennedy-manor-card {
+      width: 4in; max-width: 95vw;
+      background: #fff; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06);
+      border: 1px solid #e0d8c8;
+    }
+    .km-image {
+      background: #1a1a1a;
+      img { display: block; width: 100%; height: auto; }
+    }
+    .km-name {
+      padding: 1.1rem 1.25rem 1.4rem;
+      text-align: center;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      color: #1a3a4a;
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    }
+    .km-first {
+      font-size: 1.5rem; font-weight: 700; line-height: 1; letter-spacing: 0.01em;
+    }
+    .km-aka {
+      font-size: 0.85rem; font-style: italic; color: #6c757d;
+      letter-spacing: 0.02em; line-height: 1.3; max-width: 22ch;
+    }
+    .km-last {
+      font-size: 1.7rem; font-weight: 800; line-height: 1; color: #8a4a08;
+      letter-spacing: 0.02em;
+    }
   `]
 })
 export class BadgesAdminComponent implements OnInit {
@@ -718,6 +833,11 @@ export class BadgesAdminComponent implements OnInit {
    *  toggling print selection. State lives purely in component memory --
    *  reloading the page resets every demo stamp. */
   demoCancelMode = false;
+
+  /** Demo only: the Kennedy Manor card preview's cancellation state.
+   *  Defaults to TRUE so opening demo mode immediately shows the stamped look,
+   *  which is the whole point of the showcase. Click the card to flip. */
+  kennedyManorCancelled = true;
 
   // Per-badge selection so admins can print one (or a few) without
   // sending the whole filtered set to the printer.
