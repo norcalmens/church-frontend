@@ -11,6 +11,10 @@ export interface ThemeDefinition {
    *  SCSS palette so the admin picker can render preview chips without
    *  computing colors at runtime. */
   swatch: { primary: string; accent: string; cream: string };
+  /** Marks the baseline palette so the admin picker can badge it. The
+   *  retreat year tag (e.g. "2026") is rendered next to the "Default" label
+   *  so admins know which season the original palette belongs to. */
+  defaultYear?: number;
 }
 
 /** Keep this list in sync with the `.theme-*` classes in src/styles.scss and
@@ -19,6 +23,7 @@ export const AVAILABLE_THEMES: ThemeDefinition[] = [
   {
     id: 'sunrise', name: 'Sunrise', description: 'Deep teal + warm gold and sunset orange. The original retreat palette.',
     swatch: { primary: '#1a3a4a', accent: '#e8a832', cream: '#f0e6d0' },
+    defaultYear: 2026,
   },
   {
     id: 'forest', name: 'Redwood Forest', description: 'Deep evergreens + warm brass. Matches the Alliance Redwoods venue.',
@@ -39,6 +44,26 @@ export const AVAILABLE_THEMES: ThemeDefinition[] = [
   {
     id: 'sage', name: 'Sage & Rose', description: 'Soft eucalyptus + dusty rose. Calm, reflective palette.',
     swatch: { primary: '#3a4f44', accent: '#d4a48a', cream: '#ece8da' },
+  },
+  {
+    id: 'sunset', name: 'Sunset', description: 'Coral + magenta + warm cream. High-energy evening light.',
+    swatch: { primary: '#6e1f3a', accent: '#f4a05a', cream: '#f5e4d0' },
+  },
+  {
+    id: 'midnight', name: 'Midnight Pines', description: 'Very dark conifers + silver moonlight. Quiet and contemplative.',
+    swatch: { primary: '#122225', accent: '#b8c7c2', cream: '#e2e6df' },
+  },
+  {
+    id: 'cardinal', name: 'Cardinal', description: 'Deep red + ivory + brass. Sanctuary banner palette.',
+    swatch: { primary: '#6e1818', accent: '#d4a84a', cream: '#f0e6d0' },
+  },
+  {
+    id: 'indigo', name: 'Indigo Dawn', description: 'Deep purple + lavender + soft cream. Reflective and hopeful.',
+    swatch: { primary: '#2a2548', accent: '#b89dd4', cream: '#ede8f0' },
+  },
+  {
+    id: 'harvest', name: 'Harvest', description: 'Rust + amber + warm cream. Late-autumn, wood-stove warm.',
+    swatch: { primary: '#5a2f1f', accent: '#e8a832', cream: '#f0e4cf' },
   },
 ];
 

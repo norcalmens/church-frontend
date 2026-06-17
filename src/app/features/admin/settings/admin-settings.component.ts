@@ -61,6 +61,9 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
           <button *ngFor="let t of themes" type="button" class="theme-swatch"
                   [class.active]="(themeService.theme$ | async) === t.id"
                   (click)="previewTheme(t.id)">
+            <span *ngIf="t.defaultYear" class="swatch-default-badge">
+              <i class="pi pi-star-fill"></i> Default ({{ t.defaultYear }})
+            </span>
             <div class="swatch-strip">
               <span [style.background]="t.swatch.primary"></span>
               <span [style.background]="t.swatch.accent"></span>
@@ -214,6 +217,17 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
       position: absolute; top: 6px; right: 8px;
       color: #fff; font-size: 1.15rem;
       filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
+    }
+    .swatch-default-badge {
+      position: absolute; top: 6px; left: 6px; z-index: 1;
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: #fff; color: #b8651f;
+      padding: 0.2rem 0.55rem; border-radius: 999px;
+      font-size: 0.7rem; font-weight: 800;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+      border: 1px solid rgba(212, 120, 47, 0.45);
+      i { color: #e8a832; font-size: 0.7rem; }
     }
     .theme-actions { display: flex; gap: 0.6rem; justify-content: flex-end; }
 

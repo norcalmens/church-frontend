@@ -33,7 +33,9 @@ import { AuthService } from '../../core/auth/auth.service';
               </a>
             </div>
           </div>
-          <div class="hero-flyer">
+          <!-- Flyer block hidden until the 2027 PDF/image are ready. Flip
+               showFlyer to true on the class when the new assets are in. -->
+          <div class="hero-flyer" *ngIf="showFlyer">
             <button type="button" class="flyer-thumb" (click)="lightboxOpen = true" aria-label="Enlarge flyer">
               <img src="assets/images/retreat-flyer.png" alt="NorCal Men's Retreat 2026 Flyer" />
               <span class="flyer-zoom-hint"><i class="pi pi-search-plus"></i> Click to enlarge</span>
@@ -111,7 +113,7 @@ import { AuthService } from '../../core/auth/auth.service';
       </div>
     </div>
 
-    <div class="flyer-lightbox" *ngIf="lightboxOpen" (click)="lightboxOpen = false">
+    <div class="flyer-lightbox" *ngIf="showFlyer && lightboxOpen" (click)="lightboxOpen = false">
       <button type="button" class="lightbox-close" (click)="lightboxOpen = false" aria-label="Close"><i class="pi pi-times"></i></button>
       <img src="assets/images/retreat-flyer.png" alt="NorCal Men's Retreat 2026 Flyer" (click)="$event.stopPropagation()" />
       <a class="lightbox-download" href="assets/retreat-flyer.pdf" target="_blank" rel="noopener" (click)="$event.stopPropagation()">
@@ -220,6 +222,9 @@ import { AuthService } from '../../core/auth/auth.service';
 })
 export class HomeComponent {
   lightboxOpen = false;
+  /** Master switch for the flyer thumbnail + download button + lightbox.
+   *  Flip to true when the 2027 flyer assets are in place. */
+  showFlyer = false;
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
