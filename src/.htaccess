@@ -11,3 +11,38 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 # Otherwise, send all requests to index.html (Angular routing)
 RewriteRule ^(.*)$ /index.html [L]
+
+# ============================================================================
+# Caching policy
+# ----------------------------------------------------------------------------
+# index.html: NEVER cache. Without this the browser holds onto the old shell,
+# which references the previous build's hashed JS/CSS filenames -- so visitors
+# who picked up an older index.html don't pull the new main.<hash>.js even
+# after we redeploy. Cache-busting only works if index.html is fresh.
+#
+# Hashed assets (main.*.js, styles.*.css, polyfills.*.js, etc.): cache for a
+# year. They're content-addressed, so a redeploy produces new filenames and
+# the old ones can sit in CDN/browser cache indefinitely without conflict.
+# ============================================================================
+
+<IfModule mod_headers.c>
+  # index.html (and the bare "/") -- always fresh
+  <FilesMatch "^(index\.html)?$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # Any path that doesn't end in a file extension is an Angular route that
+  # ultimately serves index.html (via the rewrite above) -- treat the same.
+  <FilesMatch "^[^.]+$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # Hashed bundles -- safe to cache for a year (immutable: content-addressed)
+  <FilesMatch "\.(js|css|woff2?|ttf|eot|svg|png|jpg|jpeg|gif|webp|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>

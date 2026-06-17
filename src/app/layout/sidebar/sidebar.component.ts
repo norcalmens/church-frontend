@@ -88,6 +88,9 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
              *ngIf="menuVisibility.isVisible('admin/settings')">
             <i class="pi pi-cog"></i> Settings
           </a>
+          <a href="javascript:void(0)" (click)="onForceRefresh()" class="refresh-action">
+            <i class="pi pi-refresh"></i> Force Refresh
+          </a>
           <a routerLink="/admin/donations" routerLinkActive="active" (click)="close()"
              *ngIf="menuVisibility.isVisible('admin/donations')">
             <i class="pi pi-heart"></i> All Donations
@@ -139,6 +142,9 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
       }
     }
     .sidebar-divider { height: 1px; background: #e0e0e0; margin: 0.75rem 0; }
+    .refresh-action { color: #b8651f !important; margin-top: 0.5rem;
+      i { color: #d4782f !important; }
+    }
     .sidebar-section-title {
       padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 600;
       text-transform: uppercase; color: #6c757d; letter-spacing: 0.05em;
@@ -154,5 +160,24 @@ export class SidebarComponent {
   close(): void {
     this.visible = false;
     this.visibleChange.emit(false);
+  }
+
+  /** Mirror of TopbarComponent.forceRefresh -- duplicated so the sidebar
+   *  doesn't need a service injection for a one-shot user action. */
+  async onForceRefresh(): Promise<void> {
+    this.close();
+    try {
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(r => r.unregister()));
+      }
+    } catch { /* best-effort */ }
+    const url = new URL(window.location.href);
+    url.searchParams.set('_r', Date.now().toString(36));
+    window.location.replace(url.toString());
   }
 }

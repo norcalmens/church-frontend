@@ -83,6 +83,9 @@ interface SearchItem {
                  *ngIf="menuVisibility.isVisible('admin/feedback')"><i class="pi pi-comments"></i> Feedback</a>
               <a routerLink="/admin/settings" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/settings')"><i class="pi pi-cog"></i> Settings</a>
+              <div class="dropdown-divider"></div>
+              <a href="javascript:void(0)" (click)="forceRefresh(); adminMenuOpen = false"
+                 class="refresh-action"><i class="pi pi-refresh"></i> Force Refresh</a>
               <a routerLink="/admin/donations" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/donations')"><i class="pi pi-heart"></i> View All Donations</a>
               <a routerLink="/admin/payment-plans" (click)="adminMenuOpen = false"
@@ -213,6 +216,15 @@ interface SearchItem {
     .admin-dropdown-menu, .dropdown-menu {
       position: absolute; top: 100%; left: 0; padding-top: 0.35rem;
       min-width: 220px; z-index: 1050;
+    }
+    .dropdown-divider {
+      height: 1px;
+      background: rgba(26, 58, 74, 0.12);
+      margin: 0.35rem 0;
+    }
+    .refresh-action {
+      color: #b8651f !important;
+      i { color: #d4782f !important; }
     }
     .admin-dropdown-panel, .dropdown-panel {
       background: white; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
@@ -428,6 +440,31 @@ export class TopbarComponent {
 
   navigateTo(path: string): void {
     this.router.navigate([path]);
+  }
+
+  /** Hard refresh: wipe browser caches, unregister any service workers, then
+   *  reload bypassing the disk/HTTP cache. Use after a deploy when the app
+   *  shell looks stale or an admin's preview state is stuck. */
+  async forceRefresh(): Promise<void> {
+    try {
+      // Clear all CacheStorage entries (covers service-worker caches even
+      // after the SW is unregistered below).
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+      // Unregister any active service worker so the next page load starts
+      // from a clean network fetch.
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(r => r.unregister()));
+      }
+    } catch { /* best-effort -- still reload below */ }
+    // Bust the URL so even an aggressive proxy can't serve a cached response.
+    const stamp = Date.now().toString(36);
+    const url = new URL(window.location.href);
+    url.searchParams.set('_r', stamp);
+    window.location.replace(url.toString());
   }
 
   private getVisibleItems(): SearchItem[] {

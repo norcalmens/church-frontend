@@ -110,16 +110,19 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
           <label><i class="pi pi-facebook fb"></i> Facebook</label>
           <input pInputText [(ngModel)]="social.facebook" placeholder="https://facebook.com/your-page" />
           <p-inputSwitch [(ngModel)]="social.showFacebook" pTooltip="Show this icon"></p-inputSwitch>
+          <span class="row-status" [class]="iconStatus('facebook').class">{{ iconStatus('facebook').label }}</span>
         </div>
         <div class="social-row">
           <label><i class="pi pi-instagram ig"></i> Instagram</label>
           <input pInputText [(ngModel)]="social.instagram" placeholder="https://instagram.com/your-handle" />
           <p-inputSwitch [(ngModel)]="social.showInstagram" pTooltip="Show this icon"></p-inputSwitch>
+          <span class="row-status" [class]="iconStatus('instagram').class">{{ iconStatus('instagram').label }}</span>
         </div>
         <div class="social-row">
           <label><i class="pi pi-youtube yt"></i> YouTube</label>
           <input pInputText [(ngModel)]="social.youtube" placeholder="https://youtube.com/@your-channel" />
           <p-inputSwitch [(ngModel)]="social.showYoutube" pTooltip="Show this icon"></p-inputSwitch>
+          <span class="row-status" [class]="iconStatus('youtube').class">{{ iconStatus('youtube').label }}</span>
         </div>
         <div class="social-actions">
           <button pButton label="Save Social Links" icon="pi pi-check"
@@ -234,7 +237,7 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
       }
     }
     .social-row {
-      display: grid; grid-template-columns: 140px 1fr auto; gap: 0.85rem; align-items: center;
+      display: grid; grid-template-columns: 140px 1fr auto auto; gap: 0.85rem; align-items: center;
       margin-bottom: 0.85rem;
       label { display: flex; align-items: center; gap: 0.5rem; color: #1a3a4a; font-weight: 600; font-size: 0.95rem;
         i { font-size: 1.1rem;
@@ -246,8 +249,17 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
       input { width: 100%; }
     }
     .social-actions { display: flex; justify-content: flex-end; margin-top: 0.5rem; }
+    .row-status {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.25rem 0.6rem; border-radius: 999px;
+      white-space: nowrap; text-align: center; min-width: 100px;
+      &.status-ok   { background: rgba(46, 158, 91, 0.12); color: #1a6e3b; border: 1px solid rgba(46,158,91,0.35); }
+      &.status-warn { background: rgba(212, 120, 47, 0.12); color: #8a4a08; border: 1px solid rgba(212,120,47,0.4); }
+    }
     @media (max-width: 600px) {
       .social-row { grid-template-columns: 1fr; gap: 0.35rem; }
+      .row-status { justify-self: start; }
     }
   `]
 })
@@ -364,6 +376,18 @@ export class AdminSettingsComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
       }
     });
+  }
+
+  /** Live status for the row next to each social URL field. Mirrors the
+   *  render rule the footer/topbar use so the admin can see at a glance
+   *  why an icon will or won't appear before clicking Save. */
+  iconStatus(platform: 'facebook' | 'instagram' | 'youtube'): { label: string; class: string } {
+    const showKey = ('show' + platform.charAt(0).toUpperCase() + platform.slice(1)) as
+      'showFacebook' | 'showInstagram' | 'showYoutube';
+    if (!this.social.enabled)             return { label: 'Master switch off', class: 'status-warn' };
+    if (!this.social[showKey])            return { label: 'Toggle off',        class: 'status-warn' };
+    if (!this.social[platform]?.trim())   return { label: 'URL needed',        class: 'status-warn' };
+    return { label: 'Will appear', class: 'status-ok' };
   }
 
   saveSocial(): void {
