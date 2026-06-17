@@ -64,7 +64,7 @@ interface MenuCheckboxItem extends MenuItem {
       </p>
 
       <div class="font-bold text-lg mb-2 pb-1"
-           style="border-bottom: 2px solid #1a3a4a;">
+           style="border-bottom: 2px solid var(--retreat-teal-dark);">
         Public
       </div>
       <ng-container *ngFor="let item of items">
@@ -81,7 +81,7 @@ interface MenuCheckboxItem extends MenuItem {
       </ng-container>
 
       <div class="font-bold text-lg mb-2 mt-3 pb-1"
-           style="border-bottom: 2px solid #1a3a4a;">
+           style="border-bottom: 2px solid var(--retreat-teal-dark);">
         Admin
       </div>
       <ng-container *ngFor="let item of items">

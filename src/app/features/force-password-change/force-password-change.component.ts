@@ -82,17 +82,17 @@ import { AuthService } from '../../core/auth/auth.service';
     ::ng-deep .p-password { width: 100%; }
 
     .change-header {
-      text-align: center; color: #f0e6d0;
+      text-align: center; color: var(--retreat-cream);
       background: var(--retreat-grad-nav);
       padding: 2rem; margin: -1.25rem -1.25rem 1.5rem -1.25rem;
-      i { font-size: 2.5rem; color: #f0e6d0; }
+      i { font-size: 2.5rem; color: var(--retreat-cream); }
       h1 { font-size: 1.5rem; margin: 0.75rem 0 0.5rem 0; font-weight: 700; }
       p { font-size: 0.9rem; opacity: 0.85; margin: 0; }
     }
 
     .field {
       margin-bottom: 1.25rem;
-      label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a3a4a; }
+      label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--retreat-teal-dark); }
     }
 
     .password-requirements {
@@ -110,15 +110,15 @@ import { AuthService } from '../../core/auth/auth.service';
     }
 
     ::ng-deep .change-btn {
-      background: #1a3a4a !important; border-color: #1a3a4a !important;
-      &:hover { background: #1e4d5e !important; border-color: #1e4d5e !important; }
+      background: var(--retreat-teal-dark) !important; border-color: var(--retreat-teal-dark) !important;
+      &:hover { background: var(--retreat-teal-light) !important; border-color: var(--retreat-teal-light) !important; }
     }
 
     .logout-link {
       text-align: center; margin-top: 1.5rem;
       a { color: #999; text-decoration: none; cursor: pointer; font-size: 0.85rem;
         display: inline-flex; align-items: center; gap: 0.4rem;
-        &:hover { color: #d4782f; }
+        &:hover { color: var(--retreat-sunset); }
       }
     }
   `]

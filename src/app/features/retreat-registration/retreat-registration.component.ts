@@ -205,7 +205,7 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
         style: {
           base: {
             fontSize: '16px',
-            color: '#1a3a4a',
+            color: 'var(--retreat-teal-dark)',
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
             '::placeholder': { color: '#999' }
           },

@@ -261,12 +261,12 @@ interface BadgeData {
     .back-bar { margin-bottom: 1rem; }
     .back-link {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      color: #1a3a4a; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      color: var(--retreat-teal-dark); text-decoration: none; font-weight: 600; font-size: 0.9rem;
       padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s;
-      &:hover { background: rgba(26, 58, 74, 0.08); color: #d4782f; }
+      &:hover { background: rgba(26, 58, 74, 0.08); color: var(--retreat-sunset); }
     }
     .page-header {
-      text-align: center; padding: 2rem; color: #f0e6d0; border-radius: 12px;
+      text-align: center; padding: 2rem; color: var(--retreat-cream); border-radius: 12px;
       background: var(--retreat-grad-page-header);
       margin-bottom: 1.5rem;
       h1 { font-size: 1.9rem; font-weight: 700; margin: 0 0 0.4rem 0; }
@@ -279,19 +279,19 @@ interface BadgeData {
       background: #fff; padding: 0.85rem 1.1rem; border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.06);
       .search-wrap { min-width: 240px; }
-      .filter { display: flex; align-items: center; gap: 0.45rem; cursor: pointer; color: #1a3a4a; font-weight: 500; font-size: 0.95rem; }
+      .filter { display: flex; align-items: center; gap: 0.45rem; cursor: pointer; color: var(--retreat-teal-dark); font-weight: 500; font-size: 0.95rem; }
       .spacer { flex: 1; }
       .count { color: #6c757d; font-size: 0.92rem;
-        strong { color: #1a3a4a; font-size: 1rem; }
-        .of-total { color: #b8651f; font-weight: 600; }
+        strong { color: var(--retreat-teal-dark); font-size: 1rem; }
+        .of-total { color: var(--retreat-sunset); font-weight: 600; }
       }
-      .filter em { color: #b8651f; font-style: italic; font-size: 0.85rem; font-weight: 500; }
+      .filter em { color: var(--retreat-sunset); font-style: italic; font-size: 0.85rem; font-weight: 500; }
       .orientation-toggle { display: flex; gap: 0.35rem; align-items: center;
         ::ng-deep .p-button { padding: 0.35rem 0.75rem; font-size: 0.85rem; }
       }
       .slot-control {
         display: flex; align-items: center; gap: 0.4rem;
-        color: #1a3a4a; font-size: 0.88rem; font-weight: 500;
+        color: var(--retreat-teal-dark); font-size: 0.88rem; font-weight: 500;
         background: rgba(212, 120, 47, 0.08); border: 1px solid rgba(212, 120, 47, 0.25);
         border-radius: 8px; padding: 0.3rem 0.5rem; cursor: help;
         .of-total { color: #6c757d; font-size: 0.8rem; }
@@ -391,10 +391,10 @@ interface BadgeData {
     }
     .hint {
       display: flex; gap: 0.6rem; align-items: flex-start;
-      background: #fff7e0; border: 1px solid #f1d889; border-left: 4px solid #d4782f;
+      background: #fff7e0; border: 1px solid #f1d889; border-left: 4px solid var(--retreat-sunset);
       border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 1.5rem;
       color: #6e4b08;
-      i { color: #d4782f; font-size: 1.1rem; margin-top: 0.15rem; flex-shrink: 0; }
+      i { color: var(--retreat-sunset); font-size: 1.1rem; margin-top: 0.15rem; flex-shrink: 0; }
       strong { color: #8a4a08; }
     }
 
@@ -460,7 +460,7 @@ interface BadgeData {
         radial-gradient(circle at 50% 0%, rgba(232, 168, 50, 0.12) 0%, rgba(232, 168, 50, 0) 55%),
         /* cream paper tone */
         linear-gradient(180deg, #fffaf0 0%, #fff 100%);
-      color: #1a3a4a;
+      color: var(--retreat-teal-dark);
       overflow: hidden;
       position: relative;
       font-family: 'Georgia', 'Times New Roman', serif;
@@ -469,14 +469,14 @@ interface BadgeData {
     .badge::before {
       content: '';
       position: absolute; inset: 0.06in;
-      border: 0.012in solid #1a3a4a;
+      border: 0.012in solid var(--retreat-teal-dark);
       border-radius: 0.04in;
       pointer-events: none;
     }
     .badge::after {
       content: '';
       position: absolute; inset: 0.09in;
-      border: 0.005in solid #e8a832;
+      border: 0.005in solid var(--retreat-gold);
       border-radius: 0.025in;
       pointer-events: none;
     }
@@ -513,11 +513,11 @@ interface BadgeData {
       &:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(26, 58, 74, 0.22); }
       &:hover .badge-print-one { opacity: 1; }
     }
-    .badge.badge-selected { box-shadow: 0 0 0 0.05in #d4782f, 0 6px 18px rgba(212, 120, 47, 0.35); }
+    .badge.badge-selected { box-shadow: 0 0 0 0.05in var(--retreat-sunset), 0 6px 18px rgba(212, 120, 47, 0.35); }
     .badge-select-mark {
       position: absolute; top: 0.12in; left: 0.12in;
       width: 0.32in; height: 0.32in;
-      background: #d4782f; color: #fff;
+      background: var(--retreat-sunset); color: #fff;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       z-index: 3;
@@ -527,20 +527,20 @@ interface BadgeData {
     .badge-print-one {
       position: absolute; top: 0.1in; right: 0.1in;
       width: 0.32in; height: 0.32in;
-      background: #1a3a4a; color: #fff;
+      background: var(--retreat-teal-dark); color: #fff;
       border: none; border-radius: 50%;
       cursor: pointer; opacity: 0; transition: opacity 0.15s, background 0.15s;
       display: flex; align-items: center; justify-content: center;
       z-index: 3;
       box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-      &:hover { background: #d4782f; opacity: 1 !important; }
+      &:hover { background: var(--retreat-sunset); opacity: 1 !important; }
       i { font-size: 0.16in; }
     }
 
     /* Top ribbon -- gold script-style with sun icon flourishes */
     .badge-ribbon {
       display: flex; align-items: center; justify-content: center; gap: 0.1in;
-      color: #b8651f;
+      color: var(--retreat-sunset);
       font-family: 'Georgia', serif;
       font-style: italic;
       font-size: 0.16in;
@@ -548,7 +548,7 @@ interface BadgeData {
       letter-spacing: 0.01in;
       padding: 0.04in 0 0.06in;
       position: relative; z-index: 1;
-      i { font-size: 0.13in; color: #e8a832; font-style: normal; }
+      i { font-size: 0.13in; color: var(--retreat-gold); font-style: normal; }
     }
 
     /* "Hello, my name is" with gold side-ornaments */
@@ -561,7 +561,7 @@ interface BadgeData {
         font-style: italic;
         font-size: 0.11in;
         font-weight: 500;
-        color: #1a3a4a;
+        color: var(--retreat-teal-dark);
         opacity: 0.85;
         text-transform: none;
         letter-spacing: 0.01in;
@@ -569,7 +569,7 @@ interface BadgeData {
       .ornament {
         flex: 0 0 0.5in;
         height: 0.012in;
-        background: linear-gradient(90deg, transparent 0%, #e8a832 50%, transparent 100%);
+        background: linear-gradient(90deg, transparent 0%, var(--retreat-gold) 50%, transparent 100%);
         position: relative;
         &::after {
           content: '';
@@ -577,7 +577,7 @@ interface BadgeData {
           left: 50%; top: 50%;
           width: 0.04in; height: 0.04in;
           transform: translate(-50%, -50%) rotate(45deg);
-          background: #e8a832;
+          background: var(--retreat-gold);
         }
       }
     }
@@ -590,11 +590,11 @@ interface BadgeData {
       position: relative; z-index: 1;
       font-family: 'Georgia', 'Times New Roman', serif;
       .first {
-        font-size: 0.42in; font-weight: 700; line-height: 1.0; color: #1a3a4a;
+        font-size: 0.42in; font-weight: 700; line-height: 1.0; color: var(--retreat-teal-dark);
         letter-spacing: -0.005in;
       }
       .last  {
-        font-size: 0.32in; font-weight: 700; line-height: 1.05; color: #1a3a4a;
+        font-size: 0.32in; font-weight: 700; line-height: 1.05; color: var(--retreat-teal-dark);
         margin-top: 0.04in;
         letter-spacing: -0.005in;
       }
@@ -606,18 +606,18 @@ interface BadgeData {
       height: 0.05in;
       margin: 0.05in auto 0.06in;
       background:
-        linear-gradient(180deg, transparent 0 38%, #e8a832 38% 48%, transparent 48% 52%, #e8a832 52% 62%, transparent 62% 100%);
+        linear-gradient(180deg, transparent 0 38%, var(--retreat-gold) 38% 48%, transparent 48% 52%, var(--retreat-gold) 52% 62%, transparent 62% 100%);
       position: relative; z-index: 1;
     }
 
     .badge-congregation {
       display: flex; align-items: center; justify-content: center; gap: 0.05in;
-      font-size: 0.13in; font-weight: 600; color: #b8651f; line-height: 1.2;
+      font-size: 0.13in; font-weight: 600; color: var(--retreat-sunset); line-height: 1.2;
       font-family: 'Georgia', serif;
       font-style: italic;
       padding: 0 0.1in;
       position: relative; z-index: 1;
-      i { font-size: 0.1in; color: #d4782f; font-style: normal; }
+      i { font-size: 0.1in; color: var(--retreat-sunset); font-style: normal; }
       span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 3in; }
     }
 
@@ -626,7 +626,7 @@ interface BadgeData {
       margin-top: 0.05in;
       padding: 0 0.05in;
       font-family: 'Georgia', serif;
-      color: #1a3a4a;
+      color: var(--retreat-teal-dark);
       position: relative; z-index: 1;
       .qr-cell {
         display: flex; flex-direction: column; align-items: center; gap: 0.015in;
@@ -641,7 +641,7 @@ interface BadgeData {
         .qr-label {
           font-size: 0.085in;
           font-weight: 700;
-          color: #1a3a4a;
+          color: var(--retreat-teal-dark);
           letter-spacing: 0.01in;
           text-transform: uppercase;
         }
@@ -650,8 +650,8 @@ interface BadgeData {
         flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
         gap: 0.01in; line-height: 1.1;
         text-align: center;
-        .event { font-size: 0.11in; font-weight: 700; color: #1a3a4a; opacity: 0.85; }
-        .date { font-size: 0.1in; font-style: italic; color: #d4782f; margin-top: 0.02in; }
+        .event { font-size: 0.11in; font-weight: 700; color: var(--retreat-teal-dark); opacity: 0.85; }
+        .date { font-size: 0.1in; font-style: italic; color: var(--retreat-sunset); margin-top: 0.02in; }
       }
     }
 
@@ -661,10 +661,10 @@ interface BadgeData {
         radial-gradient(circle at 50% 0%, rgba(232, 168, 50, 0.22) 0%, rgba(232, 168, 50, 0) 60%),
         linear-gradient(180deg, #fff7e0 0%, #fffaf0 100%);
       &::before {
-        border: 0.018in solid #b8651f;
+        border: 0.018in solid var(--retreat-sunset);
       }
       &::after {
-        border: 0.008in solid #e8a832;
+        border: 0.008in solid var(--retreat-gold);
       }
       .badge-ribbon {
         color: #8a4a08;
@@ -673,26 +673,26 @@ interface BadgeData {
         font-size: 0.15in;
         letter-spacing: 0.04in;
         text-transform: uppercase;
-        i { color: #d4782f; }
+        i { color: var(--retreat-sunset); }
       }
       .badge-greeting .greeting-text {
         color: #8a4a08; font-style: italic; opacity: 0.95;
         font-weight: 600;
       }
-      .badge-greeting .ornament { background: linear-gradient(90deg, transparent 0%, #b8651f 50%, transparent 100%);
-        &::after { background: #b8651f; }
+      .badge-greeting .ornament { background: linear-gradient(90deg, transparent 0%, var(--retreat-sunset) 50%, transparent 100%);
+        &::after { background: var(--retreat-sunset); }
       }
       .badge-name .first, .badge-name .last { color: #5a3608; }
       .badge-rule {
         background:
-          linear-gradient(180deg, transparent 0 30%, #b8651f 30% 42%, transparent 42% 50%, #e8a832 50% 62%, transparent 62% 70%, #b8651f 70% 82%, transparent 82% 100%);
+          linear-gradient(180deg, transparent 0 30%, var(--retreat-sunset) 30% 42%, transparent 42% 50%, var(--retreat-gold) 50% 62%, transparent 62% 70%, var(--retreat-sunset) 70% 82%, transparent 82% 100%);
         height: 0.08in;
       }
       .badge-congregation { color: #5a3608;
-        i { color: #b8651f; }
+        i { color: var(--retreat-sunset); }
       }
       .badge-foot { color: #5a3608; opacity: 0.85;
-        .dot { color: #d4782f; }
+        .dot { color: var(--retreat-sunset); }
       }
     }
 
@@ -720,14 +720,14 @@ interface BadgeData {
       width: 8.5in; max-width: 100%;
       display: flex; align-items: baseline; justify-content: space-between;
       padding: 0.35rem 0.5rem;
-      color: #1a3a4a; font-size: 0.92rem;
-      border-bottom: 1px dashed #d4782f;
-      .sheet-num { font-weight: 700; color: #1a3a4a;
+      color: var(--retreat-teal-dark); font-size: 0.92rem;
+      border-bottom: 1px dashed var(--retreat-sunset);
+      .sheet-num { font-weight: 700; color: var(--retreat-teal-dark);
         .of { color: #6c757d; font-weight: 500; }
       }
       .sheet-meta { color: #495057;
-        strong { color: #1a3a4a; }
-        em { color: #b8651f; font-style: italic; }
+        strong { color: var(--retreat-teal-dark); }
+        em { color: var(--retreat-sunset); font-style: italic; }
       }
     }
     /* Print-only stamp lives inside the sheet area so it sits in the
@@ -775,7 +775,7 @@ interface BadgeData {
     .empty-hint {
       margin: 0; font-size: 0.92rem; color: #6e4b08;
       display: inline-flex; align-items: center; gap: 0.45rem;
-      i { color: #d4782f; }
+      i { color: var(--retreat-sunset); }
     }
     .kennedy-manor-card {
       width: 4in; max-width: 95vw;
@@ -818,7 +818,7 @@ interface BadgeData {
       padding: 1.1rem 1.25rem 1.4rem;
       text-align: center;
       font-family: 'Georgia', 'Times New Roman', serif;
-      color: #1a3a4a;
+      color: var(--retreat-teal-dark);
       display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
     }
     .km-first {

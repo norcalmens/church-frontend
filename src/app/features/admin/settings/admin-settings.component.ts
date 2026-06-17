@@ -143,21 +143,21 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
     .back-bar { margin-bottom: 1rem; }
     .back-link {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      color: #1a3a4a; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      color: var(--retreat-teal-dark); text-decoration: none; font-weight: 600; font-size: 0.9rem;
       padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s;
-      &:hover { background: rgba(26, 58, 74, 0.08); color: #d4782f; }
+      &:hover { background: rgba(26, 58, 74, 0.08); color: var(--retreat-sunset); }
     }
     .page-header {
       text-align: center; padding: 2.5rem 2rem;
       background: var(--retreat-grad-page-header);
-      color: #f0e6d0; border-radius: 12px; margin-bottom: 1.5rem;
+      color: var(--retreat-cream); border-radius: 12px; margin-bottom: 1.5rem;
       h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; }
       p { font-size: 1rem; margin: 0; opacity: 0.9; }
     }
     .card-header-bar {
       display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem;
       background: var(--retreat-grad-nav);
-      color: #f0e6d0; font-size: 1.1rem; font-weight: 600;
+      color: var(--retreat-cream); font-size: 1.1rem; font-weight: 600;
     }
     ::ng-deep .settings-container .p-card { border-radius: 12px; overflow: hidden;
       .p-card-header { padding: 0; border-bottom: none; }
@@ -166,13 +166,13 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
     }
     .setting-row { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
     .setting-label { flex: 1; min-width: 250px;
-      strong { color: #1a3a4a; font-size: 1.05rem; }
+      strong { color: var(--retreat-teal-dark); font-size: 1.05rem; }
       p { color: #495057; margin: 0.35rem 0 0; line-height: 1.5; font-size: 0.92rem; }
     }
     .setting-control { display: flex; gap: 0.6rem; align-items: center; }
     .hint { margin: 1rem 0 0; color: #6e4b08; background: #fff7e0;
-      border-left: 4px solid #d4782f; border-radius: 6px; padding: 0.6rem 0.85rem; font-size: 0.9rem;
-      i { color: #d4782f; margin-right: 0.4rem; }
+      border-left: 4px solid var(--retreat-sunset); border-radius: 6px; padding: 0.6rem 0.85rem; font-size: 0.9rem;
+      i { color: var(--retreat-sunset); margin-right: 0.4rem; }
       strong { color: #8a4a08; }
     }
     @media (max-width: 600px) {
@@ -210,7 +210,7 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
       span { display: block; }
     }
     .swatch-meta { padding: 0.65rem 0.85rem 0.85rem;
-      strong { display: block; color: #1a3a4a; font-size: 0.98rem; }
+      strong { display: block; color: var(--retreat-teal-dark); font-size: 0.98rem; }
       span { display: block; color: #6c757d; font-size: 0.82rem; margin-top: 0.2rem; line-height: 1.35; }
     }
     .swatch-check {
@@ -221,13 +221,13 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
     .swatch-default-badge {
       position: absolute; top: 6px; left: 6px; z-index: 1;
       display: inline-flex; align-items: center; gap: 0.3rem;
-      background: #fff; color: #b8651f;
+      background: #fff; color: var(--retreat-sunset);
       padding: 0.2rem 0.55rem; border-radius: 999px;
       font-size: 0.7rem; font-weight: 800;
       letter-spacing: 0.05em; text-transform: uppercase;
       box-shadow: 0 2px 6px rgba(0,0,0,0.18);
       border: 1px solid rgba(212, 120, 47, 0.45);
-      i { color: #e8a832; font-size: 0.7rem; }
+      i { color: var(--retreat-gold); font-size: 0.7rem; }
     }
     .theme-actions { display: flex; gap: 0.6rem; justify-content: flex-end; }
 
@@ -240,20 +240,20 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
     .social-master {
       display: flex; align-items: center; gap: 1.25rem;
       background: linear-gradient(135deg, #fffaf0 0%, #fff 100%);
-      border: 1px solid #e8a832; border-left: 4px solid #d4782f;
+      border: 1px solid var(--retreat-gold); border-left: 4px solid var(--retreat-sunset);
       border-radius: 8px; padding: 0.85rem 1rem;
       margin-bottom: 1.25rem;
       .social-master-label { flex: 1;
-        strong { color: #1a3a4a; font-size: 1.02rem; }
+        strong { color: var(--retreat-teal-dark); font-size: 1.02rem; }
         p { color: #495057; font-size: 0.88rem; margin: 0.2rem 0 0; line-height: 1.4;
-          strong { color: #b8651f; }
+          strong { color: var(--retreat-sunset); }
         }
       }
     }
     .social-row {
       display: grid; grid-template-columns: 140px 1fr auto auto; gap: 0.85rem; align-items: center;
       margin-bottom: 0.85rem;
-      label { display: flex; align-items: center; gap: 0.5rem; color: #1a3a4a; font-weight: 600; font-size: 0.95rem;
+      label { display: flex; align-items: center; gap: 0.5rem; color: var(--retreat-teal-dark); font-weight: 600; font-size: 0.95rem;
         i { font-size: 1.1rem;
           &.fb { color: #1877f2; }
           &.ig { color: #cc2366; }

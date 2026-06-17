@@ -22,20 +22,20 @@ import { BackendStatusService } from '../../core/services/backend-status.service
       display: flex; align-items: center; gap: 0.85rem;
       padding: 0.7rem 1.25rem;
       background: repeating-linear-gradient(45deg, #fff7e0, #fff7e0 14px, #ffeec0 14px, #ffeec0 28px);
-      border-bottom: 2px solid #d4782f;
+      border-bottom: 2px solid var(--retreat-sunset);
       color: #6e4b08;
       box-shadow: 0 2px 8px rgba(212, 120, 47, 0.18);
       z-index: 999;
       animation: slideDown 0.3s ease;
     }
     .maintenance-banner > i.pi-wrench {
-      font-size: 1.35rem; color: #b8651f; flex-shrink: 0;
+      font-size: 1.35rem; color: var(--retreat-sunset); flex-shrink: 0;
     }
     .banner-text { flex: 1; display: flex; flex-direction: column; gap: 0.1rem; line-height: 1.35;
       strong { color: #8a4a08; font-size: 0.98rem; }
       .banner-sub { font-size: 0.85rem; color: #6e4b08; opacity: 0.9; }
     }
-    .spinner { font-size: 1.1rem; color: #b8651f; flex-shrink: 0; }
+    .spinner { font-size: 1.1rem; color: var(--retreat-sunset); flex-shrink: 0; }
 
     @keyframes slideDown {
       from { transform: translateY(-100%); opacity: 0; }

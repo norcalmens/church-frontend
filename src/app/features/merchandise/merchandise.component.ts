@@ -148,19 +148,19 @@ interface CartItem {
     </div>
   `,
   styles: [`
-    $dark-teal: #1a3a4a;
-    $deep-teal: #1e4d5e;
-    $sunset-orange: #d4782f;
-    $warm-amber: #c8923a;
-    $golden-glow: #e8a832;
-    $cream-text: #f0e6d0;
+    $dark-teal: var(--retreat-teal-dark);
+    $deep-teal: var(--retreat-teal-light);
+    $sunset-orange: var(--retreat-sunset);
+    $warm-amber: var(--retreat-copper);
+    $golden-glow: var(--retreat-gold);
+    $cream-text: var(--retreat-cream);
 
     .merch-container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
 
     .header-section {
       text-align: center; padding: 3rem 2rem;
       background: var(--retreat-grad-page-header);
-      color: #f0e6d0; border-radius: 12px; margin-bottom: 2rem;
+      color: var(--retreat-cream); border-radius: 12px; margin-bottom: 2rem;
       box-shadow: 0 4px 12px rgba(26, 58, 74, 0.3);
       h1 { font-size: 2.5rem; font-weight: 700; margin: 0 0 0.75rem 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
       p { font-size: 1.1rem; margin: 0; opacity: 0.9; }
@@ -172,11 +172,11 @@ interface CartItem {
     }
 
     .cat-btn {
-      padding: 0.5rem 1.25rem; border-radius: 20px; border: 2px solid #1a3a4a;
-      background: transparent; color: #1a3a4a; font-weight: 600; cursor: pointer;
+      padding: 0.5rem 1.25rem; border-radius: 20px; border: 2px solid var(--retreat-teal-dark);
+      background: transparent; color: var(--retreat-teal-dark); font-weight: 600; cursor: pointer;
       transition: all 0.2s; font-size: 0.9rem;
       &:hover { background: rgba(26, 58, 74, 0.08); }
-      &.active { background: #1a3a4a; color: #f0e6d0; }
+      &.active { background: var(--retreat-teal-dark); color: var(--retreat-cream); }
     }
 
     .product-grid {
@@ -192,7 +192,7 @@ interface CartItem {
 
     .product-image {
       position: relative; height: 180px;
-      background: linear-gradient(135deg, #1a3a4a 0%, #2a6a7a 100%);
+      background: linear-gradient(135deg, var(--retreat-teal-dark) 0%, #2a6a7a 100%);
       display: flex; align-items: center; justify-content: center;
       i { font-size: 4rem; color: rgba(240, 230, 208, 0.8); }
     }
@@ -206,16 +206,16 @@ interface CartItem {
 
     .product-info {
       padding: 1.25rem;
-      h3 { margin: 0 0 0.4rem 0; color: #1a3a4a; font-size: 1.1rem; }
+      h3 { margin: 0 0 0.4rem 0; color: var(--retreat-teal-dark); font-size: 1.1rem; }
       .product-desc { color: #6c757d; font-size: 0.85rem; margin: 0 0 0.75rem 0; line-height: 1.4; }
-      .product-price { font-size: 1.4rem; font-weight: 800; color: #d4782f; margin-bottom: 0.75rem; }
+      .product-price { font-size: 1.4rem; font-weight: 800; color: var(--retreat-sunset); margin-bottom: 0.75rem; }
     }
 
     .product-options { margin-bottom: 0.75rem; }
 
     .option-row {
       margin-bottom: 0.5rem;
-      label { display: block; font-size: 0.75rem; font-weight: 600; color: #1a3a4a; margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.5px; }
+      label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--retreat-teal-dark); margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.5px; }
     }
 
     .size-pills { display: flex; gap: 0.35rem; flex-wrap: wrap; }
@@ -224,8 +224,8 @@ interface CartItem {
       padding: 0.3rem 0.7rem; border: 1.5px solid #ccc; border-radius: 6px;
       background: white; cursor: pointer; font-size: 0.8rem; font-weight: 600;
       color: #555; transition: all 0.2s;
-      &:hover { border-color: #1a3a4a; color: #1a3a4a; }
-      &.selected { background: #1a3a4a; color: #f0e6d0; border-color: #1a3a4a; }
+      &:hover { border-color: var(--retreat-teal-dark); color: var(--retreat-teal-dark); }
+      &.selected { background: var(--retreat-teal-dark); color: var(--retreat-cream); border-color: var(--retreat-teal-dark); }
     }
 
     .color-pills { display: flex; gap: 0.4rem; }
@@ -234,7 +234,7 @@ interface CartItem {
       width: 26px; height: 26px; border-radius: 50%; border: 2.5px solid #ddd;
       cursor: pointer; transition: all 0.2s;
       &:hover { transform: scale(1.15); }
-      &.selected { border-color: #1a3a4a; box-shadow: 0 0 0 2px #e8a832; }
+      &.selected { border-color: var(--retreat-teal-dark); box-shadow: 0 0 0 2px var(--retreat-gold); }
     }
 
     .product-actions {
@@ -244,7 +244,7 @@ interface CartItem {
     .qty-control {
       display: flex; align-items: center; gap: 0.25rem;
       border: 1px solid #ddd; border-radius: 8px; padding: 0.15rem;
-      .qty-value { min-width: 28px; text-align: center; font-weight: 700; color: #1a3a4a; }
+      .qty-value { min-width: 28px; text-align: center; font-weight: 700; color: var(--retreat-teal-dark); }
     }
 
     .add-btn {
@@ -253,14 +253,14 @@ interface CartItem {
 
     ::ng-deep .merch-container .add-btn.p-button {
       background: var(--retreat-grad-nav); border: none;
-      &:hover { background: linear-gradient(135deg, #d4782f 0%, #e8a832 100%); }
+      &:hover { background: linear-gradient(135deg, var(--retreat-sunset) 0%, var(--retreat-gold) 100%); }
     }
 
     /* Cart FAB */
     .cart-fab {
       position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px;
       border-radius: 50%; border: none; cursor: pointer;
-      background: linear-gradient(135deg, #d4782f, #e8a832);
+      background: linear-gradient(135deg, var(--retreat-sunset), var(--retreat-gold));
       color: white; font-size: 1.5rem; box-shadow: 0 4px 16px rgba(212, 120, 47, 0.4);
       display: flex; align-items: center; justify-content: center;
       transition: all 0.3s; z-index: 999;
@@ -292,13 +292,13 @@ interface CartItem {
     .cart-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 1.25rem 1.5rem;
-      background: var(--retreat-grad-nav); color: #f0e6d0;
+      background: var(--retreat-grad-nav); color: var(--retreat-cream);
       h2 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;
-        i { color: #e8a832; }
+        i { color: var(--retreat-gold); }
       }
     }
 
-    ::ng-deep .cart-header .p-button.p-button-text { color: #f0e6d0 !important; }
+    ::ng-deep .cart-header .p-button.p-button-text { color: var(--retreat-cream) !important; }
 
     .cart-empty {
       flex: 1; display: flex; flex-direction: column;
@@ -319,21 +319,21 @@ interface CartItem {
 
     .cart-item-icon {
       width: 44px; height: 44px; border-radius: 10px;
-      background: linear-gradient(135deg, #1a3a4a, #2a6a7a);
+      background: linear-gradient(135deg, var(--retreat-teal-dark), #2a6a7a);
       display: flex; align-items: center; justify-content: center;
-      i { color: #f0e6d0; font-size: 1.1rem; }
+      i { color: var(--retreat-cream); font-size: 1.1rem; }
     }
 
     .cart-item-details {
       flex: 1; display: flex; flex-direction: column;
-      strong { color: #1a3a4a; font-size: 0.9rem; }
+      strong { color: var(--retreat-teal-dark); font-size: 0.9rem; }
       .cart-item-meta { font-size: 0.75rem; color: #999; }
-      .cart-item-price { font-size: 0.85rem; font-weight: 700; color: #d4782f; }
+      .cart-item-price { font-size: 0.85rem; font-weight: 700; color: var(--retreat-sunset); }
     }
 
     .cart-item-qty {
       display: flex; align-items: center; gap: 0.15rem;
-      span { min-width: 20px; text-align: center; font-weight: 700; font-size: 0.9rem; color: #1a3a4a; }
+      span { min-width: 20px; text-align: center; font-weight: 700; font-size: 0.9rem; color: var(--retreat-teal-dark); }
     }
 
     .cart-footer {
@@ -344,11 +344,11 @@ interface CartItem {
       display: flex; justify-content: space-between; align-items: center;
       margin-bottom: 1rem;
       span { font-size: 1rem; color: #666; }
-      strong { font-size: 1.5rem; color: #d4782f; }
+      strong { font-size: 1.5rem; color: var(--retreat-sunset); }
     }
 
     ::ng-deep .cart-footer .checkout-btn.p-button {
-      background: linear-gradient(135deg, #d4782f, #e8a832) !important; border: none;
+      background: linear-gradient(135deg, var(--retreat-sunset), var(--retreat-gold)) !important; border: none;
       font-weight: 700; font-size: 1.05rem; padding: 0.75rem;
       &:hover { background: var(--retreat-grad-nav) !important; }
     }
@@ -538,7 +538,7 @@ export class MerchandiseComponent {
       'Charcoal': '#444',
       'White': '#f5f5f5',
       'Khaki': '#c3b091',
-      'Orange': '#d4782f',
+      'Orange': 'var(--retreat-sunset)',
       'Natural': '#e8dcc8'
     };
     return map[color] || '#999';

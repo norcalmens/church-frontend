@@ -142,26 +142,26 @@ import { ZoomLink } from '../../../core/models/zoom-link.model';
     .back-bar { margin-bottom: 1rem; }
     .back-link {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      color: #1a3a4a; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      color: var(--retreat-teal-dark); text-decoration: none; font-weight: 600; font-size: 0.9rem;
       padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s;
-      &:hover { background: rgba(26, 58, 74, 0.08); color: #d4782f; }
+      &:hover { background: rgba(26, 58, 74, 0.08); color: var(--retreat-sunset); }
     }
     .page-header {
-      text-align: center; padding: 2rem; color: #f0e6d0; border-radius: 12px; margin-bottom: 1.5rem;
+      text-align: center; padding: 2rem; color: var(--retreat-cream); border-radius: 12px; margin-bottom: 1.5rem;
       background: var(--retreat-grad-nav);
       h1 { font-size: 1.8rem; font-weight: 700; margin: 0 0 0.35rem; }
       p { font-size: 0.95rem; margin: 0; opacity: 0.9; }
     }
     .card-header-bar {
       display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem;
-      background: var(--retreat-grad-nav); color: #f0e6d0;
+      background: var(--retreat-grad-nav); color: var(--retreat-cream);
       font-size: 1.1rem; font-weight: 600;
     }
     .toolbar {
       display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;
       a { text-decoration: none; margin-left: auto; }
     }
-    .link-title { font-weight: 600; color: #1a3a4a; }
+    .link-title { font-weight: 600; color: var(--retreat-teal-dark); }
     .link-url {
       font-size: 0.78rem; color: #6c757d; margin-top: 2px;
       max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -169,8 +169,8 @@ import { ZoomLink } from '../../../core/models/zoom-link.model';
     }
     .zoom-form { display: flex; flex-direction: column; gap: 0.9rem; padding-top: 0.5rem; }
     .field { display: flex; flex-direction: column; gap: 0.35rem;
-      label { font-size: 0.85rem; color: #1a3a4a; font-weight: 600; }
-      .req { color: #d4782f; }
+      label { font-size: 0.85rem; color: var(--retreat-teal-dark); font-weight: 600; }
+      .req { color: var(--retreat-sunset); }
       input, textarea { width: 100%; }
       small { color: #6c757d; font-size: 0.78rem; }
     }
@@ -184,7 +184,7 @@ import { ZoomLink } from '../../../core/models/zoom-link.model';
       .p-card-body { padding: 1.5rem; } .p-card-content { padding: 0; }
     }
     ::ng-deep .zoom-admin-container .p-datatable .p-datatable-thead > tr > th {
-      background: var(--retreat-grad-nav); color: #f0e6d0;
+      background: var(--retreat-grad-nav); color: var(--retreat-cream);
     }
   `]
 })

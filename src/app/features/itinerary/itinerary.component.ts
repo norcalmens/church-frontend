@@ -100,13 +100,13 @@ interface Day {
     /* Next-steps footer */
     .next-steps {
       display: flex; gap: 1rem; align-items: flex-start;
-      background: #fff; border: 1px solid #e6e6e6; border-left: 4px solid #d4782f;
+      background: #fff; border: 1px solid #e6e6e6; border-left: 4px solid var(--retreat-sunset);
       border-radius: 12px; padding: 1.25rem 1.4rem; color: #495057;
       box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-      i { font-size: 1.4rem; color: #d4782f; flex-shrink: 0; margin-top: 0.15rem; }
-      strong { display: block; font-size: 1.1rem; color: #1a3a4a; }
+      i { font-size: 1.4rem; color: var(--retreat-sunset); flex-shrink: 0; margin-top: 0.15rem; }
+      strong { display: block; font-size: 1.1rem; color: var(--retreat-teal-dark); }
       p { margin: 0.35rem 0 0; color: #495057; line-height: 1.55;
-        a { color: #b8651f; font-weight: 600; }
+        a { color: var(--retreat-sunset); font-weight: 600; }
       }
     }
     .next-steps .cta-row { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;
@@ -115,35 +115,35 @@ interface Day {
 
     .hero-section {
       background: var(--retreat-grad-nav);
-      border-radius: 16px; padding: 2.25rem 2rem; text-align: center; color: #f0e6d0;
-      i.pi-calendar { font-size: 2.25rem; color: #e8a832; }
+      border-radius: 16px; padding: 2.25rem 2rem; text-align: center; color: var(--retreat-cream);
+      i.pi-calendar { font-size: 2.25rem; color: var(--retreat-gold); }
       h1 { font-size: 2.1rem; font-weight: 800; margin: 0.5rem 0 0.35rem; }
       .subtitle { font-size: 1.1rem; margin: 0 0 0.4rem; opacity: 0.92;
-        em { color: #e8a832; font-style: italic; }
-        .scripture { color: #e8a832; opacity: 0.85; font-size: 0.95rem; margin-left: 0.25rem; }
+        em { color: var(--retreat-gold); font-style: italic; }
+        .scripture { color: var(--retreat-gold); opacity: 0.85; font-size: 0.95rem; margin-left: 0.25rem; }
       }
       .tagline { font-size: 0.98rem; margin: 0 0 1rem; opacity: 0.88; line-height: 1.5;
-        strong { color: #e8a832; }
+        strong { color: var(--retreat-gold); }
       }
       .dates, .location {
         display: inline-flex; align-items: center; gap: 0.5rem; margin: 0.25rem 0.75rem;
-        font-size: 1.05rem; color: #f0e6d0;
-        i { color: #e8a832; font-size: 1rem; }
+        font-size: 1.05rem; color: var(--retreat-cream);
+        i { color: var(--retreat-gold); font-size: 1rem; }
       }
     }
 
     .day-card {
       background: #fff; border-radius: 14px; overflow: hidden;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-top: 4px solid #e8a832;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-top: 4px solid var(--retreat-gold);
     }
     .day-header {
       display: flex; align-items: center; gap: 1.5rem; padding: 1.25rem 1.5rem;
-      background: var(--retreat-grad-nav); color: #f0e6d0;
+      background: var(--retreat-grad-nav); color: var(--retreat-cream);
     }
     .day-number {
       flex-shrink: 0; width: 64px; height: 64px;
       display: flex; align-items: center; justify-content: center;
-      background: #e8a832; color: #1a3a4a; border-radius: 50%;
+      background: var(--retreat-gold); color: var(--retreat-teal-dark); border-radius: 50%;
       font-weight: 800; font-size: 0.85rem; text-align: center; line-height: 1.05;
     }
     .day-meta {
@@ -157,9 +157,9 @@ interface Day {
       display: grid; grid-template-columns: 110px 1fr; gap: 1.25rem; padding: 0.75rem 1.5rem;
       border-left: 4px solid transparent; transition: background 0.15s;
       &:hover { background: #f8f9fa; }
-      &.slot-meal       { border-left-color: #d4782f; }
-      &.slot-session    { border-left-color: #1a3a4a; }
-      &.slot-worship    { border-left-color: #e8a832; }
+      &.slot-meal       { border-left-color: var(--retreat-sunset); }
+      &.slot-session    { border-left-color: var(--retreat-teal-dark); }
+      &.slot-worship    { border-left-color: var(--retreat-gold); }
       &.slot-free       { border-left-color: #6c757d; }
       &.slot-arrival    { border-left-color: #2e9e5b; }
       &.slot-departure  { border-left-color: #2e9e5b; }
@@ -167,29 +167,29 @@ interface Day {
       &.slot-breakout   { border-left-color: #5b8ab8; }
       &.slot-panel      { border-left-color: #8a4f9e; }
     }
-    .slot-time { color: #1a3a4a; font-weight: 700; font-variant-numeric: tabular-nums; padding-top: 2px; }
+    .slot-time { color: var(--retreat-teal-dark); font-weight: 700; font-variant-numeric: tabular-nums; padding-top: 2px; }
     .slot-body { color: #495057; }
-    .slot-title { display: flex; align-items: center; gap: 0.55rem; color: #1a3a4a; font-weight: 600; font-size: 1.02rem;
-      i { color: #d4782f; font-size: 0.95rem; }
+    .slot-title { display: flex; align-items: center; gap: 0.55rem; color: var(--retreat-teal-dark); font-weight: 600; font-size: 1.02rem;
+      i { color: var(--retreat-sunset); font-size: 0.95rem; }
     }
     .slot-detail { margin: 0.25rem 0 0; font-size: 0.92rem; line-height: 1.5; color: #495057; }
-    .slot-speaker { margin: 0.25rem 0 0; font-size: 0.88rem; color: #1a3a4a;
-      strong { color: #b8651f; }
+    .slot-speaker { margin: 0.25rem 0 0; font-size: 0.88rem; color: var(--retreat-teal-dark);
+      strong { color: var(--retreat-sunset); }
     }
 
     .speakers-card { background: #fff; border-radius: 14px; padding: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-      h3 { color: #1a3a4a; margin: 0 0 0.85rem; display: flex; align-items: center; gap: 0.55rem; font-size: 1.15rem;
-        i { color: #d4782f; }
+      h3 { color: var(--retreat-teal-dark); margin: 0 0 0.85rem; display: flex; align-items: center; gap: 0.55rem; font-size: 1.15rem;
+        i { color: var(--retreat-sunset); }
       }
       ul { margin: 0; padding-left: 1.25rem; color: #495057; line-height: 1.85;
-        strong { color: #1a3a4a; }
+        strong { color: var(--retreat-teal-dark); }
       }
       .muted { color: #6c757d; font-size: 0.85rem; margin: 0.85rem 0 0; font-style: italic; }
     }
 
     .activities-card { background: #fff; border-radius: 14px; padding: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-      h3 { color: #1a3a4a; margin: 0 0 0.5rem; display: flex; align-items: center; gap: 0.55rem; font-size: 1.15rem;
-        i { color: #d4782f; }
+      h3 { color: var(--retreat-teal-dark); margin: 0 0 0.5rem; display: flex; align-items: center; gap: 0.55rem; font-size: 1.15rem;
+        i { color: var(--retreat-sunset); }
       }
       .hint { margin: 0 0 1rem; color: #6c757d; font-size: 0.9rem; }
       .activities-grid {

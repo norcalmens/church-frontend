@@ -231,16 +231,16 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
   styles: [`
     .plans-container { max-width: 1300px; margin: 0 auto; }
     .back-bar { margin-bottom: 1rem; }
-    .back-link { display:inline-flex; align-items:center; gap:0.5rem; color:#1a3a4a; text-decoration:none; font-weight:600; font-size:0.9rem;
+    .back-link { display:inline-flex; align-items:center; gap:0.5rem; color:var(--retreat-teal-dark); text-decoration:none; font-weight:600; font-size:0.9rem;
       padding:0.5rem 1rem; border-radius:8px; transition:all 0.2s;
-      &:hover { background: rgba(26,58,74,0.08); color:#d4782f; }
+      &:hover { background: rgba(26,58,74,0.08); color:var(--retreat-sunset); }
     }
-    .page-header { text-align:center; padding:2rem; color:#f0e6d0; border-radius:12px; margin-bottom:1.5rem;
+    .page-header { text-align:center; padding:2rem; color:var(--retreat-cream); border-radius:12px; margin-bottom:1.5rem;
       background: var(--retreat-grad-nav);
       h1 { font-size: 1.9rem; font-weight: 700; margin: 0 0 0.35rem; } p { font-size: 0.95rem; margin: 0; opacity: 0.9; }
     }
     .card-header-bar { display:flex; align-items:center; gap:0.75rem; padding:1rem 1.5rem;
-      background: var(--retreat-grad-nav); color:#f0e6d0; font-size:1.1rem; font-weight:600;
+      background: var(--retreat-grad-nav); color:var(--retreat-cream); font-size:1.1rem; font-weight:600;
     }
     .toolbar { margin-bottom: 1rem; }
     .muted { color: #6c757d; font-size: 0.82rem; }
@@ -254,13 +254,13 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
       .p-card-header { padding: 0; border-bottom: none; } .p-card-body { padding: 1.5rem; } .p-card-content { padding: 0; }
     }
     ::ng-deep .plans-container .p-datatable .p-datatable-thead > tr > th {
-      background: var(--retreat-grad-nav); color:#f0e6d0;
+      background: var(--retreat-grad-nav); color:var(--retreat-cream);
     }
     /* dialog */
     .form { display:flex; flex-direction:column; gap:0.85rem; padding-top:0.25rem; }
     .form .field { display:flex; flex-direction:column; gap:0.35rem;
-      label { font-size: 0.85rem; color:#1a3a4a; font-weight:600; }
-      .req { color: #d4782f; } .optional { color:#9aa0a6; font-weight:400; }
+      label { font-size: 0.85rem; color:var(--retreat-teal-dark); font-weight:600; }
+      .req { color: var(--retreat-sunset); } .optional { color:#9aa0a6; font-weight:400; }
       input, textarea { width: 100%; }
     }
     .form .field-row { display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -271,14 +271,14 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
     }
     .detail-meta .totals { display:grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-top:0.5rem;
       .muted { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; }
-      .amount { color:#1a3a4a; font-weight:700; font-size: 1.15rem; }
-      .amount.paid { color:#2e9e5b; } .amount.balance { color:#d4782f; }
+      .amount { color:var(--retreat-teal-dark); font-weight:700; font-size: 1.15rem; }
+      .amount.paid { color:#2e9e5b; } .amount.balance { color:var(--retreat-sunset); }
     }
     .pay-link-row { display:flex; gap:0.5rem; margin-top: 0.85rem;
       input { flex:1; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem; }
     }
     .payments-toolbar { display:flex; align-items:center; justify-content:space-between; margin: 0.5rem 0 0.75rem;
-      h3 { color:#1a3a4a; margin: 0; font-size: 1.1rem; }
+      h3 { color:var(--retreat-teal-dark); margin: 0; font-size: 1.1rem; }
     }
   `]
 })

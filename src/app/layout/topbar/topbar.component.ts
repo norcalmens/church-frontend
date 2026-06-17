@@ -177,12 +177,12 @@ interface SearchItem {
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     .topbar-left { display: flex; align-items: center; gap: 0.5rem; }
-    .mobile-menu-btn { display: none; color: #f0e6d0 !important; }
+    .mobile-menu-btn { display: none; color: var(--retreat-cream) !important; }
     .topbar-logo {
       display: flex; align-items: center; gap: 0.75rem;
-      text-decoration: none; color: #f0e6d0;
+      text-decoration: none; color: var(--retreat-cream);
       font-size: 1.3rem; font-weight: 700;
-      i { font-size: 1.5rem; color: #e8a832; }
+      i { font-size: 1.5rem; color: var(--retreat-gold); }
     }
     .topbar-nav {
       display: flex; gap: 0.5rem;
@@ -190,14 +190,14 @@ interface SearchItem {
         color: rgba(240, 230, 208, 0.8); text-decoration: none;
         padding: 0.5rem 1rem; border-radius: 6px;
         font-weight: 500; transition: all 0.2s;
-        &:hover { color: #f0e6d0; background: rgba(255, 255, 255, 0.1); }
-        &.active { color: #e8a832; background: rgba(232, 168, 50, 0.15); }
+        &:hover { color: var(--retreat-cream); background: rgba(255, 255, 255, 0.1); }
+        &.active { color: var(--retreat-gold); background: rgba(232, 168, 50, 0.15); }
       }
       a.donate-link {
-        background: #d4782f; color: #fff;
-        border: 1px solid #d4782f;
-        &:hover { background: #b8651f; border-color: #b8651f; color: #fff; }
-        &.active { background: #b8651f; border-color: #b8651f; color: #fff; }
+        background: var(--retreat-sunset); color: #fff;
+        border: 1px solid var(--retreat-sunset);
+        &:hover { background: var(--retreat-sunset); border-color: var(--retreat-sunset); color: #fff; }
+        &.active { background: var(--retreat-sunset); border-color: var(--retreat-sunset); color: #fff; }
       }
     }
     /* Dropdowns (Admin + Resources) */
@@ -209,8 +209,8 @@ interface SearchItem {
       color: rgba(240, 230, 208, 0.8); text-decoration: none;
       padding: 0.5rem 1rem; border-radius: 6px;
       font-weight: 500; transition: all 0.2s; cursor: pointer;
-      &:hover { color: #f0e6d0; background: rgba(255, 255, 255, 0.1); }
-      &.active { color: #e8a832; background: rgba(232, 168, 50, 0.15); }
+      &:hover { color: var(--retreat-cream); background: rgba(255, 255, 255, 0.1); }
+      &.active { color: var(--retreat-gold); background: rgba(232, 168, 50, 0.15); }
       .chevron-icon { font-size: 0.65rem; margin-left: 0.35rem; }
     }
     .admin-dropdown-menu, .dropdown-menu {
@@ -223,8 +223,8 @@ interface SearchItem {
       margin: 0.35rem 0;
     }
     .refresh-action {
-      color: #b8651f !important;
-      i { color: #d4782f !important; }
+      color: var(--retreat-sunset) !important;
+      i { color: var(--retreat-sunset) !important; }
     }
     .admin-dropdown-panel, .dropdown-panel {
       background: white; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);
@@ -232,10 +232,10 @@ interface SearchItem {
       animation: slideDown 0.15s ease;
       a {
         display: flex; align-items: center; gap: 0.65rem;
-        padding: 0.75rem 1rem; color: #1a3a4a !important; text-decoration: none;
+        padding: 0.75rem 1rem; color: var(--retreat-teal-dark) !important; text-decoration: none;
         font-weight: 500; font-size: 0.9rem; transition: background 0.15s;
         background: transparent !important;
-        i { font-size: 0.95rem; color: #d4782f; width: 18px; text-align: center; }
+        i { font-size: 0.95rem; color: var(--retreat-sunset); width: 18px; text-align: center; }
         &:hover { background: rgba(26, 58, 74, 0.06) !important; }
       }
     }
@@ -256,14 +256,14 @@ interface SearchItem {
       &.instagram:hover { background: linear-gradient(135deg, #f09433, #e6683c 30%, #dc2743 60%, #cc2366 80%, #bc1888); }
       &.youtube:hover   { background: #ff0000; }
     }
-    .user-greeting { color: #f0e6d0; font-size: 0.9rem; font-weight: 500; }
+    .user-greeting { color: var(--retreat-cream); font-size: 0.9rem; font-weight: 500; }
     .search-btn {
-      color: #f0e6d0 !important;
-      &:hover { background: rgba(255, 255, 255, 0.1) !important; color: #e8a832 !important; }
+      color: var(--retreat-cream) !important;
+      &:hover { background: rgba(255, 255, 255, 0.1) !important; color: var(--retreat-gold) !important; }
     }
     ::ng-deep .login-btn.p-button-outlined {
-      color: #f0e6d0 !important;
-      border-color: #f0e6d0 !important;
+      color: var(--retreat-cream) !important;
+      border-color: var(--retreat-cream) !important;
       background: transparent !important;
       font-weight: 600;
       padding: 0.4rem 1.25rem;
@@ -271,17 +271,17 @@ interface SearchItem {
       transition: all 0.2s;
       &:hover {
         background: rgba(240, 230, 208, 0.15) !important;
-        border-color: #e8a832 !important;
-        color: #e8a832 !important;
+        border-color: var(--retreat-gold) !important;
+        color: var(--retreat-gold) !important;
       }
     }
     ::ng-deep .topbar-right .p-button.p-button-text {
-      color: #f0e6d0 !important;
+      color: var(--retreat-cream) !important;
       &:hover { background: rgba(255, 255, 255, 0.1) !important; }
     }
     .gear-btn {
-      color: #e8a832 !important;
-      &:hover { color: #f0e6d0 !important; }
+      color: var(--retreat-gold) !important;
+      &:hover { color: var(--retreat-cream) !important; }
     }
 
     /* Search Overlay */
@@ -304,7 +304,7 @@ interface SearchItem {
       i { color: #999; font-size: 1.1rem; }
       input {
         flex: 1; border: none; outline: none; font-size: 1.05rem;
-        color: #1a3a4a; background: transparent;
+        color: var(--retreat-teal-dark); background: transparent;
         &::placeholder { color: #bbb; }
       }
       .search-shortcut {
@@ -318,12 +318,12 @@ interface SearchItem {
       gap: 0.85rem; cursor: pointer; text-decoration: none; color: #333;
       transition: background 0.15s;
       &:hover { background: rgba(26, 58, 74, 0.06); }
-      i:first-child { color: #1a3a4a; font-size: 1rem; width: 20px; text-align: center; }
+      i:first-child { color: var(--retreat-teal-dark); font-size: 1rem; width: 20px; text-align: center; }
       .result-text { flex: 1; display: flex; flex-direction: column; }
-      .result-label { font-weight: 600; font-size: 0.95rem; color: #1a3a4a; }
+      .result-label { font-weight: 600; font-size: 0.95rem; color: var(--retreat-teal-dark); }
       .result-desc { font-size: 0.8rem; color: #888; margin-top: 1px; }
       .result-arrow { color: #ccc; font-size: 0.8rem; }
-      &:hover .result-arrow { color: #e8a832; }
+      &:hover .result-arrow { color: var(--retreat-gold); }
     }
     .search-empty {
       padding: 2rem; text-align: center; color: #999;

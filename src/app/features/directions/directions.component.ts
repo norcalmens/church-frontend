@@ -88,8 +88,8 @@ import { ButtonModule } from 'primeng/button';
 
     .hero {
       background: var(--retreat-grad-nav);
-      border-radius: 16px; padding: 2rem; text-align: center; color: #f0e6d0;
-      i.pi-map-marker { font-size: 2.25rem; color: #e8a832; }
+      border-radius: 16px; padding: 2rem; text-align: center; color: var(--retreat-cream);
+      i.pi-map-marker { font-size: 2.25rem; color: var(--retreat-gold); }
       h1 { font-size: 2rem; font-weight: 800; margin: 0.5rem 0 0.35rem; }
       .subtitle { font-size: 1.05rem; margin: 0; opacity: 0.92; }
     }
@@ -98,7 +98,7 @@ import { ButtonModule } from 'primeng/button';
     .critical-callout {
       display: flex; gap: 1rem; align-items: stretch;
       background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
-      border: 3px solid #d4782f;
+      border: 3px solid var(--retreat-sunset);
       border-radius: 14px;
       padding: 1.25rem 1.5rem;
       box-shadow: 0 6px 20px rgba(212, 120, 47, 0.25);
@@ -112,12 +112,12 @@ import { ButtonModule } from 'primeng/button';
     .critical-icon {
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      i { font-size: 2.5rem; color: #b8651f; }
+      i { font-size: 2.5rem; color: var(--retreat-sunset); }
     }
     .critical-body { flex: 1; }
     .critical-label {
       display: inline-block;
-      background: #b8651f; color: #fff;
+      background: var(--retreat-sunset); color: #fff;
       padding: 0.2rem 0.65rem; border-radius: 6px;
       font-size: 0.75rem; font-weight: 800;
       text-transform: uppercase; letter-spacing: 0.08em;
@@ -133,9 +133,9 @@ import { ButtonModule } from 'primeng/button';
       background: #fff; border-radius: 14px; padding: 1.5rem;
       box-shadow: 0 4px 16px rgba(0,0,0,0.07);
       h3 {
-        color: #1a3a4a; margin: 0 0 0.85rem;
+        color: var(--retreat-teal-dark); margin: 0 0 0.85rem;
         display: flex; align-items: center; gap: 0.55rem; font-size: 1.15rem;
-        i { color: #d4782f; }
+        i { color: var(--retreat-sunset); }
       }
     }
     .address { color: #495057; line-height: 1.6; margin: 0 0 1rem; font-size: 1rem; }
@@ -149,7 +149,7 @@ import { ButtonModule } from 'primeng/button';
       li { padding: 0.25rem 0; }
       .critical-step {
         background: rgba(232, 168, 50, 0.18);
-        border-left: 4px solid #d4782f;
+        border-left: 4px solid var(--retreat-sunset);
         padding: 0.65rem 0.85rem;
         margin: 0.4rem 0;
         border-radius: 4px;
@@ -160,8 +160,8 @@ import { ButtonModule } from 'primeng/button';
     .tips-card ul {
       list-style: none; margin: 0; padding: 0; color: #495057;
       li { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.35rem 0; line-height: 1.55;
-        i { color: #d4782f; font-size: 1rem; margin-top: 0.2rem; flex-shrink: 0; }
-        a { color: #b8651f; font-weight: 600; }
+        i { color: var(--retreat-sunset); font-size: 1rem; margin-top: 0.2rem; flex-shrink: 0; }
+        a { color: var(--retreat-sunset); font-weight: 600; }
       }
     }
 

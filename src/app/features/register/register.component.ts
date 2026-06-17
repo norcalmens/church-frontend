@@ -67,15 +67,15 @@ import { AuthService } from '../../core/auth/auth.service';
     }
     .register-card { width: 100%; max-width: 500px; }
     .register-header {
-      text-align: center; color: #f0e6d0; margin-bottom: 2rem;
-      i { font-size: 3rem; color: #e8a832; }
+      text-align: center; color: var(--retreat-cream); margin-bottom: 2rem;
+      i { font-size: 3rem; color: var(--retreat-gold); }
       h1 { font-size: 2rem; margin: 1rem 0 0.5rem 0; font-weight: 700; }
       p { font-size: 1.1rem; opacity: 0.9; margin: 0; }
     }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .field {
       margin-bottom: 1rem;
-      label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a3a4a; }
+      label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--retreat-teal-dark); }
     }
     .error-message {
       background: #fee; border: 1px solid #fcc; border-radius: 6px;
@@ -84,8 +84,8 @@ import { AuthService } from '../../core/auth/auth.service';
     }
     .register-footer {
       text-align: center; margin-top: 1.5rem; color: #666;
-      a { color: #1a3a4a; text-decoration: none; font-weight: 500;
-        &:hover { text-decoration: underline; color: #d4782f; }
+      a { color: var(--retreat-teal-dark); text-decoration: none; font-weight: 500;
+        &:hover { text-decoration: underline; color: var(--retreat-sunset); }
       }
     }
     ::ng-deep .register-card .p-card { border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); }

@@ -182,29 +182,29 @@ import { Attendee } from '../../../core/models/attendee.model';
     .back-bar { margin-bottom: 1rem; }
     .back-link {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      color: #1a3a4a; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      color: var(--retreat-teal-dark); text-decoration: none; font-weight: 600; font-size: 0.9rem;
       padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s;
-      &:hover { background: rgba(26, 58, 74, 0.08); color: #d4782f; }
+      &:hover { background: rgba(26, 58, 74, 0.08); color: var(--retreat-sunset); }
     }
-    .page-header { text-align: center; padding: 2.5rem 2rem; background: var(--retreat-grad-page-header); color: #f0e6d0; border-radius: 12px; margin-bottom: 1.5rem; h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; } p { font-size: 1rem; margin: 0; opacity: 0.9; } }
-    .card-header-bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem; background: var(--retreat-grad-nav); color: #f0e6d0; font-size: 1.1rem; font-weight: 600; }
+    .page-header { text-align: center; padding: 2.5rem 2rem; background: var(--retreat-grad-page-header); color: var(--retreat-cream); border-radius: 12px; margin-bottom: 1.5rem; h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; } p { font-size: 1rem; margin: 0; opacity: 0.9; } }
+    .card-header-bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem; background: var(--retreat-grad-nav); color: var(--retreat-cream); font-size: 1.1rem; font-weight: 600; }
     .table-toolbar { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
     .csv-btn { margin-left: auto; }
     ::ng-deep .registrations-container .p-card { border-radius: 12px; overflow: hidden; .p-card-header { padding: 0; border-bottom: none; } .p-card-body { padding: 1.5rem; } .p-card-content { padding: 0; } }
-    ::ng-deep .p-datatable .p-datatable-thead > tr > th { background: var(--retreat-grad-nav); color: #f0e6d0; }
+    ::ng-deep .p-datatable .p-datatable-thead > tr > th { background: var(--retreat-grad-nav); color: var(--retreat-cream); }
     .speaker-toggle {
       background: transparent; border: none; cursor: pointer; padding: 0.25rem 0.5rem;
       border-radius: 6px; transition: all 0.15s;
       i { font-size: 1.25rem; color: #ccc; transition: color 0.15s; }
       &:hover { background: rgba(232, 168, 50, 0.12);
-        i { color: #e8a832; }
+        i { color: var(--retreat-gold); }
       }
-      &.is-speaker i { color: #e8a832; text-shadow: 0 0 8px rgba(232, 168, 50, 0.4); }
+      &.is-speaker i { color: var(--retreat-gold); text-shadow: 0 0 8px rgba(232, 168, 50, 0.4); }
     }
     .attendees-cell { vertical-align: top; }
     .attendee-list { display: flex; gap: 0.5rem; align-items: flex-start;
       .attendee-count {
-        background: #1a3a4a; color: #f0e6d0;
+        background: var(--retreat-teal-dark); color: var(--retreat-cream);
         font-weight: 700; font-size: 0.78rem;
         padding: 0.1rem 0.5rem; border-radius: 999px;
         min-width: 1.4rem; text-align: center;
@@ -214,7 +214,7 @@ import { Attendee } from '../../../core/models/attendee.model';
         li {
           display: flex; align-items: center; gap: 0.3rem;
           padding: 0.08rem 0;
-          font-size: 0.92rem; color: #1a3a4a;
+          font-size: 0.92rem; color: var(--retreat-teal-dark);
           .attendee-name { flex-shrink: 0; }
           .attendee-age { color: #6c757d; font-size: 0.82rem; }
         }
@@ -225,16 +225,16 @@ import { Attendee } from '../../../core/models/attendee.model';
       border-radius: 4px; transition: all 0.15s; flex-shrink: 0;
       i { font-size: 0.82rem; color: #d0d0d0; transition: color 0.15s; }
       &:hover { background: rgba(232, 168, 50, 0.18);
-        i { color: #e8a832; }
+        i { color: var(--retreat-gold); }
       }
-      &.is-speaker i { color: #e8a832; }
+      &.is-speaker i { color: var(--retreat-gold); }
     }
     .attendee-edit-btn {
       background: transparent; border: none; cursor: pointer; padding: 0.1rem 0.3rem;
       border-radius: 4px; transition: all 0.15s; flex-shrink: 0; margin-left: auto; opacity: 0;
       i { font-size: 0.78rem; color: #6c757d; }
       &:hover { background: rgba(26, 58, 74, 0.08);
-        i { color: #1a3a4a; }
+        i { color: var(--retreat-teal-dark); }
       }
     }
     .attendee-list li:hover .attendee-edit-btn { opacity: 1; }
@@ -243,7 +243,7 @@ import { Attendee } from '../../../core/models/attendee.model';
     /* Edit dialog form */
     .edit-form { display: flex; flex-direction: column; gap: 0.85rem; padding: 0.25rem 0; }
     .edit-row { display: flex; flex-direction: column; gap: 0.35rem;
-      label { font-size: 0.85rem; font-weight: 600; color: #1a3a4a; }
+      label { font-size: 0.85rem; font-weight: 600; color: var(--retreat-teal-dark); }
       input, ::ng-deep .p-inputnumber, ::ng-deep .p-inputnumber input { width: 100%; }
     }
     .edit-row.two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;

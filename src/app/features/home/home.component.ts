@@ -26,7 +26,7 @@ import { AuthService } from '../../core/auth/auth.service';
               </a>
               <a routerLink="/venue">
                 <button pButton label="View Venue" icon="pi pi-map" size="large"
-                        class="p-button-outlined" style="border-color: #f0e6d0; color: #f0e6d0;"></button>
+                        class="p-button-outlined" style="border-color: var(--retreat-cream); color: var(--retreat-cream);"></button>
               </a>
               <a routerLink="/donations">
                 <button pButton label="Donate" icon="pi pi-heart" size="large" class="donate-hero-btn"></button>
@@ -132,11 +132,11 @@ import { AuthService } from '../../core/auth/auth.service';
       display: flex; align-items: center; gap: 3rem;
     }
     .hero-text {
-      flex: 1; color: #f0e6d0;
+      flex: 1; color: var(--retreat-cream);
       h1 { font-size: 2.8rem; font-weight: 800; margin: 0 0 0.5rem 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
     }
     .hero-subtitle { font-size: 1.3rem; font-style: italic; margin: 0 0 1.5rem 0; opacity: 0.9; }
-    .hero-details { font-size: 1.1rem; margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem; i { color: #e8a832; } }
+    .hero-details { font-size: 1.1rem; margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem; i { color: var(--retreat-gold); } }
     .hero-details-sub { font-size: 0.95rem; opacity: 0.85; }
     .hero-flyer {
       flex-shrink: 0;
@@ -144,25 +144,25 @@ import { AuthService } from '../../core/auth/auth.service';
     }
     .flyer-thumb {
       position: relative; display: block; line-height: 0; cursor: pointer;
-      padding: 9px; border: none; background: #f0e6d0;
+      padding: 9px; border: none; background: var(--retreat-cream);
       border-radius: 14px; box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
       img { display: block; width: 300px; border-radius: 7px; }
     }
     .flyer-zoom-hint {
       position: absolute; inset: 9px; border-radius: 7px;
       display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-      background: rgba(26, 58, 74, 0.55); color: #f0e6d0; font-weight: 600; font-size: 0.95rem;
+      background: rgba(26, 58, 74, 0.55); color: var(--retreat-cream); font-weight: 600; font-size: 0.95rem;
       opacity: 0; transition: opacity 0.2s; line-height: 1;
       i { font-size: 1.15rem; }
     }
     .flyer-thumb:hover .flyer-zoom-hint, .flyer-thumb:focus-visible .flyer-zoom-hint { opacity: 1; }
     .flyer-download {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      color: #f0e6d0; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      color: var(--retreat-cream); text-decoration: none; font-weight: 600; font-size: 0.9rem;
       padding: 0.5rem 1rem; border: 1px solid rgba(240, 230, 208, 0.4); border-radius: 8px;
       transition: all 0.2s;
-      i { color: #e8a832; }
-      &:hover { background: rgba(240, 230, 208, 0.12); border-color: #e8a832; color: #e8a832; }
+      i { color: var(--retreat-gold); }
+      &:hover { background: rgba(240, 230, 208, 0.12); border-color: var(--retreat-gold); color: var(--retreat-gold); }
     }
     .flyer-lightbox {
       position: fixed; inset: 0; z-index: 2000;
@@ -180,33 +180,33 @@ import { AuthService } from '../../core/auth/auth.service';
     }
     .lightbox-download {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      background: #e8a832; color: #1a3a4a; text-decoration: none; font-weight: 700;
+      background: var(--retreat-gold); color: var(--retreat-teal-dark); text-decoration: none; font-weight: 700;
       padding: 0.6rem 1.25rem; border-radius: 8px; transition: background 0.2s;
-      &:hover { background: #f0e6d0; }
+      &:hover { background: var(--retreat-cream); }
     }
     @keyframes lbFade { from { opacity: 0; } to { opacity: 1; } }
     .hero-actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
     .hero-actions a { text-decoration: none; }
     ::ng-deep .donate-hero-btn.p-button {
-      background: #e8a832; border-color: #e8a832; color: #1a3a4a; font-weight: 700;
+      background: var(--retreat-gold); border-color: var(--retreat-gold); color: var(--retreat-teal-dark); font-weight: 700;
     }
-    ::ng-deep .donate-hero-btn.p-button:hover { background: #d4782f; border-color: #d4782f; color: #fff; }
+    ::ng-deep .donate-hero-btn.p-button:hover { background: var(--retreat-sunset); border-color: var(--retreat-sunset); color: #fff; }
     .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
     .info-card {
       text-align: center; padding: 1rem;
-      i { font-size: 2.5rem; color: #d4782f; margin-bottom: 1rem; }
-      h3 { color: #1a3a4a; font-size: 1.3rem; margin: 0 0 0.75rem 0; }
+      i { font-size: 2.5rem; color: var(--retreat-sunset); margin-bottom: 1rem; }
+      h3 { color: var(--retreat-teal-dark); font-size: 1.3rem; margin: 0 0 0.75rem 0; }
       p { color: #6c757d; line-height: 1.6; margin: 0; }
     }
-    .what-to-expect { text-align: center; h2 { color: #1a3a4a; font-size: 2rem; margin-bottom: 1.5rem; } }
+    .what-to-expect { text-align: center; h2 { color: var(--retreat-teal-dark); font-size: 2rem; margin-bottom: 1.5rem; } }
     .expect-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
     .expect-card {
       text-align: center; padding: 2rem 1.5rem;
       background: white; border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       transition: transform 0.3s, box-shadow 0.3s;
-      i { font-size: 2rem; color: #d4782f; margin-bottom: 0.75rem; }
-      h3 { color: #1a3a4a; font-size: 1.15rem; margin: 0 0 0.5rem 0; }
+      i { font-size: 2rem; color: var(--retreat-sunset); margin-bottom: 0.75rem; }
+      h3 { color: var(--retreat-teal-dark); font-size: 1.15rem; margin: 0 0 0.5rem 0; }
       p { color: #6c757d; line-height: 1.6; margin: 0; }
       &:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.12); }
     }

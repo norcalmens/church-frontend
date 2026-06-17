@@ -130,7 +130,7 @@ import { AuthService } from '../../core/auth/auth.service';
     }
     .register-card { width: 100%; max-width: 520px; }
     .register-header {
-      text-align: center; color: #f0e6d0; margin-bottom: 2rem;
+      text-align: center; color: var(--retreat-cream); margin-bottom: 2rem;
       background: var(--retreat-grad-nav);
       padding: 2rem; border-radius: 12px 12px 0 0;
       margin: -2rem -2rem 0 -2rem; position: relative;
@@ -156,8 +156,8 @@ import { AuthService } from '../../core/auth/auth.service';
         display: flex; align-items: center; justify-content: center;
       }
       .step-label { color: #999; font-weight: 500; font-size: 0.9rem; }
-      &.active .step-number { background: #1a3a4a; color: #fff; }
-      &.active .step-label { color: #1a3a4a; font-weight: 700; }
+      &.active .step-number { background: var(--retreat-teal-dark); color: #fff; }
+      &.active .step-label { color: var(--retreat-teal-dark); font-weight: 700; }
       &.completed .step-number { background: #2e7d32; color: #fff; }
       &.completed .step-label { color: #2e7d32; }
     }
@@ -168,15 +168,15 @@ import { AuthService } from '../../core/auth/auth.service';
 
     .info-banner {
       display: flex; gap: 0.75rem; align-items: flex-start;
-      background: rgba(26, 58, 74, 0.05); border-left: 3px solid #1a3a4a;
+      background: rgba(26, 58, 74, 0.05); border-left: 3px solid var(--retreat-teal-dark);
       padding: 0.75rem 1rem; border-radius: 4px; margin-bottom: 1.5rem;
       font-size: 0.85rem; color: #555;
-      i { color: #1a3a4a; margin-top: 2px; }
+      i { color: var(--retreat-teal-dark); margin-top: 2px; }
     }
 
     .field {
       margin-bottom: 1.25rem;
-      label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a3a4a; }
+      label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--retreat-teal-dark); }
     }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
@@ -200,12 +200,12 @@ import { AuthService } from '../../core/auth/auth.service';
     }
 
     ::ng-deep .verify-btn {
-      background: #1a3a4a !important; border-color: #1a3a4a !important;
-      &:hover { background: #1e4d5e !important; border-color: #1e4d5e !important; }
+      background: var(--retreat-teal-dark) !important; border-color: var(--retreat-teal-dark) !important;
+      &:hover { background: var(--retreat-teal-light) !important; border-color: var(--retreat-teal-light) !important; }
     }
     ::ng-deep .complete-btn {
-      background: #1a3a4a !important; border-color: #1a3a4a !important;
-      &:hover { background: #1e4d5e !important; border-color: #1e4d5e !important; }
+      background: var(--retreat-teal-dark) !important; border-color: var(--retreat-teal-dark) !important;
+      &:hover { background: var(--retreat-teal-light) !important; border-color: var(--retreat-teal-light) !important; }
     }
 
     .button-row {
@@ -214,8 +214,8 @@ import { AuthService } from '../../core/auth/auth.service';
 
     .register-footer {
       text-align: center; margin-top: 1.5rem; color: #666; font-size: 0.9rem;
-      a { color: #1a3a4a; text-decoration: none; font-weight: 600;
-        &:hover { text-decoration: underline; color: #d4782f; }
+      a { color: var(--retreat-teal-dark); text-decoration: none; font-weight: 600;
+        &:hover { text-decoration: underline; color: var(--retreat-sunset); }
       }
     }
 

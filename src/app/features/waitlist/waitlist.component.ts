@@ -89,8 +89,8 @@ import { WaitlistService } from '../../services/waitlist.service';
 
     .hero {
       background: var(--retreat-grad-nav);
-      border-radius: 16px; padding: 2rem; text-align: center; color: #f0e6d0;
-      i.pi-calendar-plus { font-size: 2.25rem; color: #e8a832; }
+      border-radius: 16px; padding: 2rem; text-align: center; color: var(--retreat-cream);
+      i.pi-calendar-plus { font-size: 2.25rem; color: var(--retreat-gold); }
       h1 { font-size: 1.9rem; font-weight: 800; margin: 0.5rem 0 0.35rem; }
       .subtitle { font-size: 1rem; margin: 0; opacity: 0.92; line-height: 1.5; }
     }
@@ -101,7 +101,7 @@ import { WaitlistService } from '../../services/waitlist.service';
       display: flex; flex-direction: column; gap: 1.1rem;
     }
     .form-row { display: flex; flex-direction: column; gap: 0.4rem;
-      label { font-weight: 600; color: #1a3a4a; font-size: 0.95rem;
+      label { font-weight: 600; color: var(--retreat-teal-dark); font-size: 0.95rem;
         .optional { color: #888; font-weight: 400; font-size: 0.85rem; margin-left: 0.25rem; }
       }
       input, textarea { font-size: 0.95rem; }
@@ -113,16 +113,16 @@ import { WaitlistService } from '../../services/waitlist.service';
     .actions { display: flex; justify-content: flex-end; padding-top: 0.4rem; }
     .error { color: #c0392b; margin: 0; font-size: 0.9rem; }
     .fallback { color: #6c757d; font-size: 0.88rem; text-align: center; margin: 0; padding-top: 0.5rem; border-top: 1px solid #eee;
-      a { color: #b8651f; font-weight: 600; }
+      a { color: var(--retreat-sunset); font-weight: 600; }
     }
 
     .thanks-card {
       background: #fff; border-radius: 14px; padding: 2.5rem 2rem; text-align: center;
       box-shadow: 0 4px 16px rgba(0,0,0,0.07);
       i.pi-check-circle { font-size: 3.5rem; color: #2e9e5b; }
-      h2 { color: #1a3a4a; margin: 0.85rem 0 0.4rem; font-size: 1.65rem; }
-      .position { font-size: 1.25rem; color: #1a3a4a; margin: 0.25rem 0 1rem;
-        strong { color: #d4782f; font-size: 1.5rem; }
+      h2 { color: var(--retreat-teal-dark); margin: 0.85rem 0 0.4rem; font-size: 1.65rem; }
+      .position { font-size: 1.25rem; color: var(--retreat-teal-dark); margin: 0.25rem 0 1rem;
+        strong { color: var(--retreat-sunset); font-size: 1.5rem; }
       }
       p { color: #495057; line-height: 1.55; margin: 0 0 0.5rem; }
     }

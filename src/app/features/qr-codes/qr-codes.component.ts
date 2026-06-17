@@ -53,12 +53,12 @@ interface QrEntry {
 
     .hero {
       background: var(--retreat-grad-nav);
-      border-radius: 16px; padding: 2rem; text-align: center; color: #f0e6d0;
+      border-radius: 16px; padding: 2rem; text-align: center; color: var(--retreat-cream);
       margin-bottom: 1.25rem;
-      i.pi-qrcode { font-size: 2.25rem; color: #e8a832; }
+      i.pi-qrcode { font-size: 2.25rem; color: var(--retreat-gold); }
       h1 { font-size: 1.9rem; font-weight: 800; margin: 0.5rem 0 0.35rem; }
       .subtitle { font-size: 1rem; margin: 0 0 1rem; opacity: 0.92; }
-      .print-btn { background: #e8a832 !important; border-color: #e8a832 !important; color: #1a3a4a !important; font-weight: 700; }
+      .print-btn { background: var(--retreat-gold) !important; border-color: var(--retreat-gold) !important; color: var(--retreat-teal-dark) !important; font-weight: 700; }
     }
 
     .qr-grid {
@@ -70,7 +70,7 @@ interface QrEntry {
       background: #fff; border-radius: 14px; padding: 1.25rem;
       box-shadow: 0 4px 16px rgba(0,0,0,0.07);
       display: flex; flex-direction: column; align-items: center; text-align: center;
-      border-top: 4px solid #e8a832;
+      border-top: 4px solid var(--retreat-gold);
     }
     .qr-image-wrap {
       width: 100%; aspect-ratio: 1 / 1; max-width: 240px;
@@ -79,15 +79,15 @@ interface QrEntry {
     }
     .qr-meta { width: 100%; }
     .qr-meta h3 {
-      margin: 0.75rem 0 0.35rem; color: #1a3a4a;
+      margin: 0.75rem 0 0.35rem; color: var(--retreat-teal-dark);
       display: flex; align-items: center; justify-content: center; gap: 0.45rem;
       font-size: 1.1rem;
-      i { color: #d4782f; font-size: 1rem; }
+      i { color: var(--retreat-sunset); font-size: 1rem; }
     }
     .qr-desc { margin: 0 0 0.4rem; color: #495057; font-size: 0.9rem; line-height: 1.4; }
     .qr-url { margin: 0; color: #888; font-size: 0.78rem; word-break: break-all; font-family: monospace; }
 
-    .print-header, .print-footer { display: none; text-align: center; margin: 1rem 0; color: #1a3a4a;
+    .print-header, .print-footer { display: none; text-align: center; margin: 1rem 0; color: var(--retreat-teal-dark);
       h2 { font-size: 1.4rem; margin: 0 0 0.35rem; }
       p { margin: 0; color: #495057; }
     }
@@ -104,7 +104,7 @@ interface QrEntry {
       .print-only { display: block !important; }
       .qr-container { max-width: none; }
       .qr-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-      .qr-card { box-shadow: none; border: 1px solid #ccc; border-top: 3px solid #e8a832; padding: 0.85rem; page-break-inside: avoid; }
+      .qr-card { box-shadow: none; border: 1px solid #ccc; border-top: 3px solid var(--retreat-gold); padding: 0.85rem; page-break-inside: avoid; }
       .qr-image-wrap { max-width: 200px; }
     }
   `]

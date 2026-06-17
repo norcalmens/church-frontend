@@ -155,52 +155,52 @@ import { firstValueFrom } from 'rxjs';
     .portal-container { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.25rem; }
     .loading-state, .empty-state { text-align: center; padding: 3rem 2rem; background: #fff; border-radius: 16px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-      i { font-size: 2.5rem; color: #d4782f; display: block; margin-bottom: 0.75rem; }
-      h2 { color: #1a3a4a; margin: 0 0 0.5rem; } p { color: #6c757d; margin: 0 0 1.25rem; max-width: 480px; margin-left:auto; margin-right:auto; }
+      i { font-size: 2.5rem; color: var(--retreat-sunset); display: block; margin-bottom: 0.75rem; }
+      h2 { color: var(--retreat-teal-dark); margin: 0 0 0.5rem; } p { color: #6c757d; margin: 0 0 1.25rem; max-width: 480px; margin-left:auto; margin-right:auto; }
     }
-    .hero { background: var(--retreat-grad-nav); color: #f0e6d0;
+    .hero { background: var(--retreat-grad-nav); color: var(--retreat-cream);
       border-radius: 16px; padding: 2.5rem 2rem; text-align: center;
-      i { font-size: 2.5rem; color: #e8a832; }
+      i { font-size: 2.5rem; color: var(--retreat-gold); }
       h1 { font-size: 1.85rem; font-weight: 800; margin: 0.65rem 0 0.35rem; }
       .subtitle { margin: 0; opacity: 0.9; }
     }
     .section-header { display:flex; align-items:center; gap:0.65rem; padding: 0.85rem 1.25rem;
-      background: var(--retreat-grad-nav); color:#f0e6d0; font-weight:600;
+      background: var(--retreat-grad-nav); color:var(--retreat-cream); font-weight:600;
     }
-    .balance-card .greeting { color:#1a3a4a; font-size: 1.05rem; margin: 0 0 1rem; }
+    .balance-card .greeting { color:var(--retreat-teal-dark); font-size: 1.05rem; margin: 0 0 1rem; }
     .balance-card .totals { display:grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align:center;
       .label { font-size: 0.75rem; color:#6c757d; text-transform: uppercase; letter-spacing: 0.06em; }
-      .amount { color:#1a3a4a; font-size: 1.5rem; font-weight: 700; margin-top: 0.25rem; }
-      .amount.paid { color:#2e9e5b; } .amount.balance { color:#d4782f; }
+      .amount { color:var(--retreat-teal-dark); font-size: 1.5rem; font-weight: 700; margin-top: 0.25rem; }
+      .amount.paid { color:#2e9e5b; } .amount.balance { color:var(--retreat-sunset); }
     }
     ::ng-deep .completed-tag { display:block; text-align:center; margin-top: 1rem; }
     .pay-form { display: flex; flex-direction: column; gap: 1rem; }
     .pay-form .hint { color:#6c757d; margin: 0; }
     .amount-row { display:flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap; }
     .amount-row .field { flex: 1; min-width: 180px; display:flex; flex-direction: column; gap: 0.35rem;
-      label { font-size: 0.85rem; color:#1a3a4a; font-weight:600; }
+      label { font-size: 0.85rem; color:var(--retreat-teal-dark); font-weight:600; }
     }
     ::ng-deep .amount-row .p-inputnumber { width: 100%; }
     .quick-amounts { display:flex; gap: 0.4rem; flex-wrap: wrap; }
-    .card-field label { display:block; font-size: 0.85rem; color:#1a3a4a; font-weight:600; margin-bottom:0.35rem; }
+    .card-field label { display:block; font-size: 0.85rem; color:var(--retreat-teal-dark); font-weight:600; margin-bottom:0.35rem; }
     .stripe-card { padding: 0.85rem 0.75rem; border: 1px solid #ced4da; border-radius: 8px; background: #fff; }
     .card-error { color:#e53935; font-size: 0.8rem; margin-top: 0.35rem; display: block; }
     .stripe-fallback { display:flex; align-items:center; gap: 0.5rem; padding: 0.85rem 1rem;
       background:#fff3e0; border:1px solid #ffd9a0; border-radius:8px; color:#8a5a1f; font-size:0.9rem; }
-    .pay-submit { width: 100%; justify-content: center; background:#d4782f !important; border-color:#d4782f !important; font-weight:700; }
-    ::ng-deep .pay-submit.p-button:hover { background:#b8651f !important; border-color:#b8651f !important; }
+    .pay-submit { width: 100%; justify-content: center; background:var(--retreat-sunset) !important; border-color:var(--retreat-sunset) !important; font-weight:700; }
+    ::ng-deep .pay-submit.p-button:hover { background:var(--retreat-sunset) !important; border-color:var(--retreat-sunset) !important; }
     .secure { text-align:center; color:#9aa0a6; font-size: 0.8rem; margin: 0; i { font-size: 0.75rem; margin-right: 0.25rem; } }
     .recurring-active { display:flex; align-items:flex-start; gap: 0.85rem; padding: 1rem 1.15rem;
       background: linear-gradient(135deg, #e8f5ec 0%, #d6efdf 100%); border-left: 4px solid #2e9e5b; border-radius: 8px;
       i { font-size: 1.5rem; color: #2e9e5b; margin-top: 2px; }
-      strong { display:block; color:#1a3a4a; font-size: 1rem; margin-bottom: 0.25rem; }
-      p { margin: 0 0 0.35rem; color: #1a3a4a; font-size: 0.92rem; }
+      strong { display:block; color:var(--retreat-teal-dark); font-size: 1rem; margin-bottom: 0.25rem; }
+      p { margin: 0 0 0.35rem; color: var(--retreat-teal-dark); font-size: 0.92rem; }
       small { color: #6c757d; font-size: 0.8rem; }
     }
     .history { width: 100%; border-collapse: collapse;
       th, td { padding: 0.65rem 0.85rem; text-align: left; border-bottom: 1px solid #eee; font-size: 0.92rem; }
-      th { color:#1a3a4a; background: #f8f9fa; font-weight: 600; }
-      .method-tag { background: #eef2f6; color: #1a3a4a; padding: 2px 8px; border-radius: 999px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+      th { color:var(--retreat-teal-dark); background: #f8f9fa; font-weight: 600; }
+      .method-tag { background: #eef2f6; color: var(--retreat-teal-dark); padding: 2px 8px; border-radius: 999px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
     }
     ::ng-deep .portal-container .p-card .p-card-header { padding: 0; border-bottom: none; }
     ::ng-deep .portal-container .p-card { border-radius: 14px; overflow: hidden; }
@@ -283,7 +283,7 @@ export class PaymentPlanPortalComponent implements OnInit, AfterViewInit, OnDest
     if (!(await waitForEl())) return;
     const elements = this.stripe.elements();
     this.cardElement = elements.create('card', {
-      style: { base: { fontSize: '16px', color: '#1a3a4a', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', '::placeholder': { color: '#999' } }, invalid: { color: '#e53935' } }
+      style: { base: { fontSize: '16px', color: 'var(--retreat-teal-dark)', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', '::placeholder': { color: '#999' } }, invalid: { color: '#e53935' } }
     });
     this.cardElement.mount('#plan-card-element');
     this.cardElement.on('change', (event) => {

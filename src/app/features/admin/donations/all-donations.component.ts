@@ -163,11 +163,11 @@ import { Donation } from '../../../core/models/donation.model';
     .back-bar { margin-bottom: 1rem; }
     .back-link {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      color: #1a3a4a; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      color: var(--retreat-teal-dark); text-decoration: none; font-weight: 600; font-size: 0.9rem;
       padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s;
-      &:hover { background: rgba(26, 58, 74, 0.08); color: #d4782f; }
+      &:hover { background: rgba(26, 58, 74, 0.08); color: var(--retreat-sunset); }
     }
-    .page-header { text-align: center; padding: 2.5rem 2rem; color: #f0e6d0; border-radius: 12px; margin-bottom: 1.5rem;
+    .page-header { text-align: center; padding: 2.5rem 2rem; color: var(--retreat-cream); border-radius: 12px; margin-bottom: 1.5rem;
       background: var(--retreat-grad-page-header);
       h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem; } p { font-size: 1rem; margin: 0; opacity: 0.9; }
     }
@@ -176,27 +176,27 @@ import { Donation } from '../../../core/models/donation.model';
       background: #fff; border-radius: 12px; padding: 1.25rem; text-align: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       .stat-label { color: #6c757d; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
-      .stat-value { color: #1a3a4a; font-size: 1.8rem; font-weight: 700; margin-top: 0.35rem; }
+      .stat-value { color: var(--retreat-teal-dark); font-size: 1.8rem; font-weight: 700; margin-top: 0.35rem; }
     }
-    .stat-card.highlight { background: linear-gradient(135deg, #d4782f 0%, #b8651f 100%); color: #fff;
+    .stat-card.highlight { background: linear-gradient(135deg, var(--retreat-sunset) 0%, var(--retreat-sunset) 100%); color: #fff;
       .stat-label, .stat-value { color: #fff; }
     }
     .card-header-bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem;
-      background: var(--retreat-grad-nav); color: #f0e6d0; font-size: 1.1rem; font-weight: 600;
+      background: var(--retreat-grad-nav); color: var(--retreat-cream); font-size: 1.1rem; font-weight: 600;
     }
     .table-toolbar { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
     .add-btn { margin-left: auto; }
     .csv-btn { margin-left: 0; }
     .message-cell { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .row-actions { white-space: nowrap; }
-    .donor-name { display: flex; align-items: center; gap: 0.4rem; color: #1a3a4a; font-weight: 500;
-      .notes-marker { color: #d4782f; font-size: 0.85rem; cursor: help; }
+    .donor-name { display: flex; align-items: center; gap: 0.4rem; color: var(--retreat-teal-dark); font-weight: 500;
+      .notes-marker { color: var(--retreat-sunset); font-size: 0.85rem; cursor: help; }
     }
     .admin-note-inline {
       margin-top: 0.2rem;
       color: #6e4b08;
       background: rgba(232, 168, 50, 0.12);
-      border-left: 3px solid #e8a832;
+      border-left: 3px solid var(--retreat-gold);
       padding: 0.25rem 0.5rem;
       border-radius: 4px;
       font-size: 0.78rem;
@@ -211,14 +211,14 @@ import { Donation } from '../../../core/models/donation.model';
       border: 1px solid rgba(232, 168, 50, 0.3);
       border-radius: 8px;
       padding: 0.75rem;
-      label i { color: #d4782f; margin-right: 0.3rem; }
+      label i { color: var(--retreat-sunset); margin-right: 0.3rem; }
     }
     ::ng-deep .notes-tooltip .p-tooltip-text { max-width: 320px; white-space: pre-wrap; }
     .dialog-hint { color: #6c757d; font-size: 0.9rem; margin: 0 0 1rem; }
     .donation-form { display: flex; flex-direction: column; gap: 0.85rem; }
     .donation-form .field { display: flex; flex-direction: column; gap: 0.35rem;
-      label { font-size: 0.85rem; color: #1a3a4a; font-weight: 600; }
-      .req { color: #d4782f; }
+      label { font-size: 0.85rem; color: var(--retreat-teal-dark); font-weight: 600; }
+      .req { color: var(--retreat-sunset); }
       .optional { color: #9aa0a6; font-weight: 400; }
       input, textarea { width: 100%; }
       small { color: #6c757d; font-size: 0.78rem; }
@@ -230,7 +230,7 @@ import { Donation } from '../../../core/models/donation.model';
       .p-card-body { padding: 1.5rem; } .p-card-content { padding: 0; }
     }
     ::ng-deep .donations-container .p-datatable .p-datatable-thead > tr > th {
-      background: var(--retreat-grad-nav); color: #f0e6d0;
+      background: var(--retreat-grad-nav); color: var(--retreat-cream);
     }
   `]
 })

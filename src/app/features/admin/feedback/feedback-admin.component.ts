@@ -116,14 +116,14 @@ import { FeedbackService, FeedbackEntry } from '../../../services/feedback.servi
     .back-bar { margin-bottom: 1rem; }
     .back-link {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      color: #1a3a4a; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      color: var(--retreat-teal-dark); text-decoration: none; font-weight: 600; font-size: 0.9rem;
       padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s;
-      &:hover { background: rgba(26, 58, 74, 0.08); color: #d4782f; }
+      &:hover { background: rgba(26, 58, 74, 0.08); color: var(--retreat-sunset); }
     }
     .page-header {
       text-align: center; padding: 2.5rem 2rem;
       background: var(--retreat-grad-page-header);
-      color: #f0e6d0; border-radius: 12px; margin-bottom: 1.5rem;
+      color: var(--retreat-cream); border-radius: 12px; margin-bottom: 1.5rem;
       h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; }
       p { font-size: 1rem; margin: 0; opacity: 0.9; }
     }
@@ -132,17 +132,17 @@ import { FeedbackService, FeedbackEntry } from '../../../services/feedback.servi
       background: #fff; border-radius: 12px; padding: 1.25rem; text-align: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       .stat-label { color: #6c757d; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
-      .stat-value { color: #1a3a4a; font-size: 1.8rem; font-weight: 700; margin-top: 0.35rem;
+      .stat-value { color: var(--retreat-teal-dark); font-size: 1.8rem; font-weight: 700; margin-top: 0.35rem;
         .suffix { font-size: 1rem; color: #6c757d; font-weight: 500; }
       }
     }
-    .stat-card.highlight { background: linear-gradient(135deg, #d4782f 0%, #b8651f 100%); color: #fff;
+    .stat-card.highlight { background: linear-gradient(135deg, var(--retreat-sunset) 0%, var(--retreat-sunset) 100%); color: #fff;
       .stat-label, .stat-value, .suffix { color: #fff; }
     }
     .card-header-bar {
       display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem;
       background: var(--retreat-grad-nav);
-      color: #f0e6d0; font-size: 1.1rem; font-weight: 600;
+      color: var(--retreat-cream); font-size: 1.1rem; font-weight: 600;
     }
     .toolbar { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;
       .search-wrap { min-width: 280px; flex: 1; }
@@ -153,11 +153,11 @@ import { FeedbackService, FeedbackEntry } from '../../../services/feedback.servi
       .p-card-content { padding: 0; }
     }
     ::ng-deep .feedback-admin .p-datatable .p-datatable-thead > tr > th {
-      background: var(--retreat-grad-nav); color: #f0e6d0;
+      background: var(--retreat-grad-nav); color: var(--retreat-cream);
     }
-    .email a { color: #b8651f; font-size: 0.85rem; }
+    .email a { color: var(--retreat-sunset); font-size: 0.85rem; }
     .muted { color: #888; font-style: italic; }
-    .rating-cell .stars i { font-size: 0.95rem; color: #e8a832; }
+    .rating-cell .stars i { font-size: 0.95rem; color: var(--retreat-gold); }
     .text-cell { max-width: 240px; vertical-align: top; padding: 0.5rem; line-height: 1.4;
       white-space: pre-wrap; word-wrap: break-word;
     }

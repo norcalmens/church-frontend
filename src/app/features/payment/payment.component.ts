@@ -52,11 +52,11 @@ import { AuthService } from '../../core/auth/auth.service';
   `,
   styles: [`
     .payment-container { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
-    .payment-header { text-align: center; padding: 3rem 2rem; background: var(--retreat-grad-page-header); color: #f0e6d0; border-radius: 12px; h1 { font-size: 2.5rem; font-weight: 700; margin: 0 0 0.5rem 0; } p { font-size: 1.1rem; margin: 0; opacity: 0.9; } }
-    .card-header-bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem; background: var(--retreat-grad-nav); color: #f0e6d0; font-size: 1.1rem; font-weight: 600; }
-    .field { margin-bottom: 1.25rem; label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a3a4a; } }
-    .stripe-placeholder { text-align: center; padding: 2rem; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; margin: 1rem 0; i { font-size: 2rem; color: #1a3a4a; } p { color: #6c757d; margin: 0.5rem 0; } small { color: #999; } }
-    .info-content { h3 { color: #1a3a4a; display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.5rem 0; &:not(:first-child) { margin-top: 1.5rem; } i { color: #d4782f; } } p { color: #6c757d; line-height: 1.6; margin: 0; } }
+    .payment-header { text-align: center; padding: 3rem 2rem; background: var(--retreat-grad-page-header); color: var(--retreat-cream); border-radius: 12px; h1 { font-size: 2.5rem; font-weight: 700; margin: 0 0 0.5rem 0; } p { font-size: 1.1rem; margin: 0; opacity: 0.9; } }
+    .card-header-bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem; background: var(--retreat-grad-nav); color: var(--retreat-cream); font-size: 1.1rem; font-weight: 600; }
+    .field { margin-bottom: 1.25rem; label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--retreat-teal-dark); } }
+    .stripe-placeholder { text-align: center; padding: 2rem; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px; margin: 1rem 0; i { font-size: 2rem; color: var(--retreat-teal-dark); } p { color: #6c757d; margin: 0.5rem 0; } small { color: #999; } }
+    .info-content { h3 { color: var(--retreat-teal-dark); display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.5rem 0; &:not(:first-child) { margin-top: 1.5rem; } i { color: var(--retreat-sunset); } } p { color: #6c757d; line-height: 1.6; margin: 0; } }
     ::ng-deep .payment-container .p-card { border-radius: 12px; overflow: hidden; .p-card-header { padding: 0; border-bottom: none; } }
   `]
 })

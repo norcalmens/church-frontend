@@ -159,24 +159,24 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
     .back-bar { margin-bottom: 1rem; }
     .back-link {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      color: #1a3a4a; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      color: var(--retreat-teal-dark); text-decoration: none; font-weight: 600; font-size: 0.9rem;
       padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s;
-      &:hover { background: rgba(26, 58, 74, 0.08); color: #d4782f; }
+      &:hover { background: rgba(26, 58, 74, 0.08); color: var(--retreat-sunset); }
     }
     .page-header {
       text-align: center; padding: 2rem; margin-bottom: 1.5rem;
       background: var(--retreat-grad-page-header);
-      color: #f0e6d0; border-radius: 12px;
+      color: var(--retreat-cream); border-radius: 12px;
       h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; }
       p { margin: 0; opacity: 0.9; }
     }
     ::ng-deep .p-toolbar { margin-bottom: 1rem; border-radius: 8px; }
-    ::ng-deep .p-toolbar .p-button { background: #1a3a4a !important; border-color: #1a3a4a !important; }
-    ::ng-deep .p-toolbar .p-button:hover { background: #1e4d5e !important; }
+    ::ng-deep .p-toolbar .p-button { background: var(--retreat-teal-dark) !important; border-color: var(--retreat-teal-dark) !important; }
+    ::ng-deep .p-toolbar .p-button:hover { background: var(--retreat-teal-light) !important; }
 
     .dialog-field {
       margin-bottom: 1rem;
-      label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: #1a3a4a; font-size: 0.9rem; }
+      label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: var(--retreat-teal-dark); font-size: 0.9rem; }
     }
     .info-box {
       display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.75rem 1rem;

@@ -63,7 +63,7 @@ import { AuthService } from '../../core/auth/auth.service';
       padding: 2rem 2rem 0.5rem;
       text-align: center;
       h1 {
-        font-size: 1.8rem; font-weight: 700; color: #1a3a4a;
+        font-size: 1.8rem; font-weight: 700; color: var(--retreat-teal-dark);
         margin: 0;
         font-style: italic;
       }
@@ -71,7 +71,7 @@ import { AuthService } from '../../core/auth/auth.service';
     .login-card-body { padding: 1.5rem 2rem 2rem; }
     .field {
       margin-bottom: 1.25rem;
-      label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a3a4a; font-size: 0.9rem; }
+      label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--retreat-teal-dark); font-size: 0.9rem; }
     }
     .error-message {
       background: #fee; border: 1px solid #fcc; border-radius: 6px;
@@ -80,34 +80,34 @@ import { AuthService } from '../../core/auth/auth.service';
     }
     .forgot-link {
       text-align: right; margin-bottom: 1.5rem;
-      a { color: #d4782f; text-decoration: none; font-size: 0.85rem; font-weight: 500;
-        &:hover { text-decoration: underline; color: #c8923a; }
+      a { color: var(--retreat-sunset); text-decoration: none; font-size: 0.85rem; font-weight: 500;
+        &:hover { text-decoration: underline; color: var(--retreat-copper); }
       }
     }
     ::ng-deep .login-btn.p-button {
       background: white !important;
-      color: #1a3a4a !important;
-      border: 2px solid #1a3a4a !important;
+      color: var(--retreat-teal-dark) !important;
+      border: 2px solid var(--retreat-teal-dark) !important;
       font-weight: 700; font-size: 1rem;
       padding: 0.65rem; border-radius: 8px;
       transition: all 0.2s;
       &:hover {
         background: var(--retreat-grad-nav) !important;
-        color: #f0e6d0 !important;
-        border-color: #1a3a4a !important;
+        color: var(--retreat-cream) !important;
+        border-color: var(--retreat-teal-dark) !important;
       }
     }
     .login-footer {
       margin-top: 1.5rem;
       p {
         margin: 0 0 0.35rem 0; color: #555; font-size: 0.9rem;
-        a { color: #d4782f; text-decoration: underline; font-weight: 500;
-          &:hover { color: #c8923a; }
+        a { color: var(--retreat-sunset); text-decoration: underline; font-weight: 500;
+          &:hover { color: var(--retreat-copper); }
         }
       }
       .guest-link {
-        color: #d4782f; text-decoration: underline; font-size: 0.9rem; font-weight: 500;
-        &:hover { color: #c8923a; }
+        color: var(--retreat-sunset); text-decoration: underline; font-size: 0.9rem; font-weight: 500;
+        &:hover { color: var(--retreat-copper); }
       }
     }
     ::ng-deep .login-card-body .p-password { width: 100%; }
@@ -115,7 +115,7 @@ import { AuthService } from '../../core/auth/auth.service';
       border-radius: 6px;
       border: 1px solid #ddd;
       padding: 0.65rem 0.85rem;
-      &:focus { border-color: #1a3a4a; box-shadow: 0 0 0 2px rgba(26, 58, 74, 0.15); }
+      &:focus { border-color: var(--retreat-teal-dark); box-shadow: 0 0 0 2px rgba(26, 58, 74, 0.15); }
     }
   `]
 })

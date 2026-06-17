@@ -97,8 +97,8 @@ import { firstValueFrom } from 'rxjs';
     .donate-hero {
       background: var(--retreat-grad-nav);
       border-radius: 16px; padding: 2.5rem 2rem; text-align: center;
-      color: #f0e6d0; margin-bottom: 1.5rem;
-      i { font-size: 2.5rem; color: #d4782f; }
+      color: var(--retreat-cream); margin-bottom: 1.5rem;
+      i { font-size: 2.5rem; color: var(--retreat-sunset); }
       h1 { font-size: 2rem; font-weight: 800; margin: 0.75rem 0 0.5rem; }
       p { margin: 0 auto; max-width: 520px; line-height: 1.6; opacity: 0.9; }
     }
@@ -106,27 +106,27 @@ import { firstValueFrom } from 'rxjs';
       background: #fff; border-radius: 16px; padding: 2rem;
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }
-    h2 { color: #1a3a4a; font-size: 1.2rem; margin: 0 0 1rem; }
+    h2 { color: var(--retreat-teal-dark); font-size: 1.2rem; margin: 0 0 1rem; }
     .section-gap { margin-top: 1.75rem; }
     .amount-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.6rem; }
     .amount-btn {
       padding: 0.85rem 0.5rem; border: 2px solid #d9d9d9; background: #fff;
-      border-radius: 10px; font-size: 1.1rem; font-weight: 700; color: #1a3a4a;
+      border-radius: 10px; font-size: 1.1rem; font-weight: 700; color: var(--retreat-teal-dark);
       cursor: pointer; transition: all 0.15s;
-      &:hover { border-color: #e8a832; }
-      &.selected { border-color: #d4782f; background: rgba(212,120,47,0.08); color: #d4782f; }
+      &:hover { border-color: var(--retreat-gold); }
+      &.selected { border-color: var(--retreat-sunset); background: rgba(212,120,47,0.08); color: var(--retreat-sunset); }
     }
     .custom-amount { margin-top: 0.85rem;
       label { display: block; font-size: 0.85rem; color: #6c757d; margin-bottom: 0.35rem; }
     }
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .field { margin-bottom: 1rem; display: flex; flex-direction: column;
-      label { font-size: 0.85rem; color: #1a3a4a; font-weight: 600; margin-bottom: 0.35rem; }
-      .req { color: #d4782f; }
+      label { font-size: 0.85rem; color: var(--retreat-teal-dark); font-weight: 600; margin-bottom: 0.35rem; }
+      .req { color: var(--retreat-sunset); }
       .optional { color: #9aa0a6; font-weight: 400; }
       input, textarea { width: 100%; }
     }
-    .card-field label { display: block; font-size: 0.85rem; color: #1a3a4a; font-weight: 600; margin-bottom: 0.35rem; }
+    .card-field label { display: block; font-size: 0.85rem; color: var(--retreat-teal-dark); font-weight: 600; margin-bottom: 0.35rem; }
     .stripe-card { padding: 0.85rem 0.75rem; border: 1px solid #ced4da; border-radius: 8px; background: #fff; }
     .card-error { color: #e53935; font-size: 0.8rem; margin-top: 0.35rem; display: block; }
     .stripe-fallback {
@@ -135,9 +135,9 @@ import { firstValueFrom } from 'rxjs';
     }
     .donate-submit {
       width: 100%; margin-top: 1.5rem; justify-content: center;
-      background: #d4782f !important; border-color: #d4782f !important; font-weight: 700; font-size: 1.05rem;
+      background: var(--retreat-sunset) !important; border-color: var(--retreat-sunset) !important; font-weight: 700; font-size: 1.05rem;
     }
-    ::ng-deep .donate-submit.p-button:hover { background: #b8651f !important; border-color: #b8651f !important; }
+    ::ng-deep .donate-submit.p-button:hover { background: var(--retreat-sunset) !important; border-color: var(--retreat-sunset) !important; }
     .secure-note { text-align: center; color: #9aa0a6; font-size: 0.8rem; margin: 0.85rem 0 0;
       i { font-size: 0.75rem; margin-right: 0.25rem; } }
     .donate-success { text-align: center;
@@ -215,7 +215,7 @@ export class DonationsComponent implements AfterViewInit, OnDestroy {
         style: {
           base: {
             fontSize: '16px',
-            color: '#1a3a4a',
+            color: 'var(--retreat-teal-dark)',
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
             '::placeholder': { color: '#999' }
           },
