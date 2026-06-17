@@ -53,7 +53,7 @@ import { ZoomLink } from '../../core/models/zoom-link.model';
   styles: [`
     .worship-container { max-width: 1100px; margin: 0 auto; }
     .hero-section {
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      background: var(--retreat-grad-nav);
       border-radius: 16px; padding: 2.5rem 2rem; text-align: center;
       color: #f0e6d0; margin-bottom: 2rem;
       i { font-size: 2.5rem; color: #e8a832; }

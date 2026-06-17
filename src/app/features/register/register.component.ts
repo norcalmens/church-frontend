@@ -62,7 +62,7 @@ import { AuthService } from '../../core/auth/auth.service';
   styles: [`
     .register-container {
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 40%, #c8923a 80%, #d4782f 100%);
+      background: var(--retreat-grad-page-header);
       padding: 2rem;
     }
     .register-card { width: 100%; max-width: 500px; }

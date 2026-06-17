@@ -158,14 +158,14 @@ import { firstValueFrom } from 'rxjs';
       i { font-size: 2.5rem; color: #d4782f; display: block; margin-bottom: 0.75rem; }
       h2 { color: #1a3a4a; margin: 0 0 0.5rem; } p { color: #6c757d; margin: 0 0 1.25rem; max-width: 480px; margin-left:auto; margin-right:auto; }
     }
-    .hero { background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%); color: #f0e6d0;
+    .hero { background: var(--retreat-grad-nav); color: #f0e6d0;
       border-radius: 16px; padding: 2.5rem 2rem; text-align: center;
       i { font-size: 2.5rem; color: #e8a832; }
       h1 { font-size: 1.85rem; font-weight: 800; margin: 0.65rem 0 0.35rem; }
       .subtitle { margin: 0; opacity: 0.9; }
     }
     .section-header { display:flex; align-items:center; gap:0.65rem; padding: 0.85rem 1.25rem;
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%); color:#f0e6d0; font-weight:600;
+      background: var(--retreat-grad-nav); color:#f0e6d0; font-weight:600;
     }
     .balance-card .greeting { color:#1a3a4a; font-size: 1.05rem; margin: 0 0 1rem; }
     .balance-card .totals { display:grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align:center;

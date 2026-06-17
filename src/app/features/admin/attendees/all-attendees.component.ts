@@ -133,14 +133,14 @@ import { Attendee } from '../../../core/models/attendee.model';
     }
     .page-header {
       text-align: center; padding: 2.5rem 2rem;
-      background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 30%, #c8923a 70%, #d4782f 100%);
+      background: var(--retreat-grad-page-header);
       color: #f0e6d0; border-radius: 12px; margin-bottom: 1.5rem;
       h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; }
       p { font-size: 1rem; margin: 0; opacity: 0.9; }
     }
     .card-header-bar {
       display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem;
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      background: var(--retreat-grad-nav);
       color: #f0e6d0; font-size: 1.1rem; font-weight: 600;
     }
     .toolbar {
@@ -157,7 +157,7 @@ import { Attendee } from '../../../core/models/attendee.model';
       .p-card-content { padding: 0; }
     }
     ::ng-deep .attendees-container .p-datatable .p-datatable-thead > tr > th {
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%); color: #f0e6d0;
+      background: var(--retreat-grad-nav); color: #f0e6d0;
     }
     .speaker-row { background: rgba(232, 168, 50, 0.07); }
     .speaker-toggle {

@@ -52,7 +52,7 @@ interface QrEntry {
     .qr-container { max-width: 1100px; margin: 0 auto; }
 
     .hero {
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      background: var(--retreat-grad-nav);
       border-radius: 16px; padding: 2rem; text-align: center; color: #f0e6d0;
       margin-bottom: 1.25rem;
       i.pi-qrcode { font-size: 2.25rem; color: #e8a832; }

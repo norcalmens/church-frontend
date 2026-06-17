@@ -114,7 +114,7 @@ interface Day {
     }
 
     .hero-section {
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      background: var(--retreat-grad-nav);
       border-radius: 16px; padding: 2.25rem 2rem; text-align: center; color: #f0e6d0;
       i.pi-calendar { font-size: 2.25rem; color: #e8a832; }
       h1 { font-size: 2.1rem; font-weight: 800; margin: 0.5rem 0 0.35rem; }
@@ -138,7 +138,7 @@ interface Day {
     }
     .day-header {
       display: flex; align-items: center; gap: 1.5rem; padding: 1.25rem 1.5rem;
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%); color: #f0e6d0;
+      background: var(--retreat-grad-nav); color: #f0e6d0;
     }
     .day-number {
       flex-shrink: 0; width: 64px; height: 64px;

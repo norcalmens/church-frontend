@@ -87,7 +87,7 @@ import { ButtonModule } from 'primeng/button';
     .directions-container { max-width: 920px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.25rem; }
 
     .hero {
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      background: var(--retreat-grad-nav);
       border-radius: 16px; padding: 2rem; text-align: center; color: #f0e6d0;
       i.pi-map-marker { font-size: 2.25rem; color: #e8a832; }
       h1 { font-size: 2rem; font-weight: 800; margin: 0.5rem 0 0.35rem; }

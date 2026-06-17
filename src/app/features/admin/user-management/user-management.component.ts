@@ -165,7 +165,7 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
     }
     .page-header {
       text-align: center; padding: 2rem; margin-bottom: 1.5rem;
-      background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 30%, #c8923a 70%, #d4782f 100%);
+      background: var(--retreat-grad-page-header);
       color: #f0e6d0; border-radius: 12px;
       h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; }
       p { margin: 0; opacity: 0.9; }

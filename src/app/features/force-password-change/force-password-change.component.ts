@@ -72,7 +72,7 @@ import { AuthService } from '../../core/auth/auth.service';
   styles: [`
     .change-container {
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 40%, #c8923a 80%, #d4782f 100%);
+      background: var(--retreat-grad-page-header);
       padding: 2rem;
     }
     .change-card { width: 100%; max-width: 480px; }
@@ -83,7 +83,7 @@ import { AuthService } from '../../core/auth/auth.service';
 
     .change-header {
       text-align: center; color: #f0e6d0;
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      background: var(--retreat-grad-nav);
       padding: 2rem; margin: -1.25rem -1.25rem 1.5rem -1.25rem;
       i { font-size: 2.5rem; color: #f0e6d0; }
       h1 { font-size: 1.5rem; margin: 0.75rem 0 0.5rem 0; font-weight: 700; }

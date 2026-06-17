@@ -95,7 +95,7 @@ import { firstValueFrom } from 'rxjs';
   styles: [`
     .donate-container { max-width: 720px; margin: 0 auto; }
     .donate-hero {
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      background: var(--retreat-grad-nav);
       border-radius: 16px; padding: 2.5rem 2rem; text-align: center;
       color: #f0e6d0; margin-bottom: 1.5rem;
       i { font-size: 2.5rem; color: #d4782f; }

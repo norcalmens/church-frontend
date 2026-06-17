@@ -159,7 +159,7 @@ interface CartItem {
 
     .header-section {
       text-align: center; padding: 3rem 2rem;
-      background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 30%, #c8923a 70%, #d4782f 100%);
+      background: var(--retreat-grad-page-header);
       color: #f0e6d0; border-radius: 12px; margin-bottom: 2rem;
       box-shadow: 0 4px 12px rgba(26, 58, 74, 0.3);
       h1 { font-size: 2.5rem; font-weight: 700; margin: 0 0 0.75rem 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
@@ -252,7 +252,7 @@ interface CartItem {
     }
 
     ::ng-deep .merch-container .add-btn.p-button {
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%); border: none;
+      background: var(--retreat-grad-nav); border: none;
       &:hover { background: linear-gradient(135deg, #d4782f 0%, #e8a832 100%); }
     }
 
@@ -292,7 +292,7 @@ interface CartItem {
     .cart-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 1.25rem 1.5rem;
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%); color: #f0e6d0;
+      background: var(--retreat-grad-nav); color: #f0e6d0;
       h2 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;
         i { color: #e8a832; }
       }
@@ -350,7 +350,7 @@ interface CartItem {
     ::ng-deep .cart-footer .checkout-btn.p-button {
       background: linear-gradient(135deg, #d4782f, #e8a832) !important; border: none;
       font-weight: 700; font-size: 1.05rem; padding: 0.75rem;
-      &:hover { background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%) !important; }
+      &:hover { background: var(--retreat-grad-nav) !important; }
     }
 
     .checkout-note {

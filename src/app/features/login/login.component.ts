@@ -50,7 +50,7 @@ import { AuthService } from '../../core/auth/auth.service';
   styles: [`
     .login-container {
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 40%, #c8923a 80%, #d4782f 100%);
+      background: var(--retreat-grad-page-header);
       padding: 2rem;
     }
     .login-card {
@@ -92,7 +92,7 @@ import { AuthService } from '../../core/auth/auth.service';
       padding: 0.65rem; border-radius: 8px;
       transition: all 0.2s;
       &:hover {
-        background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%) !important;
+        background: var(--retreat-grad-nav) !important;
         color: #f0e6d0 !important;
         border-color: #1a3a4a !important;
       }

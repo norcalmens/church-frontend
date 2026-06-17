@@ -125,13 +125,13 @@ import { AuthService } from '../../core/auth/auth.service';
   styles: [`
     .register-container {
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(180deg, #1a3a4a 0%, #2a5a6a 40%, #c8923a 80%, #d4782f 100%);
+      background: var(--retreat-grad-page-header);
       padding: 2rem;
     }
     .register-card { width: 100%; max-width: 520px; }
     .register-header {
       text-align: center; color: #f0e6d0; margin-bottom: 2rem;
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      background: var(--retreat-grad-nav);
       padding: 2rem; border-radius: 12px 12px 0 0;
       margin: -2rem -2rem 0 -2rem; position: relative;
       h1 { font-size: 1.6rem; margin: 0 0 0.5rem 0; font-weight: 700; }
