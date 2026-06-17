@@ -69,14 +69,17 @@ import { SettingsService, SocialLinks } from '../../../services/settings.service
         <div class="social-row">
           <label><i class="pi pi-facebook fb"></i> Facebook</label>
           <input pInputText [(ngModel)]="social.facebook" placeholder="https://facebook.com/your-page" />
+          <p-inputSwitch [(ngModel)]="social.showFacebook" pTooltip="Show this icon"></p-inputSwitch>
         </div>
         <div class="social-row">
           <label><i class="pi pi-instagram ig"></i> Instagram</label>
           <input pInputText [(ngModel)]="social.instagram" placeholder="https://instagram.com/your-handle" />
+          <p-inputSwitch [(ngModel)]="social.showInstagram" pTooltip="Show this icon"></p-inputSwitch>
         </div>
         <div class="social-row">
           <label><i class="pi pi-youtube yt"></i> YouTube</label>
           <input pInputText [(ngModel)]="social.youtube" placeholder="https://youtube.com/@your-channel" />
+          <p-inputSwitch [(ngModel)]="social.showYoutube" pTooltip="Show this icon"></p-inputSwitch>
         </div>
         <div class="social-actions">
           <button pButton label="Save Social Links" icon="pi pi-check"
@@ -150,7 +153,7 @@ import { SettingsService, SocialLinks } from '../../../services/settings.service
       }
     }
     .social-row {
-      display: grid; grid-template-columns: 140px 1fr; gap: 0.85rem; align-items: center;
+      display: grid; grid-template-columns: 140px 1fr auto; gap: 0.85rem; align-items: center;
       margin-bottom: 0.85rem;
       label { display: flex; align-items: center; gap: 0.5rem; color: #1a3a4a; font-weight: 600; font-size: 0.95rem;
         i { font-size: 1.1rem;
@@ -175,15 +178,26 @@ export class AdminSettingsComponent implements OnInit {
   original = 35;
   saving = false;
 
-  social: SocialLinks = { enabled: false, facebook: '', instagram: '', youtube: '' };
-  private socialOriginal: SocialLinks = { enabled: false, facebook: '', instagram: '', youtube: '' };
+  social: SocialLinks = {
+    enabled: false,
+    showFacebook: true, showInstagram: true, showYoutube: true,
+    facebook: '', instagram: '', youtube: '',
+  };
+  private socialOriginal: SocialLinks = {
+    enabled: false,
+    showFacebook: true, showInstagram: true, showYoutube: true,
+    facebook: '', instagram: '', youtube: '',
+  };
   savingSocial = false;
 
   get socialChanged(): boolean {
-    return this.social.enabled !== this.socialOriginal.enabled
-        || this.social.facebook !== this.socialOriginal.facebook
-        || this.social.instagram !== this.socialOriginal.instagram
-        || this.social.youtube !== this.socialOriginal.youtube;
+    return this.social.enabled       !== this.socialOriginal.enabled
+        || this.social.showFacebook  !== this.socialOriginal.showFacebook
+        || this.social.showInstagram !== this.socialOriginal.showInstagram
+        || this.social.showYoutube   !== this.socialOriginal.showYoutube
+        || this.social.facebook      !== this.socialOriginal.facebook
+        || this.social.instagram     !== this.socialOriginal.instagram
+        || this.social.youtube       !== this.socialOriginal.youtube;
   }
 
   ngOnInit(): void {

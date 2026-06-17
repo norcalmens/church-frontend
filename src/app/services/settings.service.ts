@@ -5,9 +5,14 @@ import { ApiResponse } from '../core/auth/auth.types';
 
 export interface SocialLinks {
   /** Master switch -- when false the footer / topbar hide every icon, even
-   *  if the URLs are filled in. Lets an admin pre-load URLs and reveal the
-   *  icons at launch time. Defaults to false. */
+   *  if the URLs and per-icon flags allow it. Defaults to false. */
   enabled: boolean;
+  /** Per-icon switches -- let an admin hide one specific platform while
+   *  keeping its URL saved. Defaults to true. An icon shows iff
+   *  (enabled AND showPlatform AND URL non-empty). */
+  showFacebook: boolean;
+  showInstagram: boolean;
+  showYoutube: boolean;
   facebook: string;
   instagram: string;
   youtube: string;
@@ -20,7 +25,11 @@ export class SettingsService {
   // Cached so footer + topbar + any other consumers share a single fetch.
   // Updated in-place by setSocialLinks() so an admin save reflects everywhere
   // without a page reload.
-  private socialSubject = new BehaviorSubject<SocialLinks>({ enabled: false, facebook: '', instagram: '', youtube: '' });
+  private socialSubject = new BehaviorSubject<SocialLinks>({
+    enabled: false,
+    showFacebook: true, showInstagram: true, showYoutube: true,
+    facebook: '', instagram: '', youtube: '',
+  });
   readonly socialLinks$: Observable<SocialLinks> = this.socialSubject.asObservable();
   private socialLoaded = false;
   private socialFetch$: Observable<SocialLinks> | null = null;

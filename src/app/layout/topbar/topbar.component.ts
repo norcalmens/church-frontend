@@ -33,8 +33,8 @@ interface SearchItem {
       <nav class="topbar-nav">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
            *ngIf="menuVisibility.isVisible('home')">Home</a>
-        <a routerLink="/registration" routerLinkActive="active"
-           *ngIf="menuVisibility.isVisible('registration')">Register</a>
+        <a routerLink="/waitlist" routerLinkActive="active"
+           *ngIf="menuVisibility.isVisible('registration')">Waitlist 2027</a>
         <a routerLink="/venue" routerLinkActive="active"
            *ngIf="menuVisibility.isVisible('venue')">Venue</a>
         <a routerLink="/directions" routerLinkActive="active"
@@ -97,8 +97,8 @@ interface SearchItem {
       </nav>
       <div class="topbar-right">
         <ng-container *ngIf="social$ | async as social">
-          <a *ngIf="social.enabled && social.facebook" [href]="social.facebook" target="_blank" rel="noopener"
-             class="social-link" aria-label="Facebook" pTooltip="Facebook">
+          <a *ngIf="social.enabled && social.showFacebook && social.facebook" [href]="social.facebook"
+             target="_blank" rel="noopener" class="social-link" aria-label="Facebook" pTooltip="Facebook">
             <i class="pi pi-facebook"></i>
           </a>
         </ng-container>

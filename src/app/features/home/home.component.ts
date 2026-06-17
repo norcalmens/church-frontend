@@ -21,8 +21,8 @@ import { AuthService } from '../../core/auth/auth.service';
             <p class="hero-details"><i class="pi pi-dollar"></i> Full retreat $248 &middot; Single day $85</p>
             <p class="hero-details hero-details-sub"><i class="pi pi-info-circle"></i> Linen &amp; towel package $25 (or $5/item) &middot; Single-day meals $50 (2) / $65 (3)</p>
             <div class="hero-actions">
-              <a routerLink="/registration">
-                <button pButton label="Register Now" icon="pi pi-pencil" size="large"></button>
+              <a routerLink="/waitlist">
+                <button pButton label="Reserve a Spot for 2027" icon="pi pi-calendar-plus" size="large"></button>
               </a>
               <a routerLink="/venue">
                 <button pButton label="View Venue" icon="pi pi-map" size="large"

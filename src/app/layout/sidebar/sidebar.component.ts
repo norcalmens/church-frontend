@@ -22,9 +22,9 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
            *ngIf="menuVisibility.isVisible('home')">
           <i class="pi pi-home"></i> Home
         </a>
-        <a routerLink="/registration" routerLinkActive="active" (click)="close()"
+        <a routerLink="/waitlist" routerLinkActive="active" (click)="close()"
            *ngIf="menuVisibility.isVisible('registration')">
-          <i class="pi pi-pencil"></i> Register
+          <i class="pi pi-calendar-plus"></i> Waitlist 2027
         </a>
         <a routerLink="/venue" routerLinkActive="active" (click)="close()"
            *ngIf="menuVisibility.isVisible('venue')">
