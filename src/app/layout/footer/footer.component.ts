@@ -1,10 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { SettingsService, SocialLinks } from '../../services/settings.service';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
+  imports: [CommonModule],
   template: `
     <footer class="app-footer">
+      <!-- Social icons row -- only renders if at least one URL is configured -->
+      <div *ngIf="social$ | async as social" class="social-row">
+        <a *ngIf="social.facebook" [href]="social.facebook" target="_blank" rel="noopener"
+           class="social-icon facebook" aria-label="Facebook">
+          <i class="pi pi-facebook"></i>
+        </a>
+        <a *ngIf="social.instagram" [href]="social.instagram" target="_blank" rel="noopener"
+           class="social-icon instagram" aria-label="Instagram">
+          <i class="pi pi-instagram"></i>
+        </a>
+        <a *ngIf="social.youtube" [href]="social.youtube" target="_blank" rel="noopener"
+           class="social-icon youtube" aria-label="YouTube">
+          <i class="pi pi-youtube"></i>
+        </a>
+      </div>
       <div class="footer-content">
         <span>&copy; {{ currentYear }} NorCal Men's Retreat</span>
         <span class="separator">|</span>
@@ -25,8 +43,36 @@ import { Component } from '@angular/core';
       gap: 0.75rem; flex-wrap: wrap;
     }
     .separator { opacity: 0.5; }
+    .social-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.75rem; margin-bottom: 0.75rem;
+      &:empty { display: none; }   // hide row entirely when no icons rendered
+    }
+    .social-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: #f0e6d0;
+      background: rgba(240, 230, 208, 0.08);
+      border: 1px solid rgba(240, 230, 208, 0.18);
+      transition: all 0.2s;
+      text-decoration: none;
+      i { font-size: 1.05rem; }
+      &:hover { transform: translateY(-2px); color: #1a3a4a; }
+      &.facebook:hover  { background: #1877f2; border-color: #1877f2; color: #fff; }
+      &.instagram:hover { background: linear-gradient(135deg, #f09433, #e6683c 30%, #dc2743 60%, #cc2366 80%, #bc1888);
+                          border-color: transparent; color: #fff; }
+      &.youtube:hover   { background: #ff0000; border-color: #ff0000; color: #fff; }
+    }
   `]
 })
-export class FooterComponent {
+export class FooterComponent implements OnInit {
+  private settings = inject(SettingsService);
   currentYear = new Date().getFullYear();
+  social$ = this.settings.socialLinks$;
+
+  ngOnInit(): void {
+    // Kick the cached load -- subsequent consumers (topbar, etc.) get the
+    // values from the BehaviorSubject without a second round trip.
+    this.settings.loadSocialLinks().subscribe();
+  }
 }

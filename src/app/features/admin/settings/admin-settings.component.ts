@@ -5,14 +5,15 @@ import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { SettingsService } from '../../../services/settings.service';
+import { SettingsService, SocialLinks } from '../../../services/settings.service';
 
 @Component({
   selector: 'app-admin-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, CardModule, ButtonModule, InputNumberModule, ToastModule],
+  imports: [CommonModule, FormsModule, RouterLink, CardModule, ButtonModule, InputNumberModule, InputTextModule, ToastModule],
   providers: [MessageService],
   template: `
     <p-toast></p-toast>
@@ -42,6 +43,36 @@ import { SettingsService } from '../../../services/settings.service';
         <p class="hint" *ngIf="capacity !== original">
           <i class="pi pi-info-circle"></i>
           Unsaved &mdash; previous value: <strong>{{ original }}</strong>
+        </p>
+      </p-card>
+
+      <p-card class="social-card">
+        <ng-template pTemplate="header">
+          <div class="card-header-bar"><i class="pi pi-share-alt"></i><span>Social Links</span></div>
+        </ng-template>
+        <div class="social-intro">
+          Paste full URLs (with <code>https://</code>). An empty field hides that icon site-wide.
+          Saved values take effect immediately &mdash; no redeploy.
+        </div>
+        <div class="social-row">
+          <label><i class="pi pi-facebook fb"></i> Facebook</label>
+          <input pInputText [(ngModel)]="social.facebook" placeholder="https://facebook.com/your-page" />
+        </div>
+        <div class="social-row">
+          <label><i class="pi pi-instagram ig"></i> Instagram</label>
+          <input pInputText [(ngModel)]="social.instagram" placeholder="https://instagram.com/your-handle" />
+        </div>
+        <div class="social-row">
+          <label><i class="pi pi-youtube yt"></i> YouTube</label>
+          <input pInputText [(ngModel)]="social.youtube" placeholder="https://youtube.com/@your-channel" />
+        </div>
+        <div class="social-actions">
+          <button pButton label="Save Social Links" icon="pi pi-check"
+                  (click)="saveSocial()" [disabled]="savingSocial || !socialChanged" [loading]="savingSocial"></button>
+        </div>
+        <p class="hint" *ngIf="socialChanged">
+          <i class="pi pi-info-circle"></i>
+          Unsaved changes.
         </p>
       </p-card>
     </div>
@@ -86,6 +117,29 @@ import { SettingsService } from '../../../services/settings.service';
     @media (max-width: 600px) {
       .setting-control { width: 100%; ::ng-deep .p-button, ::ng-deep .p-inputnumber { flex: 1; } }
     }
+
+    .social-card { margin-top: 1.25rem; }
+    .social-intro {
+      color: #495057; font-size: 0.92rem; line-height: 1.5;
+      margin-bottom: 1rem;
+      code { background: rgba(26,58,74,0.06); padding: 0.05rem 0.35rem; border-radius: 4px; font-size: 0.88em; }
+    }
+    .social-row {
+      display: grid; grid-template-columns: 140px 1fr; gap: 0.85rem; align-items: center;
+      margin-bottom: 0.85rem;
+      label { display: flex; align-items: center; gap: 0.5rem; color: #1a3a4a; font-weight: 600; font-size: 0.95rem;
+        i { font-size: 1.1rem;
+          &.fb { color: #1877f2; }
+          &.ig { color: #cc2366; }
+          &.yt { color: #ff0000; }
+        }
+      }
+      input { width: 100%; }
+    }
+    .social-actions { display: flex; justify-content: flex-end; margin-top: 0.5rem; }
+    @media (max-width: 600px) {
+      .social-row { grid-template-columns: 1fr; gap: 0.35rem; }
+    }
   `]
 })
 export class AdminSettingsComponent implements OnInit {
@@ -96,10 +150,27 @@ export class AdminSettingsComponent implements OnInit {
   original = 35;
   saving = false;
 
+  social: SocialLinks = { facebook: '', instagram: '', youtube: '' };
+  private socialOriginal: SocialLinks = { facebook: '', instagram: '', youtube: '' };
+  savingSocial = false;
+
+  get socialChanged(): boolean {
+    return this.social.facebook !== this.socialOriginal.facebook
+        || this.social.instagram !== this.socialOriginal.instagram
+        || this.social.youtube !== this.socialOriginal.youtube;
+  }
+
   ngOnInit(): void {
     this.settingsService.getCapacity().subscribe({
       next: (c) => { this.capacity = c; this.original = c; },
       error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load capacity' })
+    });
+    this.settingsService.loadSocialLinks().subscribe({
+      next: (links) => {
+        this.social = { ...links };
+        this.socialOriginal = { ...links };
+      },
+      error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load social links' })
     });
   }
 
@@ -115,6 +186,24 @@ export class AdminSettingsComponent implements OnInit {
       error: () => {
         this.saving = false;
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save capacity' });
+      }
+    });
+  }
+
+  saveSocial(): void {
+    if (this.savingSocial) return;
+    this.savingSocial = true;
+    this.settingsService.setSocialLinks(this.social).subscribe({
+      next: (links) => {
+        this.savingSocial = false;
+        this.social = { ...links };
+        this.socialOriginal = { ...links };
+        this.messageService.add({ severity: 'success', summary: 'Saved', detail: 'Social links updated' });
+      },
+      error: (e) => {
+        this.savingSocial = false;
+        const msg = e?.error?.message || 'Failed to save social links';
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
       }
     });
   }

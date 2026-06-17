@@ -119,7 +119,7 @@ interface BadgeData {
             <img src="assets/images/kennedy-manor.png" alt="Kennedy Manor Card" />
             <div *ngIf="kennedyManorCancelled" class="cancel-stamp demo-card-stamp">
               <span class="cancel-line"></span>
-              <span class="cancel-text">CANCELLED</span>
+              <span class="cancel-text">Permanently Cancelled</span>
             </div>
           </div>
         </div>
@@ -155,7 +155,7 @@ interface BadgeData {
                    demo's printout still shows the void mark). -->
               <div *ngIf="!badge.skip && badge.demoCancelled" class="cancel-stamp">
                 <span class="cancel-line"></span>
-                <span class="cancel-text">CANCELLED</span>
+                <span class="cancel-text">Permanently Cancelled</span>
               </div>
 
               <!-- Skipped slot (visible on screen with hatching + "Skipped" label,
@@ -241,13 +241,13 @@ interface BadgeData {
               <img src="assets/images/kennedy-manor.png" alt="Kennedy Manor Apartments, Richmond, CA" />
             </div>
             <div class="km-name">
-              <span class="km-first">El Sean</span>
+              <span class="km-first">Ell Sean</span>
               <span class="km-aka">"SJ &middot; The Prof &middot; Grady &middot; Reaper &middot; Crescent Park, etc."</span>
               <span class="km-last">Smith</span>
             </div>
             <div *ngIf="kennedyManorCancelled" class="cancel-stamp km-cancel-stamp">
               <span class="cancel-line"></span>
-              <span class="cancel-text">CANCELLED</span>
+              <span class="cancel-text">Permanently Cancelled</span>
             </div>
           </div>
           <p class="empty-hint"><i class="pi pi-info-circle"></i> Sample card &mdash; register attendees to see real badges.</p>
@@ -327,19 +327,25 @@ interface BadgeData {
         top: 50%; left: 50%;
         transform: translate(-50%, -50%) rotate(-20deg);
         font-family: 'Georgia', serif;
-        font-size: 0.32in;
+        font-size: 0.22in;
         font-weight: 900;
-        letter-spacing: 0.04in;
+        letter-spacing: 0.03in;
+        line-height: 1.05;
         color: #c0392b;
         text-transform: uppercase;
+        text-align: center;
         background: rgba(255, 255, 255, 0.85);
-        padding: 0.04in 0.15in;
+        padding: 0.05in 0.15in;
         border: 0.025in solid #c0392b;
         border-radius: 0.04in;
-        white-space: nowrap;
+        /* Wrap on space: "PERMANENTLY / CANCELLED" stacks vertically.
+           width: min-content shrinks the box to the widest unbreakable word
+           ("PERMANENTLY"), and the second word lays out centered beneath. */
+        white-space: normal;
+        width: min-content;
       }
     }
-    .sheet.sheet-portrait .cancel-stamp .cancel-text { font-size: 0.26in; }
+    .sheet.sheet-portrait .cancel-stamp .cancel-text { font-size: 0.18in; letter-spacing: 0.025in; }
 
     /* === Demo card preview (Kennedy Manor) === */
     .demo-card-preview {
@@ -377,9 +383,9 @@ interface BadgeData {
         transparent calc(50% + 8px));
     }
     .demo-card-stamp .cancel-text {
-      font-size: 3.5rem !important;
-      letter-spacing: 0.4rem !important;
-      padding: 0.4rem 1.5rem !important;
+      font-size: 2.4rem !important;
+      letter-spacing: 0.3rem !important;
+      padding: 0.5rem 1.3rem !important;
       border-width: 4px !important;
       box-shadow: 0 6px 16px rgba(192, 57, 43, 0.4);
     }
@@ -797,9 +803,9 @@ interface BadgeData {
           transparent calc(50% + 5px));
       }
       .cancel-text {
-        font-size: 2.2rem !important;
-        letter-spacing: 0.25rem !important;
-        padding: 0.3rem 1rem !important;
+        font-size: 1.6rem !important;
+        letter-spacing: 0.2rem !important;
+        padding: 0.4rem 0.9rem !important;
         border-width: 3px !important;
         box-shadow: 0 4px 12px rgba(192, 57, 43, 0.35);
       }

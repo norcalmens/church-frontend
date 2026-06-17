@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../../core/auth/auth.service';
 import { MenuVisibilityService } from '../../core/services/menu-visibility.service';
 import { MenuSelectorComponent } from '../../features/admin/menu-selector/menu-selector.component';
+import { SettingsService } from '../../services/settings.service';
 
 interface SearchItem {
   label: string;
@@ -95,6 +96,10 @@ interface SearchItem {
         </div>
       </nav>
       <div class="topbar-right">
+        <a *ngIf="(social$ | async)?.facebook as fb" [href]="fb" target="_blank" rel="noopener"
+           class="social-link" aria-label="Facebook" pTooltip="Facebook">
+          <i class="pi pi-facebook"></i>
+        </a>
         <button pButton icon="pi pi-search" class="p-button-text p-button-rounded search-btn"
                 pTooltip="Search" (click)="toggleSearch()"></button>
         <button *ngIf="authService.isAdmin()" pButton icon="pi pi-th-large"
@@ -212,6 +217,14 @@ interface SearchItem {
     }
 
     .topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+    .social-link {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: rgba(240, 230, 208, 0.85); text-decoration: none;
+      transition: all 0.2s;
+      i { font-size: 1rem; }
+      &:hover { background: #1877f2; color: #fff; }
+    }
     .user-greeting { color: #f0e6d0; font-size: 0.9rem; font-weight: 500; }
     .search-btn {
       color: #f0e6d0 !important;
@@ -318,6 +331,11 @@ export class TopbarComponent {
   authService = inject(AuthService);
   menuVisibility = inject(MenuVisibilityService);
   private router = inject(Router);
+  private settings = inject(SettingsService);
+
+  // Reuses the SettingsService BehaviorSubject so the topbar and footer share
+  // a single fetch; the footer kicks the load on layout init.
+  social$ = this.settings.socialLinks$;
 
   searchOpen = false;
   adminMenuOpen = false;
