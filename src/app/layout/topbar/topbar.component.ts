@@ -97,10 +97,20 @@ interface SearchItem {
       </nav>
       <div class="topbar-right">
         <ng-container *ngIf="social$ | async as social">
-          <a *ngIf="social.enabled && social.showFacebook && social.facebook" [href]="social.facebook"
-             target="_blank" rel="noopener" class="social-link" aria-label="Facebook" pTooltip="Facebook">
-            <i class="pi pi-facebook"></i>
-          </a>
+          <ng-container *ngIf="social.enabled">
+            <a *ngIf="social.showFacebook && social.facebook" [href]="social.facebook"
+               target="_blank" rel="noopener" class="social-link facebook" aria-label="Facebook" pTooltip="Facebook">
+              <i class="pi pi-facebook"></i>
+            </a>
+            <a *ngIf="social.showInstagram && social.instagram" [href]="social.instagram"
+               target="_blank" rel="noopener" class="social-link instagram" aria-label="Instagram" pTooltip="Instagram">
+              <i class="pi pi-instagram"></i>
+            </a>
+            <a *ngIf="social.showYoutube && social.youtube" [href]="social.youtube"
+               target="_blank" rel="noopener" class="social-link youtube" aria-label="YouTube" pTooltip="YouTube">
+              <i class="pi pi-youtube"></i>
+            </a>
+          </ng-container>
         </ng-container>
         <button pButton icon="pi pi-search" class="p-button-text p-button-rounded search-btn"
                 pTooltip="Search" (click)="toggleSearch()"></button>
@@ -220,12 +230,19 @@ interface SearchItem {
 
     .topbar-right { display: flex; align-items: center; gap: 0.75rem; }
     .social-link {
-      width: 32px; height: 32px; border-radius: 50%;
+      width: 38px; height: 38px; border-radius: 50%;
       display: inline-flex; align-items: center; justify-content: center;
-      color: rgba(240, 230, 208, 0.85); text-decoration: none;
+      color: rgba(240, 230, 208, 0.9); text-decoration: none;
+      background: rgba(240, 230, 208, 0.1);
+      border: 1px solid rgba(240, 230, 208, 0.18);
       transition: all 0.2s;
-      i { font-size: 1rem; }
-      &:hover { background: #1877f2; color: #fff; }
+      i { font-size: 1.1rem; }
+      &:hover { transform: translateY(-2px); color: #fff; border-color: transparent;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      }
+      &.facebook:hover  { background: #1877f2; }
+      &.instagram:hover { background: linear-gradient(135deg, #f09433, #e6683c 30%, #dc2743 60%, #cc2366 80%, #bc1888); }
+      &.youtube:hover   { background: #ff0000; }
     }
     .user-greeting { color: #f0e6d0; font-size: 0.9rem; font-weight: 500; }
     .search-btn {
