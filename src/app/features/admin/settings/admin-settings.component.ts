@@ -10,6 +10,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SettingsService, SocialLinks } from '../../../services/settings.service';
+import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-admin-settings',
@@ -44,6 +45,45 @@ import { SettingsService, SocialLinks } from '../../../services/settings.service
         <p class="hint" *ngIf="capacity !== original">
           <i class="pi pi-info-circle"></i>
           Unsaved &mdash; previous value: <strong>{{ original }}</strong>
+        </p>
+      </p-card>
+
+      <p-card class="theme-card">
+        <ng-template pTemplate="header">
+          <div class="card-header-bar"><i class="pi pi-palette"></i><span>Color Theme</span></div>
+        </ng-template>
+        <div class="theme-intro">
+          Pick a palette below to preview live. Click <strong>Save Theme</strong> to apply for every visitor.
+          The topbar, footer, hero, and admin page headers rebrand immediately; smaller component-level
+          colors will follow as more surfaces migrate to the shared variables.
+        </div>
+        <div class="theme-grid">
+          <button *ngFor="let t of themes" type="button" class="theme-swatch"
+                  [class.active]="(themeService.theme$ | async) === t.id"
+                  (click)="previewTheme(t.id)">
+            <div class="swatch-strip">
+              <span [style.background]="t.swatch.primary"></span>
+              <span [style.background]="t.swatch.accent"></span>
+              <span [style.background]="t.swatch.cream"></span>
+            </div>
+            <div class="swatch-meta">
+              <strong>{{ t.name }}</strong>
+              <span>{{ t.description }}</span>
+            </div>
+            <i *ngIf="(themeService.theme$ | async) === t.id" class="pi pi-check-circle swatch-check"></i>
+          </button>
+        </div>
+        <div class="theme-actions">
+          <button pButton label="Cancel Preview" class="p-button-text" icon="pi pi-undo"
+                  (click)="resetThemePreview()" [disabled]="!themePreviewActive"></button>
+          <button pButton label="Save Theme" icon="pi pi-check"
+                  (click)="saveTheme()" [disabled]="!themePreviewActive || savingTheme"
+                  [loading]="savingTheme"></button>
+        </div>
+        <p class="hint" *ngIf="themePreviewActive">
+          <i class="pi pi-info-circle"></i>
+          Previewing <strong>{{ previewedThemeName }}</strong> &mdash; click Save Theme to apply for everyone,
+          or Cancel Preview to revert.
         </p>
       </p-card>
 
@@ -133,6 +173,47 @@ import { SettingsService, SocialLinks } from '../../../services/settings.service
       .setting-control { width: 100%; ::ng-deep .p-button, ::ng-deep .p-inputnumber { flex: 1; } }
     }
 
+    .theme-card { margin-top: 1.25rem; }
+    .theme-intro {
+      color: #495057; font-size: 0.92rem; line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .theme-grid {
+      display: grid; gap: 0.85rem;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      margin-bottom: 1rem;
+    }
+    .theme-swatch {
+      position: relative;
+      text-align: left; cursor: pointer;
+      background: #fff; border: 2px solid #e0e0e0; border-radius: 10px;
+      padding: 0; overflow: hidden;
+      transition: all 0.15s;
+      display: flex; flex-direction: column;
+      font-family: inherit;
+      &:hover { border-color: var(--retreat-sunset); transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      }
+      &.active { border-color: var(--retreat-sunset);
+        box-shadow: 0 0 0 3px rgba(212, 120, 47, 0.18);
+      }
+    }
+    .swatch-strip {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      height: 48px;
+      span { display: block; }
+    }
+    .swatch-meta { padding: 0.65rem 0.85rem 0.85rem;
+      strong { display: block; color: #1a3a4a; font-size: 0.98rem; }
+      span { display: block; color: #6c757d; font-size: 0.82rem; margin-top: 0.2rem; line-height: 1.35; }
+    }
+    .swatch-check {
+      position: absolute; top: 6px; right: 8px;
+      color: #fff; font-size: 1.15rem;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
+    }
+    .theme-actions { display: flex; gap: 0.6rem; justify-content: flex-end; }
+
     .social-card { margin-top: 1.25rem; }
     .social-intro {
       color: #495057; font-size: 0.92rem; line-height: 1.5;
@@ -172,11 +253,27 @@ import { SettingsService, SocialLinks } from '../../../services/settings.service
 })
 export class AdminSettingsComponent implements OnInit {
   private settingsService = inject(SettingsService);
+  themeService = inject(ThemeService);
   private messageService = inject(MessageService);
 
   capacity = 35;
   original = 35;
   saving = false;
+
+  // Theme picker state. originalTheme = persisted choice; preview lives on
+  // ThemeService.theme$ while the admin clicks swatches. Save commits the
+  // current preview; Cancel reverts to originalTheme.
+  themes: ThemeDefinition[] = this.themeService.availableThemes;
+  originalTheme = 'sunrise';
+  savingTheme = false;
+
+  get themePreviewActive(): boolean {
+    return this.themeService.currentTheme !== this.originalTheme;
+  }
+  get previewedThemeName(): string {
+    const id = this.themeService.currentTheme;
+    return this.themes.find(t => t.id === id)?.name || id;
+  }
 
   social: SocialLinks = {
     enabled: false,
@@ -205,6 +302,9 @@ export class AdminSettingsComponent implements OnInit {
       next: (c) => { this.capacity = c; this.original = c; },
       error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load capacity' })
     });
+    // Layout already kicked loadActiveTheme on app boot, so the BehaviorSubject
+    // already has the persisted value. Snapshot it here as the "original".
+    this.originalTheme = this.themeService.currentTheme;
     this.settingsService.loadSocialLinks().subscribe({
       next: (links) => {
         this.social = { ...links };
@@ -226,6 +326,42 @@ export class AdminSettingsComponent implements OnInit {
       error: () => {
         this.saving = false;
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save capacity' });
+      }
+    });
+  }
+
+  // ===== Theme picker =====
+
+  /** Apply a theme locally so the admin sees the change immediately. Doesn't
+   *  hit the server -- saving (or canceling) is a separate explicit action. */
+  previewTheme(id: string): void {
+    this.themeService.applyTheme(id);
+  }
+
+  resetThemePreview(): void {
+    if (this.themeService.currentTheme !== this.originalTheme) {
+      this.themeService.applyTheme(this.originalTheme);
+    }
+  }
+
+  saveTheme(): void {
+    if (this.savingTheme || !this.themePreviewActive) return;
+    const id = this.themeService.currentTheme;
+    this.savingTheme = true;
+    this.themeService.saveTheme(id).subscribe({
+      next: (saved) => {
+        this.savingTheme = false;
+        this.originalTheme = saved;
+        const name = this.themes.find(t => t.id === saved)?.name || saved;
+        this.messageService.add({ severity: 'success', summary: 'Saved', detail: `Theme set to ${name}` });
+      },
+      error: (e) => {
+        this.savingTheme = false;
+        // Rollback the preview on failure so the visitor's actual state isn't
+        // out of sync with what got saved.
+        this.themeService.applyTheme(this.originalTheme);
+        const msg = e?.error?.message || 'Failed to save theme';
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
       }
     });
   }

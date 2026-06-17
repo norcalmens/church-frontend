@@ -155,7 +155,7 @@ interface SearchItem {
       position: fixed;
       top: 0; left: 0; right: 0;
       height: 60px;
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      background: var(--retreat-grad-nav);
       display: flex;
       align-items: center;
       justify-content: space-between;

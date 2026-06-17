@@ -122,7 +122,7 @@ import { AuthService } from '../../core/auth/auth.service';
   styles: [`
     .home-container { max-width: 1200px; margin: 0 auto; }
     .hero-section {
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      background: var(--retreat-grad-nav);
       border-radius: 16px; padding: 3rem;
       margin-bottom: 3rem; overflow: hidden;
     }

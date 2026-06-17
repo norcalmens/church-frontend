@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TopbarComponent } from './topbar/topbar.component';
@@ -6,6 +6,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { MaintenanceBannerComponent } from './maintenance-banner/maintenance-banner.component';
 import { BackendStatusService } from '../core/services/backend-status.service';
+import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-layout',
@@ -53,7 +54,14 @@ import { BackendStatusService } from '../core/services/backend-status.service';
     }
   `]
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit {
   sidebarVisible = false;
   status = inject(BackendStatusService);
+  private themeService = inject(ThemeService);
+
+  ngOnInit(): void {
+    // Resolve the admin's saved theme before the visitor sees too much.
+    // Failure is silent -- the default theme stays applied via :root.
+    this.themeService.loadActiveTheme().subscribe({ error: () => {} });
+  }
 }

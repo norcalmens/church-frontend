@@ -1,16 +1,108 @@
 /* NorCal Men's Retreat 2026 — Global Styles */
 
-/* Theme variables */
-:root {
+/* ============================================================================
+   Theme palette. The DEFAULT (Sunrise) lives on :root so an un-themed page
+   still renders correctly. Each named theme overrides the same set of
+   variables; the ThemeService applies one by setting `.theme-<id>` on the
+   <html> element. Components that consume var(--retreat-*) will rebrand
+   automatically. Components that still use hard-coded hex colors will not
+   -- the topbar, footer, home hero, and page-header gradients (the most
+   visible surfaces) have been migrated.
+============================================================================ */
+:root,
+.theme-sunrise {
+  /* Primary -- dark teal used on topbar, footer, headings */
   --retreat-teal-dark: #1a3a4a;
   --retreat-teal: #2a5a6a;
   --retreat-teal-light: #1e4d5e;
+  /* Accents -- gold + sunset/copper used for icons, CTAs, accents */
   --retreat-gold: #e8a832;
   --retreat-sunset: #d4782f;
   --retreat-copper: #c8923a;
+  /* Background tones */
   --retreat-cream: #f0e6d0;
+  --retreat-cream-soft: #faf2dc;
+  /* Text */
   --retreat-text: #333;
   --retreat-text-secondary: #6c757d;
+  /* Composite gradients */
+  --retreat-grad-nav: linear-gradient(135deg, var(--retreat-teal-dark) 0%, var(--retreat-teal-light) 100%);
+  --retreat-grad-page-header: linear-gradient(180deg, var(--retreat-teal-dark) 0%, var(--retreat-teal) 30%, var(--retreat-copper) 70%, var(--retreat-sunset) 100%);
+}
+
+/* Forest -- deep evergreens + warm brass. Matches the Alliance Redwoods venue. */
+.theme-forest {
+  --retreat-teal-dark: #1f3a25;
+  --retreat-teal: #355c3c;
+  --retreat-teal-light: #2a4d31;
+  --retreat-gold: #d4b35a;
+  --retreat-sunset: #a87832;
+  --retreat-copper: #8a6429;
+  --retreat-cream: #ece4d2;
+  --retreat-cream-soft: #f5efd9;
+}
+
+/* Pacific -- navy + sky + sandy beige. Northern California coast palette. */
+.theme-pacific {
+  --retreat-teal-dark: #14305a;
+  --retreat-teal: #2d4f7c;
+  --retreat-teal-light: #1f3e6d;
+  --retreat-gold: #7ab8d4;
+  --retreat-sunset: #d49a5a;
+  --retreat-copper: #a8753a;
+  --retreat-cream: #f0ead8;
+  --retreat-cream-soft: #f9f5e8;
+}
+
+/* Vintage Hymn -- burgundy + ivory + brass. Traditional church aesthetic. */
+.theme-vintage {
+  --retreat-teal-dark: #4a1f24;
+  --retreat-teal: #6a2d33;
+  --retreat-teal-light: #5e2730;
+  --retreat-gold: #c89a4a;
+  --retreat-sunset: #a87532;
+  --retreat-copper: #835820;
+  --retreat-cream: #f0e4d4;
+  --retreat-cream-soft: #faf2e0;
+}
+
+/* Slate -- modern gray + indigo + warm tan. Clean, contemporary look. */
+.theme-slate {
+  --retreat-teal-dark: #2d3748;
+  --retreat-teal: #4a5568;
+  --retreat-teal-light: #3a4658;
+  --retreat-gold: #7e9cc8;
+  --retreat-sunset: #b89678;
+  --retreat-copper: #8d6d4f;
+  --retreat-cream: #ecedf0;
+  --retreat-cream-soft: #f7f8f9;
+}
+
+/* Sage -- soft eucalyptus + dusty rose. Calm, reflective palette. */
+.theme-sage {
+  --retreat-teal-dark: #3a4f44;
+  --retreat-teal: #57705e;
+  --retreat-teal-light: #44604f;
+  --retreat-gold: #d4a48a;
+  --retreat-sunset: #b87a5e;
+  --retreat-copper: #8a5840;
+  --retreat-cream: #ece8da;
+  --retreat-cream-soft: #f4f1e6;
+}
+
+/* Per-theme gradient overrides. The default Sunrise gradient lives on :root
+   above; the rest re-derive from each theme's own palette so the page-header
+   block on admin tables (and the home hero) rebrand cleanly. */
+.theme-forest, .theme-pacific, .theme-vintage, .theme-slate, .theme-sage {
+  --retreat-grad-nav: linear-gradient(135deg, var(--retreat-teal-dark) 0%, var(--retreat-teal-light) 100%);
+  --retreat-grad-page-header: linear-gradient(180deg, var(--retreat-teal-dark) 0%, var(--retreat-teal) 30%, var(--retreat-copper) 70%, var(--retreat-sunset) 100%);
+}
+
+/* Smooth crossfade when the admin previews a theme. Only affects elements
+   that actually consume the variables (the surfaces we migrated). */
+.app-footer, .topbar, .topbar-logo,
+.hero-section, .page-header, .card-header-bar {
+  transition: background 0.35s ease, color 0.25s ease;
 }
 
 /* Global resets */

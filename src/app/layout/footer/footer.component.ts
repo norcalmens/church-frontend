@@ -35,7 +35,7 @@ import { SettingsService, SocialLinks } from '../../services/settings.service';
   `,
   styles: [`
     .app-footer {
-      background: linear-gradient(135deg, #1a3a4a 0%, #1e4d5e 100%);
+      background: var(--retreat-grad-nav);
       color: rgba(240, 230, 208, 0.7);
       padding: 1.25rem 2rem;
       text-align: center;
