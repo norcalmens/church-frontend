@@ -8,20 +8,24 @@ import { SettingsService, SocialLinks } from '../../services/settings.service';
   imports: [CommonModule],
   template: `
     <footer class="app-footer">
-      <!-- Social icons row -- only renders if at least one URL is configured -->
-      <div *ngIf="social$ | async as social" class="social-row">
-        <a *ngIf="social.facebook" [href]="social.facebook" target="_blank" rel="noopener"
-           class="social-icon facebook" aria-label="Facebook">
-          <i class="pi pi-facebook"></i>
-        </a>
-        <a *ngIf="social.instagram" [href]="social.instagram" target="_blank" rel="noopener"
-           class="social-icon instagram" aria-label="Instagram">
-          <i class="pi pi-instagram"></i>
-        </a>
-        <a *ngIf="social.youtube" [href]="social.youtube" target="_blank" rel="noopener"
-           class="social-icon youtube" aria-label="YouTube">
-          <i class="pi pi-youtube"></i>
-        </a>
+      <!-- Social icons row -- master switch (social.enabled) must be on AND
+           the individual URL must be filled. Either condition alone hides
+           the icon completely. -->
+      <div *ngIf="(social$ | async) as social" class="social-row">
+        <ng-container *ngIf="social.enabled">
+          <a *ngIf="social.facebook" [href]="social.facebook" target="_blank" rel="noopener"
+             class="social-icon facebook" aria-label="Facebook">
+            <i class="pi pi-facebook"></i>
+          </a>
+          <a *ngIf="social.instagram" [href]="social.instagram" target="_blank" rel="noopener"
+             class="social-icon instagram" aria-label="Instagram">
+            <i class="pi pi-instagram"></i>
+          </a>
+          <a *ngIf="social.youtube" [href]="social.youtube" target="_blank" rel="noopener"
+             class="social-icon youtube" aria-label="YouTube">
+            <i class="pi pi-youtube"></i>
+          </a>
+        </ng-container>
       </div>
       <div class="footer-content">
         <span>&copy; {{ currentYear }} NorCal Men's Retreat</span>

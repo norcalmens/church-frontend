@@ -96,10 +96,12 @@ interface SearchItem {
         </div>
       </nav>
       <div class="topbar-right">
-        <a *ngIf="(social$ | async)?.facebook as fb" [href]="fb" target="_blank" rel="noopener"
-           class="social-link" aria-label="Facebook" pTooltip="Facebook">
-          <i class="pi pi-facebook"></i>
-        </a>
+        <ng-container *ngIf="social$ | async as social">
+          <a *ngIf="social.enabled && social.facebook" [href]="social.facebook" target="_blank" rel="noopener"
+             class="social-link" aria-label="Facebook" pTooltip="Facebook">
+            <i class="pi pi-facebook"></i>
+          </a>
+        </ng-container>
         <button pButton icon="pi pi-search" class="p-button-text p-button-rounded search-btn"
                 pTooltip="Search" (click)="toggleSearch()"></button>
         <button *ngIf="authService.isAdmin()" pButton icon="pi pi-th-large"

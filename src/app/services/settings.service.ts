@@ -4,6 +4,10 @@ import { BehaviorSubject, Observable, map, shareReplay, tap } from 'rxjs';
 import { ApiResponse } from '../core/auth/auth.types';
 
 export interface SocialLinks {
+  /** Master switch -- when false the footer / topbar hide every icon, even
+   *  if the URLs are filled in. Lets an admin pre-load URLs and reveal the
+   *  icons at launch time. Defaults to false. */
+  enabled: boolean;
   facebook: string;
   instagram: string;
   youtube: string;
@@ -16,7 +20,7 @@ export class SettingsService {
   // Cached so footer + topbar + any other consumers share a single fetch.
   // Updated in-place by setSocialLinks() so an admin save reflects everywhere
   // without a page reload.
-  private socialSubject = new BehaviorSubject<SocialLinks>({ facebook: '', instagram: '', youtube: '' });
+  private socialSubject = new BehaviorSubject<SocialLinks>({ enabled: false, facebook: '', instagram: '', youtube: '' });
   readonly socialLinks$: Observable<SocialLinks> = this.socialSubject.asObservable();
   private socialLoaded = false;
   private socialFetch$: Observable<SocialLinks> | null = null;

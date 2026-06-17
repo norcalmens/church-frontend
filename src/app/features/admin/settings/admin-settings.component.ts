@@ -6,6 +6,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputSwitchModule } from 'primeng/inputswitch';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SettingsService, SocialLinks } from '../../../services/settings.service';
@@ -13,7 +14,7 @@ import { SettingsService, SocialLinks } from '../../../services/settings.service
 @Component({
   selector: 'app-admin-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, CardModule, ButtonModule, InputNumberModule, InputTextModule, ToastModule],
+  imports: [CommonModule, FormsModule, RouterLink, CardModule, ButtonModule, InputNumberModule, InputTextModule, InputSwitchModule, ToastModule],
   providers: [MessageService],
   template: `
     <p-toast></p-toast>
@@ -51,8 +52,19 @@ import { SettingsService, SocialLinks } from '../../../services/settings.service
           <div class="card-header-bar"><i class="pi pi-share-alt"></i><span>Social Links</span></div>
         </ng-template>
         <div class="social-intro">
-          Paste full URLs (with <code>https://</code>). An empty field hides that icon site-wide.
-          Saved values take effect immediately &mdash; no redeploy.
+          Paste full URLs (with <code>https://</code>) and flip the master switch when you're ready
+          to show icons site-wide. With the switch off, every icon stays hidden even if the URLs
+          are filled in &mdash; useful for pre-loading the Facebook link without revealing it yet.
+        </div>
+        <div class="social-master">
+          <div class="social-master-label">
+            <strong>Show social icons site-wide</strong>
+            <p>
+              Master switch. When off, the footer and topbar render no social icons regardless of which URLs are saved.
+              Currently <strong>{{ social.enabled ? 'visible' : 'hidden' }}</strong>.
+            </p>
+          </div>
+          <p-inputSwitch [(ngModel)]="social.enabled"></p-inputSwitch>
         </div>
         <div class="social-row">
           <label><i class="pi pi-facebook fb"></i> Facebook</label>
@@ -124,6 +136,19 @@ import { SettingsService, SocialLinks } from '../../../services/settings.service
       margin-bottom: 1rem;
       code { background: rgba(26,58,74,0.06); padding: 0.05rem 0.35rem; border-radius: 4px; font-size: 0.88em; }
     }
+    .social-master {
+      display: flex; align-items: center; gap: 1.25rem;
+      background: linear-gradient(135deg, #fffaf0 0%, #fff 100%);
+      border: 1px solid #e8a832; border-left: 4px solid #d4782f;
+      border-radius: 8px; padding: 0.85rem 1rem;
+      margin-bottom: 1.25rem;
+      .social-master-label { flex: 1;
+        strong { color: #1a3a4a; font-size: 1.02rem; }
+        p { color: #495057; font-size: 0.88rem; margin: 0.2rem 0 0; line-height: 1.4;
+          strong { color: #b8651f; }
+        }
+      }
+    }
     .social-row {
       display: grid; grid-template-columns: 140px 1fr; gap: 0.85rem; align-items: center;
       margin-bottom: 0.85rem;
@@ -150,12 +175,13 @@ export class AdminSettingsComponent implements OnInit {
   original = 35;
   saving = false;
 
-  social: SocialLinks = { facebook: '', instagram: '', youtube: '' };
-  private socialOriginal: SocialLinks = { facebook: '', instagram: '', youtube: '' };
+  social: SocialLinks = { enabled: false, facebook: '', instagram: '', youtube: '' };
+  private socialOriginal: SocialLinks = { enabled: false, facebook: '', instagram: '', youtube: '' };
   savingSocial = false;
 
   get socialChanged(): boolean {
-    return this.social.facebook !== this.socialOriginal.facebook
+    return this.social.enabled !== this.socialOriginal.enabled
+        || this.social.facebook !== this.socialOriginal.facebook
         || this.social.instagram !== this.socialOriginal.instagram
         || this.social.youtube !== this.socialOriginal.youtube;
   }
