@@ -14,6 +14,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import { RegistrationService } from '../../../services/registration.service';
+import { AuthService } from '../../../core/auth/auth.service';
 import { Registration } from '../../../core/models/registration.model';
 import { Attendee } from '../../../core/models/attendee.model';
 
@@ -36,7 +37,7 @@ import { Attendee } from '../../../core/models/attendee.model';
         </ng-template>
         <div class="table-toolbar">
           <span class="p-input-icon-left"><i class="pi pi-search"></i><input type="text" pInputText [(ngModel)]="searchTerm" placeholder="Search..." (input)="filterRegistrations()" /></span>
-          <button *ngIf="selected.length" pButton
+          <button *ngIf="auth.canEdit() && selected.length" pButton
                   [label]="'Delete ' + selected.length + ' selected'" icon="pi pi-trash"
                   class="p-button-danger" (click)="confirmBulkDelete()"></button>
           <button pButton label="Download CSV" icon="pi pi-download" class="p-button-outlined csv-btn"
@@ -46,7 +47,7 @@ import { Attendee } from '../../../core/models/attendee.model';
                  [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [sortField]="'registeredAt'" [sortOrder]="-1" [tableStyle]="{'min-width': '60rem'}" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}">
           <ng-template pTemplate="header">
             <tr>
-              <th style="width: 3rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+              <th style="width: 3rem"><p-tableHeaderCheckbox *ngIf="auth.canEdit()"></p-tableHeaderCheckbox></th>
               <th pSortableColumn="attendeeLastName">Name <p-sortIcon field="attendeeLastName"></p-sortIcon></th>
               <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
               <th>Phone</th>
@@ -61,7 +62,7 @@ import { Attendee } from '../../../core/models/attendee.model';
           </ng-template>
           <ng-template pTemplate="body" let-reg>
             <tr>
-              <td><p-tableCheckbox [value]="reg"></p-tableCheckbox></td>
+              <td><p-tableCheckbox *ngIf="auth.canEdit()" [value]="reg"></p-tableCheckbox></td>
               <td>{{ reg.firstName | titlecase }} {{ reg.lastName | titlecase }}</td>
               <td>{{ reg.email }}</td>
               <td>{{ reg.phone }}</td>
@@ -100,11 +101,13 @@ import { Attendee } from '../../../core/models/attendee.model';
               <td><p-tag [value]="reg.paymentStatus || 'pending'" [severity]="getStatusSeverity(reg.paymentStatus)"></p-tag></td>
               <td>{{ reg.registeredAt | date:'short' }}</td>
               <td class="row-actions">
-                <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
-                        pTooltip="Edit registration" tooltipPosition="left"
-                        (click)="openRegEdit(reg)"></button>
-                <button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm"
-                        (click)="confirmDelete(reg)"></button>
+                <ng-container *ngIf="auth.canEdit()">
+                  <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                          pTooltip="Edit registration" tooltipPosition="left"
+                          (click)="openRegEdit(reg)"></button>
+                  <button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm"
+                          (click)="confirmDelete(reg)"></button>
+                </ng-container>
               </td>
             </tr>
           </ng-template>
@@ -256,6 +259,7 @@ export class ManageRegistrationsComponent implements OnInit {
   private registrationService = inject(RegistrationService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
+  auth = inject(AuthService);
   registrations: Registration[] = [];
   filteredRegistrations: Registration[] = [];
   selected: Registration[] = [];

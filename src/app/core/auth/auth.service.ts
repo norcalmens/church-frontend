@@ -183,6 +183,24 @@ export class AuthService {
     return user?.roles.includes('SUPERADMIN') || false;
   }
 
+  /** Read-only committee member -- can VIEW admin pages but not edit/delete. */
+  isCommittee(): boolean {
+    const user = this.currentUserSubject.value;
+    return user?.roles.includes('COMMITTEE') || false;
+  }
+
+  /** Anyone who can land on an admin page (committee OR admin). Use this to
+   *  gate route access and nav visibility. */
+  canViewAdmin(): boolean {
+    return this.isAdmin() || this.isCommittee();
+  }
+
+  /** True only when the user can mutate data. Committee members get FALSE
+   *  here so edit/delete buttons stay hidden for them. */
+  canEdit(): boolean {
+    return this.isAdmin();
+  }
+
   hasRole(role: string): boolean {
     const user = this.currentUserSubject.value;
     return user?.roles.includes(role.toUpperCase()) || false;

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth/auth.guard';
 import { adminGuard } from './core/auth/admin.guard';
+import { committeeOrAdminGuard } from './core/auth/committee-or-admin.guard';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './features/login/login.component';
 import { CompleteRegistrationComponent } from './features/complete-registration/complete-registration.component';
@@ -50,17 +51,17 @@ export const routes: Routes = [
       { path: 'donations', component: DonationsComponent },
       { path: 'worship', component: WorshipComponent },
       { path: 'admin/zoom-links', component: ZoomLinksAdminComponent, canActivate: [authGuard, adminGuard] },
-      { path: 'admin/donations', component: AllDonationsComponent, canActivate: [authGuard, adminGuard] },
-      { path: 'admin/payment-plans', component: PaymentPlansAdminComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'admin/donations', component: AllDonationsComponent, canActivate: [authGuard, committeeOrAdminGuard] },
+      { path: 'admin/payment-plans', component: PaymentPlansAdminComponent, canActivate: [authGuard, committeeOrAdminGuard] },
       { path: 'plan/:token', component: PaymentPlanPortalComponent },
       { path: 'theme-poll', component: ThemePollComponent, canActivate: [authGuard, adminGuard] },
       { path: 'payment', redirectTo: 'registration', pathMatch: 'full' },
-      { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, adminGuard] },
-      { path: 'admin/registrations', component: ManageRegistrationsComponent, canActivate: [authGuard, adminGuard] },
-      { path: 'admin/attendees', component: AllAttendeesComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, committeeOrAdminGuard] },
+      { path: 'admin/registrations', component: ManageRegistrationsComponent, canActivate: [authGuard, committeeOrAdminGuard] },
+      { path: 'admin/attendees', component: AllAttendeesComponent, canActivate: [authGuard, committeeOrAdminGuard] },
       { path: 'admin/badges', component: BadgesAdminComponent, canActivate: [authGuard, adminGuard] },
-      { path: 'admin/waitlist', component: WaitlistAdminComponent, canActivate: [authGuard, adminGuard] },
-      { path: 'admin/feedback', component: FeedbackAdminComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'admin/waitlist', component: WaitlistAdminComponent, canActivate: [authGuard, committeeOrAdminGuard] },
+      { path: 'admin/feedback', component: FeedbackAdminComponent, canActivate: [authGuard, committeeOrAdminGuard] },
       { path: 'admin/settings', component: AdminSettingsComponent, canActivate: [authGuard, adminGuard] },
       { path: 'admin/users', component: UserManagementComponent, canActivate: [authGuard, adminGuard] }
     ]

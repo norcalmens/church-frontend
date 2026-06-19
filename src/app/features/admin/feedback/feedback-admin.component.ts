@@ -11,6 +11,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import { FeedbackService, FeedbackEntry } from '../../../services/feedback.service';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-feedback-admin',
@@ -54,7 +55,7 @@ import { FeedbackService, FeedbackEntry } from '../../../services/feedback.servi
             <i class="pi pi-search"></i>
             <input pInputText [(ngModel)]="searchTerm" placeholder="Search name, email, or text..." (input)="filter()" />
           </span>
-          <button *ngIf="selected.length" pButton
+          <button *ngIf="auth.canEdit() && selected.length" pButton
                   [label]="'Delete ' + selected.length + ' selected'" icon="pi pi-trash"
                   class="p-button-danger" (click)="confirmBulkDelete()"></button>
           <button pButton label="Download CSV" icon="pi pi-download" class="p-button-outlined"
@@ -66,7 +67,7 @@ import { FeedbackService, FeedbackEntry } from '../../../services/feedback.servi
                  [sortField]="'submittedAt'" [sortOrder]="-1" [tableStyle]="{'min-width': '60rem'}">
           <ng-template pTemplate="header">
             <tr>
-              <th style="width: 3rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+              <th style="width: 3rem"><p-tableHeaderCheckbox *ngIf="auth.canEdit()"></p-tableHeaderCheckbox></th>
               <th pSortableColumn="submittedAt" style="width: 140px">Submitted <p-sortIcon field="submittedAt"></p-sortIcon></th>
               <th style="width: 180px">From</th>
               <th pSortableColumn="rating" style="width: 100px">Rating <p-sortIcon field="rating"></p-sortIcon></th>
@@ -78,7 +79,7 @@ import { FeedbackService, FeedbackEntry } from '../../../services/feedback.servi
           </ng-template>
           <ng-template pTemplate="body" let-e>
             <tr>
-              <td><p-tableCheckbox [value]="e"></p-tableCheckbox></td>
+              <td><p-tableCheckbox *ngIf="auth.canEdit()" [value]="e"></p-tableCheckbox></td>
               <td>{{ e.submittedAt | date:'short' }}</td>
               <td>
                 <div *ngIf="e.name; else anon"><strong>{{ e.name }}</strong></div>
@@ -99,7 +100,7 @@ import { FeedbackService, FeedbackEntry } from '../../../services/feedback.servi
               <td class="text-cell">{{ e.improve || '—' }}</td>
               <td class="text-cell">{{ e.other || '—' }}</td>
               <td>
-                <button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm"
+                <button *ngIf="auth.canEdit()" pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm"
                         (click)="confirmDelete(e)" pTooltip="Delete"></button>
               </td>
             </tr>
@@ -165,6 +166,7 @@ import { FeedbackService, FeedbackEntry } from '../../../services/feedback.servi
 })
 export class FeedbackAdminComponent implements OnInit {
   private feedbackService = inject(FeedbackService);
+  auth = inject(AuthService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
 

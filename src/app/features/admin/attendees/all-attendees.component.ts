@@ -11,6 +11,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService } from 'primeng/api';
 import { RegistrationService } from '../../../services/registration.service';
+import { AuthService } from '../../../core/auth/auth.service';
 import { Attendee } from '../../../core/models/attendee.model';
 
 @Component({
@@ -74,14 +75,19 @@ import { Attendee } from '../../../core/models/attendee.model';
               </td>
               <td>{{ daysLabel(a) }}</td>
               <td style="text-align: center;">
-                <button type="button" class="speaker-toggle" [class.is-speaker]="a.speaker"
+                <button *ngIf="auth.canEdit(); else readOnlySpeaker"
+                        type="button" class="speaker-toggle" [class.is-speaker]="a.speaker"
                         (click)="toggleSpeaker(a)"
                         [title]="a.speaker ? 'Speaker — click to remove' : 'Click to mark as speaker'">
                   <i class="pi" [class.pi-star-fill]="a.speaker" [class.pi-star]="!a.speaker"></i>
                 </button>
+                <ng-template #readOnlySpeaker>
+                  <i class="pi pi-star-fill" *ngIf="a.speaker" style="color: var(--retreat-gold); font-size: 0.95rem;"></i>
+                  <span *ngIf="!a.speaker" style="color: #ccc;">—</span>
+                </ng-template>
               </td>
               <td>
-                <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                <button *ngIf="auth.canEdit()" pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
                         pTooltip="Edit name / age" (click)="openEdit(a)"></button>
               </td>
             </tr>
@@ -182,6 +188,7 @@ import { Attendee } from '../../../core/models/attendee.model';
 export class AllAttendeesComponent implements OnInit {
   private registrationService = inject(RegistrationService);
   private messageService = inject(MessageService);
+  auth = inject(AuthService);
 
   attendees: Attendee[] = [];
   filtered: Attendee[] = [];

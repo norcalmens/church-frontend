@@ -18,6 +18,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import { DonationService } from '../../../services/donation.service';
 import { Donation } from '../../../core/models/donation.model';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-all-donations',
@@ -55,10 +56,10 @@ import { Donation } from '../../../core/models/donation.model';
         </ng-template>
         <div class="table-toolbar">
           <span class="p-input-icon-left"><i class="pi pi-search"></i><input type="text" pInputText [(ngModel)]="searchTerm" placeholder="Search donor name or email..." (input)="filter()" /></span>
-          <button *ngIf="selected.length" pButton
+          <button *ngIf="auth.canEdit() && selected.length" pButton
                   [label]="'Delete ' + selected.length + ' selected'" icon="pi pi-trash"
                   class="p-button-danger bulk-btn" (click)="confirmBulkDelete()"></button>
-          <button pButton label="Add Donation" icon="pi pi-plus" class="p-button-outlined add-btn" (click)="openAdd()"></button>
+          <button *ngIf="auth.canEdit()" pButton label="Add Donation" icon="pi pi-plus" class="p-button-outlined add-btn" (click)="openAdd()"></button>
           <button pButton label="Download CSV" icon="pi pi-download" class="p-button-outlined csv-btn"
                   (click)="exportCsv()" [disabled]="!donations.length"></button>
         </div>
@@ -68,7 +69,7 @@ import { Donation } from '../../../core/models/donation.model';
                  [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords}">
           <ng-template pTemplate="header">
             <tr>
-              <th style="width: 3rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+              <th style="width: 3rem"><p-tableHeaderCheckbox *ngIf="auth.canEdit()"></p-tableHeaderCheckbox></th>
               <th pSortableColumn="donorName">Donor <p-sortIcon field="donorName"></p-sortIcon></th>
               <th>Email</th>
               <th pSortableColumn="amount">Amount <p-sortIcon field="amount"></p-sortIcon></th>
@@ -80,7 +81,7 @@ import { Donation } from '../../../core/models/donation.model';
           </ng-template>
           <ng-template pTemplate="body" let-d>
             <tr>
-              <td><p-tableCheckbox [value]="d"></p-tableCheckbox></td>
+              <td><p-tableCheckbox *ngIf="auth.canEdit()" [value]="d"></p-tableCheckbox></td>
               <td>
                 <div class="donor-name">
                   {{ d.donorName }}
@@ -95,10 +96,12 @@ import { Donation } from '../../../core/models/donation.model';
               <td><p-tag [value]="d.paymentStatus || 'pending'" [severity]="statusSeverity(d.paymentStatus)"></p-tag></td>
               <td>{{ d.createdAt | date:'short' }}</td>
               <td class="row-actions">
-                <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
-                        (click)="openEdit(d)" pTooltip="Edit"></button>
-                <button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm"
-                        (click)="confirmDelete(d)" pTooltip="Delete"></button>
+                <ng-container *ngIf="auth.canEdit()">
+                  <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                          (click)="openEdit(d)" pTooltip="Edit"></button>
+                  <button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm"
+                          (click)="confirmDelete(d)" pTooltip="Delete"></button>
+                </ng-container>
               </td>
             </tr>
           </ng-template>
@@ -238,6 +241,7 @@ export class AllDonationsComponent implements OnInit {
   private donationService = inject(DonationService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
+  auth = inject(AuthService);
   private fb = inject(FormBuilder);
   donations: Donation[] = [];
   filteredDonations: Donation[] = [];

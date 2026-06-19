@@ -64,36 +64,43 @@ interface SearchItem {
            *ngIf="authService.isAdmin() && menuVisibility.isVisible('merchandise')">Merch</a>
         <a routerLink="/theme-poll" routerLinkActive="active"
            *ngIf="authService.isAdmin() && menuVisibility.isVisible('theme-poll')">Theme Poll</a>
-        <div class="admin-dropdown" *ngIf="authService.isAdmin() && menuVisibility.isVisible('admin/dashboard')"
+        <div class="admin-dropdown" *ngIf="authService.canViewAdmin() && menuVisibility.isVisible('admin/dashboard')"
              (mouseenter)="adminMenuOpen = true" (mouseleave)="adminMenuOpen = false">
-          <a routerLink="/admin/dashboard" routerLinkActive="active" class="admin-nav-link">Admin <i class="pi pi-chevron-down chevron-icon"></i></a>
+          <a routerLink="/admin/dashboard" routerLinkActive="active" class="admin-nav-link">
+            {{ authService.isAdmin() ? 'Admin' : 'Committee' }}
+            <i class="pi pi-chevron-down chevron-icon"></i>
+          </a>
           <div class="admin-dropdown-menu" *ngIf="adminMenuOpen">
             <div class="admin-dropdown-panel">
+              <!-- Read-only surfaces -- Committee + Admin both see these -->
               <a routerLink="/admin/dashboard" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/dashboard')"><i class="pi pi-chart-line"></i> Dashboard</a>
               <a routerLink="/admin/registrations" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/registrations')"><i class="pi pi-list"></i> View All Registrations</a>
               <a routerLink="/admin/attendees" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/attendees')"><i class="pi pi-users"></i> All Attendees</a>
-              <a routerLink="/admin/badges" (click)="adminMenuOpen = false"
-                 *ngIf="menuVisibility.isVisible('admin/badges')"><i class="pi pi-id-card"></i> Print Name Badges</a>
               <a routerLink="/admin/waitlist" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/waitlist')"><i class="pi pi-calendar-plus"></i> 2027 Interest List</a>
               <a routerLink="/admin/feedback" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/feedback')"><i class="pi pi-comments"></i> Feedback</a>
-              <a routerLink="/admin/settings" (click)="adminMenuOpen = false"
-                 *ngIf="menuVisibility.isVisible('admin/settings')"><i class="pi pi-cog"></i> Settings</a>
-              <div class="dropdown-divider"></div>
-              <a href="javascript:void(0)" (click)="forceRefresh(); adminMenuOpen = false"
-                 class="refresh-action"><i class="pi pi-refresh"></i> Force Refresh</a>
               <a routerLink="/admin/donations" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/donations')"><i class="pi pi-heart"></i> View All Donations</a>
               <a routerLink="/admin/payment-plans" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/payment-plans')"><i class="pi pi-credit-card"></i> Payment Plans</a>
-              <a routerLink="/admin/users" (click)="adminMenuOpen = false"
-                 *ngIf="menuVisibility.isVisible('admin/users')"><i class="pi pi-users"></i> Manage Users</a>
-              <a routerLink="/admin/zoom-links" (click)="adminMenuOpen = false"
-                 *ngIf="menuVisibility.isVisible('admin/zoom-links')"><i class="pi pi-video"></i> Manage Zoom Links</a>
+              <!-- Admin-only mutating surfaces below the divider -->
+              <ng-container *ngIf="authService.isAdmin()">
+                <div class="dropdown-divider"></div>
+                <a routerLink="/admin/badges" (click)="adminMenuOpen = false"
+                   *ngIf="menuVisibility.isVisible('admin/badges')"><i class="pi pi-id-card"></i> Print Name Badges</a>
+                <a routerLink="/admin/settings" (click)="adminMenuOpen = false"
+                   *ngIf="menuVisibility.isVisible('admin/settings')"><i class="pi pi-cog"></i> Settings</a>
+                <a routerLink="/admin/users" (click)="adminMenuOpen = false"
+                   *ngIf="menuVisibility.isVisible('admin/users')"><i class="pi pi-users"></i> Manage Users</a>
+                <a routerLink="/admin/zoom-links" (click)="adminMenuOpen = false"
+                   *ngIf="menuVisibility.isVisible('admin/zoom-links')"><i class="pi pi-video"></i> Manage Zoom Links</a>
+                <a href="javascript:void(0)" (click)="forceRefresh(); adminMenuOpen = false"
+                   class="refresh-action"><i class="pi pi-refresh"></i> Force Refresh</a>
+              </ng-container>
             </div>
           </div>
         </div>

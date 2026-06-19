@@ -11,6 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { WaitlistService, WaitlistEntry } from '../../../services/waitlist.service';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-waitlist-admin',
@@ -57,14 +58,19 @@ import { WaitlistService, WaitlistEntry } from '../../../services/waitlist.servi
               <td style="text-align: center;">{{ e.requestedSeats }}</td>
               <td>{{ e.createdAt | date:'short' }}</td>
               <td style="text-align: center;">
-                <button type="button" class="contacted-toggle" [class.is-contacted]="e.contacted"
+                <button *ngIf="auth.canEdit(); else readOnlyContacted"
+                        type="button" class="contacted-toggle" [class.is-contacted]="e.contacted"
                         (click)="toggleContacted(e)"
                         [title]="e.contacted ? 'Mark as not contacted' : 'Mark as contacted'">
                   <i class="pi" [class.pi-check-circle]="e.contacted" [class.pi-circle]="!e.contacted"></i>
                 </button>
+                <ng-template #readOnlyContacted>
+                  <i class="pi pi-check-circle" *ngIf="e.contacted" style="color: #2e9e5b;"></i>
+                  <span *ngIf="!e.contacted" style="color: #ccc;">—</span>
+                </ng-template>
               </td>
               <td>
-                <button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm"
+                <button *ngIf="auth.canEdit()" pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm"
                         (click)="confirmDelete(e)"></button>
               </td>
             </tr>
@@ -121,6 +127,7 @@ import { WaitlistService, WaitlistEntry } from '../../../services/waitlist.servi
 })
 export class WaitlistAdminComponent implements OnInit {
   private waitlistService = inject(WaitlistService);
+  auth = inject(AuthService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
 
