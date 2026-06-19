@@ -21,6 +21,9 @@ import { AuthService } from '../../core/auth/auth.service';
             <p>For security, you must change your password before continuing.</p>
           </div>
 
+          <div *ngIf="successMessage" class="success-message">
+            <i class="pi pi-check-circle"></i> {{ successMessage }}
+          </div>
           <div *ngIf="errorMessage" class="error-message">
             <i class="pi pi-exclamation-triangle"></i> {{ errorMessage }}
           </div>
@@ -103,6 +106,18 @@ import { AuthService } from '../../core/auth/auth.service';
       }
     }
 
+    .success-message {
+      background: rgba(46, 158, 91, 0.1);
+      color: #1a6e3b;
+      border: 1px solid rgba(46, 158, 91, 0.35);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
     .error-message {
       background: #fee; border: 1px solid #fcc; border-radius: 6px;
       padding: 0.75rem 1rem; margin-bottom: 1rem; color: #c00;
@@ -130,6 +145,7 @@ export class ForcePasswordChangeComponent implements OnInit {
 
   loading = false;
   errorMessage = '';
+  successMessage = '';
 
   ngOnInit(): void {
     // Belt + suspenders to the route guard: if the auth state went away
@@ -169,8 +185,17 @@ export class ForcePasswordChangeComponent implements OnInit {
       newPassword: this.form.value.newPassword
     }).subscribe({
       next: () => {
+        // Forced password change is a security boundary -- invalidate the
+        // local session so the user must sign in again with the NEW
+        // credential. Show a brief success banner first so the redirect
+        // doesn't feel like a glitch, then logout + bounce to login with
+        // a query param so the login page can echo the message.
         this.loading = false;
-        this.router.navigate(['/']);
+        this.successMessage = 'Password updated. Please sign in with your new password.';
+        setTimeout(() => {
+          this.authService.logout();
+          this.router.navigate(['/login'], { queryParams: { changed: '1' } });
+        }, 1500);
       },
       error: (err) => {
         this.loading = false;

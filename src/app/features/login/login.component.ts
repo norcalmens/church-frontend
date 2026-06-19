@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -19,6 +20,9 @@ import { AuthService } from '../../core/auth/auth.service';
           <h1>Welcome Back</h1>
         </div>
         <div class="login-card-body">
+          <div *ngIf="passwordChanged" class="success-message">
+            <i class="pi pi-check-circle"></i> Password updated. Please sign in with your new password.
+          </div>
           <div *ngIf="errorMessage" class="error-message">
             <i class="pi pi-exclamation-triangle"></i> {{ errorMessage }}
           </div>
@@ -73,6 +77,18 @@ import { AuthService } from '../../core/auth/auth.service';
       margin-bottom: 1.25rem;
       label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--retreat-teal-dark); font-size: 0.9rem; }
     }
+    .success-message {
+      background: rgba(46, 158, 91, 0.1);
+      color: #1a6e3b;
+      border: 1px solid rgba(46, 158, 91, 0.35);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
     .error-message {
       background: #fee; border: 1px solid #fcc; border-radius: 6px;
       padding: 0.75rem 1rem; margin-bottom: 1rem; color: #c00;
@@ -119,14 +135,23 @@ import { AuthService } from '../../core/auth/auth.service';
     }
   `]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   username = '';
   password = '';
   loading = false;
   errorMessage = '';
+  /** Set when /login?changed=1 (the post-password-change redirect) -- shows
+   *  a green confirmation banner so the user understands why their old
+   *  session is gone. */
+  passwordChanged = false;
+
+  ngOnInit(): void {
+    this.passwordChanged = this.route.snapshot.queryParamMap.get('changed') === '1';
+  }
 
   login(): void {
     if (!this.username || !this.password) {
