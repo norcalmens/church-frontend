@@ -36,7 +36,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'register', component: CompleteRegistrationComponent },
-  { path: 'change-password', component: ForcePasswordChangeComponent },
+  { path: 'change-password', component: ForcePasswordChangeComponent, canActivate: [authGuard] },
   {
     path: '',
     component: LayoutComponent,

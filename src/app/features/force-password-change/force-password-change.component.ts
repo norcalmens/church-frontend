@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -123,13 +123,23 @@ import { AuthService } from '../../core/auth/auth.service';
     }
   `]
 })
-export class ForcePasswordChangeComponent {
+export class ForcePasswordChangeComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
   loading = false;
   errorMessage = '';
+
+  ngOnInit(): void {
+    // Belt + suspenders to the route guard: if the auth state went away
+    // between guard evaluation and component init (logout in another tab,
+    // expired token, etc.) bounce to login instead of letting the user
+    // see a "User not found" error on submit.
+    if (!this.authService.getCurrentUser()) {
+      this.router.navigate(['/login']);
+    }
+  }
 
   form: FormGroup = this.fb.group({
     currentPassword: ['', Validators.required],
@@ -164,7 +174,16 @@ export class ForcePasswordChangeComponent {
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err.message || 'Password change failed. Please try again.';
+        const msg = err?.message || err?.error?.message || '';
+        // Stale session OR direct-URL hit -- log out and bounce to login
+        // instead of showing "User not found" on this form. The route
+        // guard normally catches it; this is the late-failure path.
+        if (/user not found/i.test(msg)) {
+          this.authService.logout();
+          this.router.navigate(['/login']);
+          return;
+        }
+        this.errorMessage = msg || 'Password change failed. Please try again.';
       }
     });
   }
