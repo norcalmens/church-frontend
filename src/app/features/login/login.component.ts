@@ -170,7 +170,13 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err.message || 'Login failed';
+        // Extract the real server message from the HTTP error envelope.
+        // err.error?.message is the backend ApiResponse.message; err.message
+        // is the JS Error wrapper ("Http failure response..."), which is
+        // useless to the user.
+        this.errorMessage = err?.error?.message
+          || err?.message
+          || 'Login failed';
       }
     });
   }

@@ -199,7 +199,9 @@ export class ForcePasswordChangeComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        const msg = err?.message || err?.error?.message || '';
+        // Prefer the backend ApiResponse.message -- err.message is the JS
+        // wrapper ("Http failure response..."), useless for the user.
+        const msg = err?.error?.message || err?.message || '';
         // Stale session OR direct-URL hit -- log out and bounce to login
         // instead of showing "User not found" on this form. The route
         // guard normally catches it; this is the late-failure path.
