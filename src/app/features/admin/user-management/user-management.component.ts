@@ -12,7 +12,10 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { MenuModule } from 'primeng/menu';
+import { Menu } from 'primeng/menu';
+import { ViewChild } from '@angular/core';
+import { MessageService, ConfirmationService, MenuItem } from 'primeng/api';
 import { UserDTO } from '../../../core/auth/auth.types';
 import { UserManagementService, AdminCreateUserRequest } from '../../../services/user-management.service';
 
@@ -22,7 +25,7 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
   imports: [
     CommonModule, FormsModule, RouterLink, TableModule, ButtonModule, DialogModule,
     InputTextModule, DropdownModule, TagModule, ToastModule, ConfirmDialogModule,
-    ToolbarModule, TooltipModule
+    ToolbarModule, TooltipModule, MenuModule
   ],
   providers: [MessageService, ConfirmationService],
   template: `
@@ -78,13 +81,15 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
               <p-tag *ngIf="user.isActive && !user.isLocked" value="Active" severity="success"></p-tag>
             </td>
             <td>{{ user.lastLogin ? (user.lastLogin | date:'short') : 'Never' }}</td>
-            <td>
-              <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" pTooltip="Edit" (click)="showEditDialog(user)"></button>
-              <button pButton icon="pi pi-shield" class="p-button-text p-button-sm" pTooltip="Change Role" (click)="showRoleDialog(user)"></button>
-              <button pButton icon="pi pi-key" class="p-button-text p-button-sm p-button-warning" pTooltip="Force Password" (click)="showForcePasswordDialog(user)"></button>
-              <button *ngIf="user.isLocked" pButton icon="pi pi-lock-open" class="p-button-text p-button-sm p-button-success" pTooltip="Unlock" (click)="unlockUser(user)"></button>
-              <button pButton icon="pi pi-sign-out" class="p-button-text p-button-sm p-button-secondary" pTooltip="Force Logout" (click)="forceLogout(user)"></button>
-              <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger" pTooltip="Deactivate" (click)="confirmDeactivate(user)"></button>
+            <td class="actions-cell">
+              <!-- Edit stays as a primary one-click action. Everything else
+                   collapses into a single Actions menu so each row only has
+                   two controls regardless of how many tools we add later. -->
+              <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm primary-action"
+                      pTooltip="Edit" (click)="showEditDialog(user)"></button>
+              <button pButton icon="pi pi-ellipsis-v" class="p-button-text p-button-sm"
+                      pTooltip="More actions"
+                      (click)="openActionsMenu($event, user)"></button>
             </td>
           </tr>
         </ng-template>
@@ -93,6 +98,9 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
         </ng-template>
       </p-table>
     </div>
+
+    <!-- Shared actions menu -- one instance, repositioned per row click -->
+    <p-menu #actionsMenu [model]="actionsItems" [popup]="true" appendTo="body"></p-menu>
 
     <!-- Create User Dialog -->
     <p-dialog header="Create New User" [(visible)]="createDialogVisible" [modal]="true" [style]="{width: '450px'}">
@@ -178,6 +186,13 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
       margin-bottom: 1rem;
       label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: var(--retreat-teal-dark); font-size: 0.9rem; }
     }
+    .actions-cell { white-space: nowrap; display: flex; gap: 0.25rem; align-items: center; }
+    .actions-cell .primary-action :host ::ng-deep .p-button { color: var(--retreat-teal-dark); }
+    ::ng-deep .menu-danger .p-menuitem-link {
+      color: #c0392b !important;
+      .p-menuitem-icon { color: #c0392b !important; }
+      &:hover { background: rgba(192, 57, 43, 0.08) !important; }
+    }
     .info-box {
       display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.75rem 1rem;
       background: #e3f2fd; border-radius: 6px; margin-bottom: 1rem; font-size: 0.85rem; color: #1565c0;
@@ -191,6 +206,12 @@ export class UserManagementComponent implements OnInit {
   private userService = inject(UserManagementService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
+
+  // The shared popup menu we re-position per row click. One <p-menu> in the
+  // template, repopulated each time so the bound actions point at the right
+  // user without us building a menu per row.
+  @ViewChild('actionsMenu') actionsMenu!: Menu;
+  actionsItems: MenuItem[] = [];
 
   users: UserDTO[] = [];
   loading = false;
@@ -338,6 +359,27 @@ export class UserManagementComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Failed to set password' });
       }
     });
+  }
+
+  /** Rebuild the action list for THIS user, then anchor the shared menu
+   *  to the click-target. Bound actions close over `user` so the right row
+   *  gets the action regardless of how many open/close cycles happen. */
+  openActionsMenu(event: MouseEvent, user: UserDTO): void {
+    this.actionsItems = [
+      { label: 'Change Role',       icon: 'pi pi-shield',
+        command: () => this.showRoleDialog(user) },
+      { label: 'Force Password',    icon: 'pi pi-key',
+        command: () => this.showForcePasswordDialog(user) },
+      ...(user.isLocked ? [{ label: 'Unlock Account', icon: 'pi pi-lock-open',
+        command: () => this.unlockUser(user) } as MenuItem] : []),
+      { label: 'Force Logout',      icon: 'pi pi-sign-out',
+        command: () => this.forceLogout(user) },
+      { separator: true },
+      { label: 'Deactivate',        icon: 'pi pi-trash',
+        styleClass: 'menu-danger',
+        command: () => this.confirmDeactivate(user) },
+    ];
+    this.actionsMenu.toggle(event);
   }
 
   unlockUser(user: UserDTO): void {

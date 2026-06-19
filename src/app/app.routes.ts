@@ -4,6 +4,7 @@ import { adminGuard } from './core/auth/admin.guard';
 import { committeeOrAdminGuard } from './core/auth/committee-or-admin.guard';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './features/login/login.component';
+import { ForgotPasswordComponent } from './features/forgot-password/forgot-password.component';
 import { CompleteRegistrationComponent } from './features/complete-registration/complete-registration.component';
 import { ForcePasswordChangeComponent } from './features/force-password-change/force-password-change.component';
 import { HomeComponent } from './features/home/home.component';
@@ -33,6 +34,7 @@ import { PaymentPlanPortalComponent } from './features/payment-plan/payment-plan
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'register', component: CompleteRegistrationComponent },
   { path: 'change-password', component: ForcePasswordChangeComponent },
   {
