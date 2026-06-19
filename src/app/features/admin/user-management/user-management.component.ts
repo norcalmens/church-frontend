@@ -102,6 +102,27 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
     <!-- Shared actions menu -- one instance, repositioned per row click -->
     <p-menu #actionsMenu [model]="actionsItems" [popup]="true" appendTo="body"></p-menu>
 
+    <!-- Diagnostic dialog -->
+    <p-dialog header="User Diagnostic" [(visible)]="diagnosticDialogVisible" [modal]="true"
+              [style]="{width: '520px'}" [breakpoints]="{'640px': '95vw'}">
+      <p class="diag-intro" *ngIf="diagnosticUser">
+        Auth-state snapshot for <strong>{{ diagnosticUser.username }}</strong>
+        ({{ diagnosticUser.email }}). Red rows are likely blocking login.
+      </p>
+      <div *ngIf="diagnosticLoading" class="diag-loading">
+        <i class="pi pi-spinner pi-spin"></i> Loading...
+      </div>
+      <table *ngIf="!diagnosticLoading && diagnosticData" class="diag-table">
+        <tr *ngFor="let entry of (diagnosticData | keyvalue)" [class]="diagnosticRowClass(entry.key, entry.value)">
+          <th>{{ entry.key }}</th>
+          <td>{{ diagnosticValue(entry.value) }}</td>
+        </tr>
+      </table>
+      <ng-template pTemplate="footer">
+        <button pButton label="Close" class="p-button-text" (click)="diagnosticDialogVisible = false"></button>
+      </ng-template>
+    </p-dialog>
+
     <!-- Create User Dialog -->
     <p-dialog header="Create New User" [(visible)]="createDialogVisible" [modal]="true" [style]="{width: '450px'}">
       <div class="info-box">
@@ -187,6 +208,24 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
       label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: var(--retreat-teal-dark); font-size: 0.9rem; }
     }
     .actions-cell { white-space: nowrap; display: flex; gap: 0.25rem; align-items: center; }
+    .diag-intro { color: #495057; font-size: 0.9rem; margin: 0 0 1rem; line-height: 1.45;
+      strong { color: var(--retreat-teal-dark); }
+    }
+    .diag-loading { text-align: center; padding: 2rem; color: #6c757d;
+      i { font-size: 1.5rem; margin-right: 0.5rem; color: var(--retreat-sunset); }
+    }
+    .diag-table { width: 100%; border-collapse: collapse;
+      tr { border-bottom: 1px solid #eee; }
+      th { text-align: left; color: var(--retreat-teal-dark); padding: 0.5rem 0.75rem;
+        font-size: 0.85rem; font-weight: 600; width: 45%; vertical-align: top;
+      }
+      td { padding: 0.5rem 0.75rem; color: #495057; font-family: 'Consolas', monospace; font-size: 0.85rem;
+        word-break: break-all;
+      }
+      .diag-bad th, .diag-bad td { background: rgba(192, 57, 43, 0.08); color: #8a1a13; }
+      .diag-bad th::after { content: ' \\26A0'; }   // ⚠ (escaped for TS template literal)
+      .diag-warn th, .diag-warn td { background: rgba(212, 120, 47, 0.08); color: #6e4b08; }
+    }
     .actions-cell .primary-action :host ::ng-deep .p-button { color: var(--retreat-teal-dark); }
     ::ng-deep .menu-danger .p-menuitem-link {
       color: #c0392b !important;
@@ -374,12 +413,54 @@ export class UserManagementComponent implements OnInit {
         command: () => this.unlockUser(user) } as MenuItem] : []),
       { label: 'Force Logout',      icon: 'pi pi-sign-out',
         command: () => this.forceLogout(user) },
+      { label: 'View Diagnostic',   icon: 'pi pi-search',
+        command: () => this.showDiagnostic(user) },
       { separator: true },
       { label: 'Deactivate',        icon: 'pi pi-trash',
         styleClass: 'menu-danger',
         command: () => this.confirmDeactivate(user) },
     ];
     this.actionsMenu.toggle(event);
+  }
+
+  // Diagnostic dialog state
+  diagnosticDialogVisible = false;
+  diagnosticUser: UserDTO | null = null;
+  diagnosticData: Record<string, unknown> | null = null;
+  diagnosticLoading = false;
+
+  showDiagnostic(user: UserDTO): void {
+    this.diagnosticUser = user;
+    this.diagnosticDialogVisible = true;
+    this.diagnosticLoading = true;
+    this.diagnosticData = null;
+    this.userService.diagnostic(user.id).subscribe({
+      next: (data) => { this.diagnosticData = data; this.diagnosticLoading = false; },
+      error: (e) => {
+        this.diagnosticLoading = false;
+        this.messageService.add({ severity: 'error', summary: 'Diagnostic failed',
+          detail: e?.error?.message || 'Could not load user diagnostic' });
+        this.diagnosticDialogVisible = false;
+      }
+    });
+  }
+
+  /** Stringify the diagnostic value (booleans, dates, nulls, arrays) into
+   *  something the admin can read at a glance. */
+  diagnosticValue(v: unknown): string {
+    if (v === null || v === undefined) return '—';
+    if (Array.isArray(v)) return v.join(', ') || '(none)';
+    if (typeof v === 'boolean') return v ? 'true' : 'false';
+    return String(v);
+  }
+
+  /** Highlight rows that often cause login failure. */
+  diagnosticRowClass(key: string, value: unknown): string {
+    if (key === 'isLocked' && value === true) return 'diag-bad';
+    if (key === 'isActive' && value === false) return 'diag-bad';
+    if (key === 'failedLoginAttempts' && typeof value === 'number' && value >= 5) return 'diag-bad';
+    if (key === 'passwordChangeRequired' && value === true) return 'diag-warn';
+    return '';
   }
 
   unlockUser(user: UserDTO): void {

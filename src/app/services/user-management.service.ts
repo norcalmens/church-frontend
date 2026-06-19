@@ -62,6 +62,12 @@ export class UserManagementService {
     return this.http.post<ApiResponse<void>>(`/api/users/${id}/force-logout`, {}).pipe(map(res => res.data));
   }
 
+  /** Admin diagnostic snapshot of a user's auth state. Used by the
+   *  "View Diagnostic" action in user-management to debug login failures. */
+  diagnostic(id: number): Observable<Record<string, unknown>> {
+    return this.http.get<ApiResponse<Record<string, unknown>>>(`/api/users/${id}/diagnostic`).pipe(map(res => res.data));
+  }
+
   getAvailableRoles(): Observable<string[]> {
     return this.http.get<ApiResponse<string[]>>('/api/users/roles').pipe(map(res => res.data));
   }
