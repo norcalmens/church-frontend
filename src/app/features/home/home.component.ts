@@ -14,9 +14,9 @@ import { AuthService } from '../../core/auth/auth.service';
       <div class="hero-section">
         <div class="hero-content">
           <div class="hero-text">
-            <h1>NorCal Men's Retreat 2026</h1>
+            <h1>NorCal Men's Retreat</h1>
             <p class="hero-subtitle">Standing in the Gap</p>
-            <p class="hero-details"><i class="pi pi-calendar"></i> June 11-13, 2026</p>
+            <p class="hero-details"><i class="pi pi-calendar"></i> Dates: TBD</p>
             <p class="hero-details"><i class="pi pi-map-marker"></i> Alliance Redwoods, Occidental, CA</p>
             <p class="hero-details"><i class="pi pi-dollar"></i> Full retreat $248 &middot; Single day $85</p>
             <p class="hero-details hero-details-sub"><i class="pi pi-info-circle"></i> Linen &amp; towel package $25 (or $5/item) &middot; Single-day meals $50 (2) / $65 (3)</p>
