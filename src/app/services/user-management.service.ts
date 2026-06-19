@@ -3,12 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { ApiResponse, UserDTO } from '../core/auth/auth.types';
 
+/** Shape matches the backend AdminCreateUserRequest DTO. `password` is
+ *  optional -- if blank, the backend generates a memorable temp string and
+ *  echoes it back in CreateUserResponse.tempPassword. */
 export interface AdminCreateUserRequest {
   email: string;
   firstName: string;
   lastName: string;
   roleName: string;
   username?: string;
+  password?: string;
 }
 
 export interface CreateUserResponse {

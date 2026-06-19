@@ -127,12 +127,15 @@ import { UserManagementService, AdminCreateUserRequest } from '../../../services
     <p-dialog header="Create New User" [(visible)]="createDialogVisible" [modal]="true" [style]="{width: '450px'}">
       <div class="info-box">
         <i class="pi pi-info-circle"></i>
-        <span>Default password is <strong>123456</strong>. User will be required to change it on first login.</span>
+        <span>Leave the password field blank to auto-generate a temp one (the dialog will show you what to share). Either way, the user is required to change it on first login.</span>
       </div>
       <div class="dialog-field"><label>Email *</label><input pInputText [(ngModel)]="newUser.email" class="w-full" /></div>
       <div class="dialog-field"><label>First Name *</label><input pInputText [(ngModel)]="newUser.firstName" class="w-full" /></div>
       <div class="dialog-field"><label>Last Name *</label><input pInputText [(ngModel)]="newUser.lastName" class="w-full" /></div>
       <div class="dialog-field"><label>Username (optional)</label><input pInputText [(ngModel)]="newUser.username" class="w-full" placeholder="Defaults to email" /></div>
+      <div class="dialog-field"><label>Temp Password (optional)</label>
+        <input pInputText [(ngModel)]="newUser.password" class="w-full" placeholder="Leave blank to auto-generate" type="text" autocomplete="off" />
+      </div>
       <div class="dialog-field">
         <label>Role *</label>
         <p-dropdown [options]="roleOptions" [(ngModel)]="newUser.roleName" styleClass="w-full" placeholder="Select role"></p-dropdown>
@@ -261,7 +264,7 @@ export class UserManagementComponent implements OnInit {
 
   // Create dialog
   createDialogVisible = false;
-  newUser: AdminCreateUserRequest = { email: '', firstName: '', lastName: '', roleName: 'MEMBER', username: '' };
+  newUser: AdminCreateUserRequest = { email: '', firstName: '', lastName: '', roleName: 'MEMBER', username: '', password: '' };
 
   // Edit dialog
   editDialogVisible = false;
@@ -310,7 +313,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   showCreateDialog(): void {
-    this.newUser = { email: '', firstName: '', lastName: '', roleName: 'MEMBER', username: '' };
+    this.newUser = { email: '', firstName: '', lastName: '', roleName: 'MEMBER', username: '', password: '' };
     this.createDialogVisible = true;
   }
 
@@ -321,10 +324,14 @@ export class UserManagementComponent implements OnInit {
         this.saving = false;
         this.createDialogVisible = false;
         this.loadUsers();
-        const detail = response.welcomeEmailSent
-          ? 'User created. Welcome email sent.'
-          : `User created. Default password: ${response.defaultPassword}`;
-        this.messageService.add({ severity: 'success', summary: 'Created', detail, life: 8000 });
+        // ALWAYS surface the temp password to the admin -- even when an
+        // email goes out, the admin often needs to relay it manually.
+        // Long life so it stays on screen long enough to copy.
+        this.messageService.add({
+          severity: 'success', summary: 'User created',
+          detail: `Temp password: ${response.defaultPassword}  (user must change on first sign-in)`,
+          life: 20000,
+        });
       },
       error: (err) => {
         this.saving = false;
