@@ -1,9 +1,9 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { AuthService } from '../../core/auth/auth.service';
+import { RegistrationService, Availability } from '../../services/registration.service';
 
 @Component({
   selector: 'app-home',
@@ -16,10 +16,23 @@ import { AuthService } from '../../core/auth/auth.service';
           <div class="hero-text">
             <h1>NorCal Men's Retreat</h1>
             <p class="hero-subtitle">Standing in the Gap</p>
-            <p class="hero-details"><i class="pi pi-calendar"></i> Dates: TBD</p>
+            <p class="hero-details"><i class="pi pi-calendar"></i> April 15&ndash;17, 2027</p>
             <p class="hero-details"><i class="pi pi-map-marker"></i> Alliance Redwoods, Occidental, CA</p>
-            <p class="hero-details"><i class="pi pi-dollar"></i> Full retreat $248 &middot; Single day $85</p>
-            <p class="hero-details hero-details-sub"><i class="pi pi-info-circle"></i> Linen &amp; towel package $25 (or $5/item) &middot; Single-day meals $50 (2) / $65 (3)</p>
+            <p class="hero-details"><i class="pi pi-dollar"></i> Full retreat TBD &middot; Single day TBD</p>
+            <!-- Live counter -- reflects overnight registrations only; day
+                 attendees never take a bed so they don't decrement this. -->
+            <p *ngIf="availability" class="hero-details hero-counter"
+               [class.hero-counter-low]="availability.spacesLeft <= 5 && !availability.isFull"
+               [class.hero-counter-full]="availability.isFull">
+              <i class="pi pi-users"></i>
+              <ng-container *ngIf="availability.isFull; else spotsLeft">
+                Overnight lodging is full &mdash; single-day registrations still open.
+              </ng-container>
+              <ng-template #spotsLeft>
+                <strong>{{ availability.totalAttendees }} of {{ availability.capacity }}</strong>
+                overnight spots filled &mdash; <strong>{{ availability.spacesLeft }} left</strong>
+              </ng-template>
+            </p>
             <div class="hero-actions">
               <a routerLink="/waitlist">
                 <button pButton label="Reserve a Spot for 2027" icon="pi pi-calendar-plus" size="large"></button>
@@ -138,6 +151,27 @@ import { AuthService } from '../../core/auth/auth.service';
     .hero-subtitle { font-size: 1.3rem; font-style: italic; margin: 0 0 1.5rem 0; opacity: 0.9; }
     .hero-details { font-size: 1.1rem; margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem; i { color: var(--retreat-gold); } }
     .hero-details-sub { font-size: 0.95rem; opacity: 0.85; }
+    /* Live overnight-capacity pill in the hero. Rounded, cream text on a
+       gold-tinted chip so it reads as an at-a-glance urgency signal, not
+       another line of copy. */
+    .hero-counter {
+      margin-top: 0.75rem; padding: 0.4rem 0.85rem;
+      background: rgba(232, 168, 50, 0.18);
+      border: 1px solid rgba(232, 168, 50, 0.4);
+      border-radius: 999px; width: fit-content;
+      font-size: 1rem;
+      strong { color: var(--retreat-gold); font-weight: 800; }
+    }
+    .hero-counter.hero-counter-low {
+      background: rgba(212, 120, 47, 0.25);
+      border-color: var(--retreat-sunset);
+      strong { color: #ffe0b0; }
+    }
+    .hero-counter.hero-counter-full {
+      background: rgba(192, 57, 43, 0.28);
+      border-color: #c0392b;
+      color: #ffcfc9;
+    }
     .hero-flyer {
       flex-shrink: 0;
       display: flex; flex-direction: column; align-items: center; gap: 0.85rem;
@@ -220,11 +254,26 @@ import { AuthService } from '../../core/auth/auth.service';
     }
   `]
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  private registrationService = inject(RegistrationService);
+
   lightboxOpen = false;
   /** Master switch for the flyer thumbnail + download button + lightbox.
    *  Flip to true when the 2027 flyer assets are in place. */
   showFlyer = false;
+
+  /** Live overnight capacity snapshot. Populated on ngOnInit and shown as
+   *  the hero counter -- "N of 35 overnight spots filled" or "Overnight
+   *  lodging is full" when spacesLeft = 0. Day attendees never count
+   *  against this (backend already scopes it to full-retreat rows). */
+  availability: Availability | null = null;
+
+  ngOnInit(): void {
+    this.registrationService.getAvailability().subscribe({
+      next: (a) => this.availability = a,
+      error: () => { /* leave hero counter hidden if backend is unreachable */ }
+    });
+  }
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
