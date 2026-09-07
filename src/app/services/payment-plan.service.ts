@@ -52,8 +52,33 @@ export class PaymentPlanService {
     return this.http.post<{ url: string }>(`/api/payment-plans/by-token/${token}/recurring/checkout`, { amount });
   }
 
+  /** Public: submit the "Request a Payment Plan" form. Backend creates a
+   *  plan in status="requested" and pings admin -- payer gets nothing yet. */
+  requestPlan(payload: PaymentPlanRequest): Observable<PaymentPlan> {
+    return this.http.post<PaymentPlan>('/api/payment-plans/request', payload);
+  }
+
+  /** Admin: approve a requested plan. Flips status to active and emails
+   *  the payer their secure pay link. */
+  approveRequest(planId: number): Observable<PaymentPlan> {
+    return this.http.post<PaymentPlan>(`/api/payment-plans/${planId}/approve`, {});
+  }
+
   /** Admin: cancel a plan's recurring Stripe Subscription. */
   cancelRecurring(planId: number): Observable<PaymentPlan> {
     return this.http.post<PaymentPlan>(`/api/payment-plans/${planId}/recurring/cancel`, {});
   }
+}
+
+/** Payload for the public "Request a Payment Plan" form. Mirrors
+ *  PaymentPlanRequestDTO on the backend -- narrow on purpose so the caller
+ *  can't smuggle in status/token/stripe fields. */
+export interface PaymentPlanRequest {
+  payerName: string;
+  payerEmail: string;
+  payerPhone?: string;
+  retreatLabel: string;
+  totalAmount: number;
+  preferredInstallments?: number;
+  message?: string;
 }

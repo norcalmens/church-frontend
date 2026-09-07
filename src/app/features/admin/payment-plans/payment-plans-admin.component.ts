@@ -79,14 +79,31 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
                 </div>
               </td>
               <td class="actions">
-                <button pButton icon="pi pi-list" class="p-button-text p-button-sm" (click)="openDetail(p)" pTooltip="Payments"></button>
-                <button pButton icon="pi pi-copy" class="p-button-text p-button-sm" (click)="copyPayLink(p)" pTooltip="Copy pay link"></button>
-                <button pButton icon="pi pi-send" class="p-button-text p-button-sm" (click)="resendInvite(p)" pTooltip="Resend invite email"></button>
-                <button *ngIf="p.recurringStatus === 'active'" pButton icon="pi pi-times-circle"
-                        class="p-button-warning p-button-text p-button-sm"
+                <!-- Approve is only visible for plans still in the requested
+                     state -- clicking it flips them to active and emails the
+                     payer their secure pay link. Placed first so it's the
+                     obvious next step when a request lands. -->
+                <button *ngIf="p.status === 'requested'" pButton icon="pi pi-check-circle" label="Approve"
+                        class="p-button-success p-button-sm approve-btn"
+                        (click)="confirmApprove(p)" pTooltip="Activate and email payer their link"></button>
+                <!-- Copy Link is the workhorse action -- what admin does 90%
+                     of the time to onboard a payer. Labeled + gold accent so
+                     it's visually the obvious next step, not just another
+                     unlabeled icon in a row. -->
+                <button pButton icon="pi pi-link" label="Copy Link"
+                        class="p-button-sm act-btn act-copy"
+                        (click)="copyPayLink(p)" pTooltip="Copy the payer's secure pay link to your clipboard"></button>
+                <button pButton icon="pi pi-list" class="p-button-text p-button-sm act-icon act-view"
+                        (click)="openDetail(p)" pTooltip="View payments"></button>
+                <button pButton icon="pi pi-envelope" class="p-button-text p-button-sm act-icon act-mail"
+                        (click)="resendInvite(p)" pTooltip="Email the pay link to the payer"></button>
+                <button *ngIf="p.recurringStatus === 'active'" pButton icon="pi pi-ban"
+                        class="p-button-text p-button-sm act-icon act-cancel-recurring"
                         (click)="confirmCancelRecurring(p)" pTooltip="Cancel monthly auto-pay"></button>
-                <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="openEdit(p)" pTooltip="Edit plan"></button>
-                <button pButton icon="pi pi-trash" class="p-button-danger p-button-text p-button-sm" (click)="confirmDelete(p)" pTooltip="Delete plan"></button>
+                <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm act-icon act-edit"
+                        (click)="openEdit(p)" pTooltip="Edit plan details"></button>
+                <button pButton icon="pi pi-trash" class="p-button-text p-button-sm act-icon act-delete"
+                        (click)="confirmDelete(p)" pTooltip="Delete plan"></button>
               </td>
             </tr>
           </ng-template>
@@ -244,7 +261,56 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
     }
     .toolbar { margin-bottom: 1rem; }
     .muted { color: #6c757d; font-size: 0.82rem; }
-    .actions { white-space: nowrap; }
+    .actions { white-space: nowrap;
+      /* Flex row keeps buttons aligned even when Approve / Cancel-recurring
+         come and go conditionally, and gives every action the same tap
+         target height without the browser's default inline-block gaps. */
+      display: inline-flex; align-items: center; gap: 0.35rem;
+    }
+    // Compact label on the Approve button so it fits alongside the icon-only
+    // row actions without blowing out the actions column width.
+    ::ng-deep .approve-btn.p-button { padding: 0.35rem 0.6rem; font-size: 0.82rem; }
+
+    /* ===== Row-action buttons =====
+       Icon-only buttons in a dense table are hard to differentiate at a
+       glance. Give each action a distinct color tint so the admin can pick
+       out "delete" vs "email" vs "cancel-recurring" without hovering to
+       read the tooltip. Copy Link is the primary action so it gets a real
+       label + gold-accent background, not text-only. */
+
+    /* Labeled Copy Link button -- gold accent, always visible, always
+       first in the row. This is the click admin makes 90% of the time. */
+    ::ng-deep .act-btn.act-copy.p-button {
+      background: var(--retreat-gold);
+      border-color: var(--retreat-gold);
+      color: var(--retreat-teal-dark);
+      font-weight: 700;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.82rem;
+      &:hover {
+        background: var(--retreat-sunset);
+        border-color: var(--retreat-sunset);
+        color: #fff;
+      }
+      .p-button-icon { color: inherit; }
+    }
+
+    /* Compact circular tap targets for the icon-only actions; each gets
+       its own tint so the row reads as a color-coded control panel. */
+    ::ng-deep .act-icon.p-button {
+      width: 2rem; height: 2rem; padding: 0;
+      border-radius: 50%;
+      transition: background 0.15s, color 0.15s, transform 0.1s;
+      &:active { transform: scale(0.94); }
+      .p-button-icon { font-size: 0.95rem; }
+    }
+    /* Per-action colors -- muted background so the row doesn't shout,
+       but distinct enough to tell apart in peripheral vision. */
+    ::ng-deep .act-view.p-button        { color: #1a3a4a; &:hover { background: rgba(26,58,74,0.10); } }
+    ::ng-deep .act-mail.p-button        { color: #1565c0; &:hover { background: rgba(21,101,192,0.12); } }
+    ::ng-deep .act-cancel-recurring.p-button { color: #8a4a08; background: rgba(232,168,50,0.14); &:hover { background: rgba(232,168,50,0.28); } }
+    ::ng-deep .act-edit.p-button        { color: #6c757d; &:hover { background: rgba(108,117,125,0.14); } }
+    ::ng-deep .act-delete.p-button      { color: #c0392b; &:hover { background: rgba(192,57,43,0.14); } }
     .recurring-line { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.35rem;
       font-size: 0.78rem; color: #2e9e5b; font-weight: 600;
       i { font-size: 0.7rem; }
@@ -344,7 +410,38 @@ export class PaymentPlansAdminComponent implements OnInit {
   }
 
   statusSeverity(s: string | undefined): string {
-    switch (s) { case 'completed': return 'success'; case 'canceled': return 'danger'; default: return 'info'; }
+    switch (s) {
+      case 'completed': return 'success';
+      case 'canceled':  return 'danger';
+      // Amber -- draws the eye to plans awaiting admin approval so they
+      // don't sit forgotten while the payer waits for a link.
+      case 'requested': return 'warning';
+      default: return 'info';
+    }
+  }
+
+  /** Approve a requested plan. Confirmation exists because approving
+   *  fires an outbound email to the payer -- want the admin to click
+   *  intentionally rather than misfire from a row-scan. */
+  confirmApprove(p: PaymentPlan): void {
+    if (p.id == null) return;
+    this.confirm.confirm({
+      header: 'Approve plan?',
+      icon: 'pi pi-check-circle',
+      message: `Activate this plan and email ${p.payerEmail} their secure pay link now?`,
+      acceptButtonStyleClass: 'p-button-success',
+      accept: () => {
+        this.svc.approveRequest(p.id!).subscribe({
+          next: (updated) => {
+            Object.assign(p, updated);
+            this.toast.add({ severity: 'success', summary: 'Approved',
+              detail: `Plan activated. Invite emailed to ${updated.payerEmail}.`, life: 4000 });
+          },
+          error: (e) => this.toast.add({ severity: 'error', summary: 'Error',
+            detail: e?.error?.message || 'Could not approve plan' }),
+        });
+      }
+    });
   }
   paymentSeverity(s: string | undefined): string {
     switch (s) { case 'paid': return 'success'; case 'pending': return 'warning'; case 'processing': return 'info'; case 'failed': return 'danger'; default: return 'warning'; }

@@ -42,7 +42,7 @@ interface SearchItem {
         <a routerLink="/itinerary" routerLinkActive="active"
            *ngIf="menuVisibility.isVisible('itinerary')">Itinerary</a>
         <a routerLink="/worship" routerLinkActive="active"
-           *ngIf="menuVisibility.isVisible('worship')">Worship</a>
+           *ngIf="menuVisibility.isVisible('worship')">Meetings</a>
         <div class="resources-dropdown"
              *ngIf="menuVisibility.isVisible('qr-codes') || menuVisibility.isVisible('feedback')"
              (mouseenter)="resourcesMenuOpen = true" (mouseleave)="resourcesMenuOpen = false">
@@ -390,8 +390,8 @@ export class TopbarComponent {
     { label: 'Feedback', description: 'Share how the retreat went', icon: 'pi-comments', route: '/feedback' },
     { label: 'QR Codes', description: 'Printable QR codes for itinerary, feedback, donate, etc.', icon: 'pi-qrcode', route: '/qr-codes' },
     { label: 'Donate', description: 'Make a donation to support the retreat', icon: 'pi-heart', route: '/donations' },
-    { label: 'Worship', description: 'Zoom meetings for worship and fellowship', icon: 'pi-video', route: '/worship' },
-    { label: 'Manage Zoom Links', description: 'Add, edit, or remove Worship Zoom meetings', icon: 'pi-video', route: '/admin/zoom-links', adminOnly: true },
+    { label: 'Meetings', description: 'Zoom meetings for prayer, worship, and fellowship', icon: 'pi-video', route: '/worship' },
+    { label: 'Manage Zoom Links', description: 'Add, edit, or remove Meetings page Zoom links', icon: 'pi-video', route: '/admin/zoom-links', adminOnly: true },
     { label: 'All Donations', description: 'View every donation processed through the site', icon: 'pi-heart', route: '/admin/donations', adminOnly: true },
     { label: 'Payment Plans', description: 'Manage installment payment plans for future retreats', icon: 'pi-credit-card', route: '/admin/payment-plans', adminOnly: true },
     { label: 'Merchandise', description: 'Official retreat gear and apparel', icon: 'pi-shopping-bag', route: '/merchandise', adminOnly: true },

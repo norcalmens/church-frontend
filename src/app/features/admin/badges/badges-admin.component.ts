@@ -119,7 +119,7 @@ interface BadgeData {
             <img src="assets/images/kennedy-manor.png" alt="Kennedy Manor Card" />
             <div *ngIf="kennedyManorCancelled" class="cancel-stamp demo-card-stamp">
               <span class="cancel-line"></span>
-              <span class="cancel-text">Permanently Cancelled</span>
+              <span class="cancel-text">Reinstated</span>
             </div>
           </div>
         </div>
@@ -155,7 +155,7 @@ interface BadgeData {
                    demo's printout still shows the void mark). -->
               <div *ngIf="!badge.skip && badge.demoCancelled" class="cancel-stamp">
                 <span class="cancel-line"></span>
-                <span class="cancel-text">Permanently Cancelled</span>
+                <span class="cancel-text">Reinstated</span>
               </div>
 
               <!-- Skipped slot (visible on screen with hatching + "Skipped" label,
@@ -179,7 +179,7 @@ interface BadgeData {
               <!-- Decorative top ribbon: scripture / role tag -->
               <div class="badge-ribbon">
                 <i class="pi" [class.pi-sun]="!badge.isSpeaker" [class.pi-star-fill]="badge.isSpeaker"></i>
-                <span>{{ badge.isSpeaker ? 'INVITED SPEAKER' : 'Standing in the Gap' }}</span>
+                <span>{{ badge.isSpeaker ? 'INVITED SPEAKER' : 'RETREAT 2027' }}</span>
                 <i class="pi" [class.pi-sun]="!badge.isSpeaker" [class.pi-star-fill]="badge.isSpeaker"></i>
               </div>
 
@@ -213,8 +213,8 @@ interface BadgeData {
                 </div>
                 <div class="event-stamp">
                   <span class="event">NorCal Men's</span>
-                  <span class="event">Retreat 2026</span>
-                  <span class="date">June 11&ndash;13</span>
+                  <span class="event">Retreat 2027</span>
+                  <span class="date">April 15&ndash;17</span>
                 </div>
                 <div class="qr-cell">
                   <img [src]="qrFeedbackUrl" alt="Feedback QR" loading="lazy" />
@@ -236,18 +236,21 @@ interface BadgeData {
           <div class="kennedy-manor-card"
                [class.km-cancelled]="kennedyManorCancelled"
                (click)="kennedyManorCancelled = !kennedyManorCancelled"
-               title="Click to toggle cancellation stamp">
+               title="Click to toggle Reinstated stamp">
             <div class="km-image">
               <img src="assets/images/kennedy-manor.png" alt="Kennedy Manor Apartments, Richmond, CA" />
+              <!-- Reinstated banner overlays only the BOTTOM of the image
+                   (not the whole card) so the name text below stays fully
+                   visible. Sits inside .km-image so it can position relative
+                   to just the photo. -->
+              <div *ngIf="kennedyManorCancelled" class="km-reinstated-stamp">
+                <span class="cancel-text">Reinstated</span>
+              </div>
             </div>
             <div class="km-name">
               <span class="km-first">Ell Sean</span>
               <span class="km-aka">"SJ &middot; The Prof &middot; Grady &middot; Reaper &middot; Crescent Park, etc."</span>
               <span class="km-last">Smith</span>
-            </div>
-            <div *ngIf="kennedyManorCancelled" class="cancel-stamp km-cancel-stamp">
-              <span class="cancel-line"></span>
-              <span class="cancel-text">Permanently Cancelled</span>
             </div>
           </div>
           <p class="empty-hint"><i class="pi pi-info-circle"></i> Sample card &mdash; register attendees to see real badges.</p>
@@ -787,32 +790,37 @@ interface BadgeData {
       transition: transform 0.15s;
       &:hover { transform: scale(1.01); }
     }
-    .kennedy-manor-card.km-cancelled {
-      .km-image img { filter: grayscale(0.4) brightness(0.92); }
-      .km-name { opacity: 0.55; }
-    }
-    /* Cancel stamp spans the FULL card (image + name section), not just the
-       photo at the top -- the line goes corner-to-corner across the whole
-       thing, with the CANCELLED text sized for a ~4in wide card. */
-    .km-cancel-stamp {
-      .cancel-line {
-        background: linear-gradient(to bottom right,
-          transparent calc(50% - 5px),
-          #c0392b calc(50% - 5px),
-          #c0392b calc(50% + 5px),
-          transparent calc(50% + 5px));
-      }
-      .cancel-text {
-        font-size: 1.6rem !important;
-        letter-spacing: 0.2rem !important;
-        padding: 0.4rem 0.9rem !important;
-        border-width: 3px !important;
-        box-shadow: 0 4px 12px rgba(192, 57, 43, 0.35);
-      }
-    }
+    /* Reinstated is a POSITIVE state -- no grayscale, no text dimming.
+       The image + name stay fully legible; the stamp sits on the photo
+       bottom as a "certified" banner rather than a rejection overlay. */
     .km-image {
       background: #1a1a1a;
+      position: relative;
       img { display: block; width: 100%; height: auto; }
+    }
+    /* Reinstated stamp: horizontal green banner across the BOTTOM of the
+       image only. Doesn't cover the name area below. Kept centered
+       horizontally, with rotation removed so "Reinstated" reads left-to-
+       right the way a certification/approval stamp normally would. */
+    .km-reinstated-stamp {
+      position: absolute;
+      left: 0; right: 0; bottom: 0.5rem;
+      display: flex; justify-content: center;
+      pointer-events: none;
+      .cancel-text {
+        font-family: 'Georgia', serif;
+        font-size: 1.2rem;
+        font-weight: 900;
+        letter-spacing: 0.18rem;
+        text-transform: uppercase;
+        color: #1a6e3b;
+        background: rgba(255, 255, 255, 0.92);
+        padding: 0.35rem 1rem;
+        border: 3px solid #1a6e3b;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(26, 110, 59, 0.35);
+        transform: rotate(-4deg);
+      }
     }
     .km-name {
       padding: 1.1rem 1.25rem 1.4rem;

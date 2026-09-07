@@ -26,7 +26,7 @@ interface QrEntry {
 
       <!-- Print-only header -->
       <div class="print-header print-only">
-        <h2>NorCal Men's Retreat 2026 &mdash; Quick Links</h2>
+        <h2>NorCal Men's Retreat 2027 &mdash; Quick Links</h2>
         <p>Scan these QR codes with your phone camera. norcalmensretreat.com</p>
       </div>
 
@@ -116,7 +116,7 @@ export class QrCodesComponent implements OnInit {
     { label: 'Directions',   path: '/directions',   description: 'How to get to Alliance Redwoods.',        icon: 'pi-map-marker' },
     { label: 'Register',     path: '/registration', description: 'Sign up and pay for the retreat.',        icon: 'pi-pencil' },
     { label: 'Donate',       path: '/donations',    description: 'Support the retreat.',                    icon: 'pi-heart' },
-    { label: 'Worship',      path: '/worship',      description: 'Live Zoom worship sessions.',             icon: 'pi-video' },
+    { label: 'Meetings',     path: '/worship',      description: 'Live Zoom prayer & worship meetings.',    icon: 'pi-video' },
   ];
 
   private origin = '';

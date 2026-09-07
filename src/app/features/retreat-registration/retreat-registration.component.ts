@@ -21,8 +21,8 @@ import { Attendee, RetreatDay } from '../../core/models/attendee.model';
 import { Stripe, StripeCardElement } from '@stripe/stripe-js';
 import { firstValueFrom } from 'rxjs';
 
-const FULL_RETREAT_PRICE = 248;
-const PER_DAY_PRICE = 85;
+const FULL_RETREAT_PRICE = 280;
+const PER_DAY_PRICE = 90;
 const LINEN_PACKAGE_PRICE = 25;
 const LINEN_ITEM_PRICE = 5;
 const HALF_DAY_MEAL_PRICE = 50;

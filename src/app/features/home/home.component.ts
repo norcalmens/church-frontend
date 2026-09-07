@@ -1,9 +1,11 @@
-import { Component, HostListener, OnInit, inject } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { Subscription } from 'rxjs';
 import { RegistrationService, Availability } from '../../services/registration.service';
+import { RealtimeService } from '../../services/realtime.service';
 
 @Component({
   selector: 'app-home',
@@ -15,10 +17,16 @@ import { RegistrationService, Availability } from '../../services/registration.s
         <div class="hero-content">
           <div class="hero-text">
             <h1>NorCal Men's Retreat</h1>
-            <p class="hero-subtitle">Standing in the Gap</p>
             <p class="hero-details"><i class="pi pi-calendar"></i> April 15&ndash;17, 2027</p>
             <p class="hero-details"><i class="pi pi-map-marker"></i> Alliance Redwoods, Occidental, CA</p>
-            <p class="hero-details"><i class="pi pi-dollar"></i> Full retreat TBD &middot; Single day TBD</p>
+            <p class="hero-details"><i class="pi pi-dollar"></i> Full retreat $280 &middot; Single day $90</p>
+            <!-- "Registration is open" status pill. Green (open-now) once
+                 reservations go live. Hidden once lodging fills (the red
+                 capacity chip tells the whole story at that point). -->
+            <p *ngIf="!availability?.isFull" class="hero-status hero-status-open">
+              <i class="pi pi-check-circle"></i>
+              <span>Registration is <strong>open</strong></span>
+            </p>
             <!-- Live counter -- reflects overnight registrations only; day
                  attendees never take a bed so they don't decrement this. -->
             <p *ngIf="availability" class="hero-details hero-counter"
@@ -34,8 +42,10 @@ import { RegistrationService, Availability } from '../../services/registration.s
               </ng-template>
             </p>
             <div class="hero-actions">
-              <a routerLink="/waitlist">
-                <button pButton label="Reserve a Spot for 2027" icon="pi pi-calendar-plus" size="large"></button>
+              <!-- Register Now is live once showRegisterCta is true. Flip
+                   back to false during any future pre-open period. -->
+              <a *ngIf="showRegisterCta" routerLink="/registration">
+                <button pButton label="Register Now" icon="pi pi-pencil" size="large"></button>
               </a>
               <a routerLink="/venue">
                 <button pButton label="View Venue" icon="pi pi-map" size="large"
@@ -46,15 +56,17 @@ import { RegistrationService, Availability } from '../../services/registration.s
               </a>
             </div>
           </div>
-          <!-- Flyer block hidden until the 2027 PDF/image are ready. Flip
-               showFlyer to true on the class when the new assets are in. -->
+          <!-- 2027 flyer: JPG + PDF pair, both with Register + Donate QRs
+               baked into a dedicated bottom strip (matches last year's
+               treatment). Offer both formats so people can pick JPG for
+               web/social forwarding or PDF for clean printing. -->
           <div class="hero-flyer" *ngIf="showFlyer">
             <button type="button" class="flyer-thumb" (click)="lightboxOpen = true" aria-label="Enlarge flyer">
-              <img src="assets/images/retreat-flyer.png" alt="NorCal Men's Retreat 2026 Flyer" />
+              <img src="assets/images/retreat-flyer-2027.jpg" alt="NorCal Men's Retreat 2027 Flyer" />
               <span class="flyer-zoom-hint"><i class="pi pi-search-plus"></i> Click to enlarge</span>
             </button>
-            <a class="flyer-download" href="assets/retreat-flyer.pdf" target="_blank" rel="noopener">
-              <i class="pi pi-download"></i> Download Flyer (PDF)
+            <a class="flyer-download" href="assets/retreat-flyer-2027.pdf" target="_blank" rel="noopener">
+              <i class="pi pi-file-pdf"></i> Download PDF
             </a>
           </div>
         </div>
@@ -115,7 +127,7 @@ import { RegistrationService, Availability } from '../../services/registration.s
           <div class="expect-card">
             <i class="pi pi-calendar-plus"></i>
             <h3>Single-Day Option</h3>
-            <p>Can't stay overnight? Attend any day for $85, with optional half-day meals ($50, 2 meals) or full-day meals ($65, 3 meals).</p>
+            <p>Can't stay overnight? Attend any day for $90, with optional half-day meals ($50, 2 meals) or full-day meals ($65, 3 meals).</p>
           </div>
           <div class="expect-card">
             <i class="pi pi-map"></i>
@@ -128,7 +140,7 @@ import { RegistrationService, Availability } from '../../services/registration.s
 
     <div class="flyer-lightbox" *ngIf="showFlyer && lightboxOpen" (click)="lightboxOpen = false">
       <button type="button" class="lightbox-close" (click)="lightboxOpen = false" aria-label="Close"><i class="pi pi-times"></i></button>
-      <img src="assets/images/retreat-flyer.png" alt="NorCal Men's Retreat 2026 Flyer" (click)="$event.stopPropagation()" />
+      <img src="assets/images/retreat-flyer-2027.jpg" alt="NorCal Men's Retreat 2027 Flyer" (click)="$event.stopPropagation()" />
       <a class="lightbox-download" href="assets/retreat-flyer.pdf" target="_blank" rel="noopener" (click)="$event.stopPropagation()">
         <i class="pi pi-download"></i> Download PDF
       </a>
@@ -151,6 +163,31 @@ import { RegistrationService, Availability } from '../../services/registration.s
     .hero-subtitle { font-size: 1.3rem; font-style: italic; margin: 0 0 1.5rem 0; opacity: 0.9; }
     .hero-details { font-size: 1.1rem; margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem; i { color: var(--retreat-gold); } }
     .hero-details-sub { font-size: 0.95rem; opacity: 0.85; }
+    /* "Registration is open" status pill. Emerald tint so it reads as a
+       green go-signal separate from the gold capacity chip that follows. */
+    .hero-status {
+      margin-top: 0.75rem; padding: 0.35rem 0.85rem;
+      border-radius: 999px; width: fit-content;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.95rem; font-weight: 600;
+    }
+    .hero-status-soon {
+      background: rgba(232, 168, 50, 0.20);
+      border: 1px solid rgba(232, 168, 50, 0.55);
+      color: #fff2d0;
+      i { color: var(--retreat-gold); }
+      strong { color: var(--retreat-gold); text-transform: uppercase; letter-spacing: 0.05em; }
+    }
+    /* Green go-signal for the "Registration is open" state -- separate
+       from the amber "coming soon" pill above so they read differently
+       at a glance without needing to read the copy. */
+    .hero-status-open {
+      background: rgba(46, 158, 91, 0.18);
+      border: 1px solid rgba(46, 158, 91, 0.55);
+      color: #d7ffe4;
+      i { color: #7be0a0; }
+      strong { color: #b4f2c8; text-transform: uppercase; letter-spacing: 0.06em; }
+    }
     /* Live overnight-capacity pill in the hero. Rounded, cream text on a
        gold-tinted chip so it reads as an at-a-glance urgency signal, not
        another line of copy. */
@@ -254,13 +291,19 @@ import { RegistrationService, Availability } from '../../services/registration.s
     }
   `]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   private registrationService = inject(RegistrationService);
+  private realtime = inject(RealtimeService);
+  private capacitySub?: Subscription;
 
   lightboxOpen = false;
   /** Master switch for the flyer thumbnail + download button + lightbox.
    *  Flip to true when the 2027 flyer assets are in place. */
-  showFlyer = false;
+  showFlyer = true;
+  /** Master switch for the "Register Now" hero button. True = live CTA;
+   *  false = hidden (use during pre-open periods, paired with a "coming
+   *  soon" pill via hero-status-soon). */
+  showRegisterCta = true;
 
   /** Live overnight capacity snapshot. Populated on ngOnInit and shown as
    *  the hero counter -- "N of 35 overnight spots filled" or "Overnight
@@ -269,10 +312,22 @@ export class HomeComponent implements OnInit {
   availability: Availability | null = null;
 
   ngOnInit(): void {
+    // Initial snapshot -- the hero counter has to have something to render
+    // on first paint before STOMP events start flowing.
     this.registrationService.getAvailability().subscribe({
       next: (a) => this.availability = a,
       error: () => { /* leave hero counter hidden if backend is unreachable */ }
     });
+    // Live updates: swap in each fresh snapshot as new registrations come
+    // in / rows get deleted. Same shape as the HTTP response so the
+    // template needs no changes.
+    this.capacitySub = this.realtime.on('/topic/public/capacity').subscribe(evt => {
+      this.availability = evt;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.capacitySub?.unsubscribe();
   }
 
   @HostListener('document:keydown.escape')

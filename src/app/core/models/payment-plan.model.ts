@@ -19,7 +19,9 @@ export interface PaymentPlan {
   payerEmail: string;
   totalAmount: number;
   payerToken?: string;
-  status?: 'active' | 'completed' | 'canceled' | string;
+  /** requested = submitted via public form, awaiting admin approve;
+   *  active = pay link is live; completed = fully paid; canceled = shut off. */
+  status?: 'requested' | 'active' | 'completed' | 'canceled' | string;
   notes?: string;
   createdAt?: string;
   updatedAt?: string;

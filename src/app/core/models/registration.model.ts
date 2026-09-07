@@ -24,6 +24,9 @@ export interface Registration {
   userId?: number;
   registeredAt?: string;
   updatedAt?: string;
+  /** Season this row belongs to (e.g. 2026, 2027). Admin can filter the
+   *  list by year; the counter only sums the currently-active year. */
+  retreatYear?: number;
   attendees: Attendee[];
   // Populated only on create response so the success screen can show
   // "You are #N of CAPACITY" without an extra round trip.

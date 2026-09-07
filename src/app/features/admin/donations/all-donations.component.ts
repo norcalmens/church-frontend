@@ -37,15 +37,15 @@ import { AuthService } from '../../../core/auth/auth.service';
 
       <div class="stats-row">
         <div class="stat-card">
-          <div class="stat-label">Total Donations</div>
-          <div class="stat-value">{{ donations.length }}</div>
+          <div class="stat-label">{{ yearFilter == null ? 'Total Donations' : yearFilter + ' Donations' }}</div>
+          <div class="stat-value">{{ filteredDonations.length }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Paid</div>
           <div class="stat-value">{{ paidCount }}</div>
         </div>
         <div class="stat-card highlight">
-          <div class="stat-label">Total Raised</div>
+          <div class="stat-label">{{ yearFilter == null ? 'Total Raised' : yearFilter + ' Raised' }}</div>
           <div class="stat-value">{{'$'}}{{ totalRaised | number:'1.2-2' }}</div>
         </div>
       </div>
@@ -56,12 +56,18 @@ import { AuthService } from '../../../core/auth/auth.service';
         </ng-template>
         <div class="table-toolbar">
           <span class="p-input-icon-left"><i class="pi pi-search"></i><input type="text" pInputText [(ngModel)]="searchTerm" placeholder="Search donor name or email..." (input)="filter()" /></span>
+          <span class="year-filter">
+            <label for="donYearFilter">Year:</label>
+            <p-dropdown inputId="donYearFilter" [options]="yearOptions" [(ngModel)]="yearFilter"
+                        optionLabel="label" optionValue="value" [style]="{'min-width': '150px'}"
+                        (onChange)="filter()"></p-dropdown>
+          </span>
           <button *ngIf="auth.canEdit() && selected.length" pButton
                   [label]="'Delete ' + selected.length + ' selected'" icon="pi pi-trash"
                   class="p-button-danger bulk-btn" (click)="confirmBulkDelete()"></button>
           <button *ngIf="auth.canEdit()" pButton label="Add Donation" icon="pi pi-plus" class="p-button-outlined add-btn" (click)="openAdd()"></button>
           <button pButton label="Download CSV" icon="pi pi-download" class="p-button-outlined csv-btn"
-                  (click)="exportCsv()" [disabled]="!donations.length"></button>
+                  (click)="exportCsv()" [disabled]="!filteredDonations.length"></button>
         </div>
         <p-table [value]="filteredDonations" [(selection)]="selected" dataKey="id"
                  [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
@@ -188,6 +194,9 @@ import { AuthService } from '../../../core/auth/auth.service';
       background: var(--retreat-grad-nav); color: var(--retreat-cream); font-size: 1.1rem; font-weight: 600;
     }
     .table-toolbar { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .year-filter { display: inline-flex; align-items: center; gap: 0.5rem;
+      label { font-size: 0.85rem; font-weight: 600; color: var(--retreat-teal-dark); }
+    }
     .add-btn { margin-left: auto; }
     .csv-btn { margin-left: 0; }
     .message-cell { max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -248,6 +257,12 @@ export class AllDonationsComponent implements OnInit {
   selected: Donation[] = [];
   searchTerm = '';
 
+  // Year is derived from donation.createdAt (calendar year). Donations flow
+  // in year-round, not tied to a retreat season, so calendar-year matches
+  // what admins want for tax reporting / annual totals. null = All years.
+  yearFilter: number | null = null;
+  yearOptions: { label: string; value: number | null }[] = [{ label: 'All years', value: null }];
+
   dialogVisible = false;
   saving = false;
   editing: Donation | null = null;
@@ -267,9 +282,11 @@ export class AllDonationsComponent implements OnInit {
     adminNotes: [''],
   });
 
-  get paidCount(): number { return this.donations.filter(d => d.paymentStatus === 'paid').length; }
+  // Stats mirror the current filter so "Paid" and "Total Raised" match
+  // whichever slice (year + search) the admin is looking at.
+  get paidCount(): number { return this.filteredDonations.filter(d => d.paymentStatus === 'paid').length; }
   get totalRaised(): number {
-    return this.donations
+    return this.filteredDonations
       .filter(d => d.paymentStatus === 'paid')
       .reduce((sum, d) => sum + (Number(d.amount) || 0), 0);
   }
@@ -278,16 +295,52 @@ export class AllDonationsComponent implements OnInit {
 
   load(): void {
     this.donationService.listAll().subscribe({
-      next: (data) => { this.donations = data || []; this.filteredDonations = this.donations; },
+      next: (data) => {
+        this.donations = data || [];
+        this.rebuildYearOptions();
+        this.filter();
+      },
       error: () => { this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load donations' }); }
     });
   }
 
+  /** Distinct calendar years present in the donation set, newest first,
+   *  plus an "All years" option. Rebuilt after each load so newly-recorded
+   *  donations in a fresh year show up in the dropdown without a hard reload. */
+  private rebuildYearOptions(): void {
+    const years = new Set<number>();
+    for (const d of this.donations) {
+      if (d.createdAt) {
+        const y = new Date(d.createdAt).getFullYear();
+        if (!isNaN(y)) years.add(y);
+      }
+    }
+    const sorted = Array.from(years).sort((a, b) => b - a);
+    this.yearOptions = [
+      { label: 'All years', value: null },
+      ...sorted.map(y => ({ label: String(y), value: y as number | null })),
+    ];
+    // If the current filter refers to a year no longer present (e.g. after
+    // a bulk delete), fall back to All years so the table isn't empty
+    // and the dropdown still points at a valid option.
+    if (this.yearFilter != null && !years.has(this.yearFilter)) {
+      this.yearFilter = null;
+    }
+  }
+
   filter(): void {
     const term = this.searchTerm.toLowerCase().trim();
-    this.filteredDonations = term
-      ? this.donations.filter(d => (d.donorName || '').toLowerCase().includes(term) || (d.donorEmail || '').toLowerCase().includes(term))
-      : this.donations;
+    const yearOk = (d: Donation) => {
+      if (this.yearFilter == null) return true;
+      if (!d.createdAt) return false;
+      return new Date(d.createdAt).getFullYear() === this.yearFilter;
+    };
+    this.filteredDonations = this.donations.filter(d => {
+      if (!yearOk(d)) return false;
+      if (!term) return true;
+      return (d.donorName || '').toLowerCase().includes(term)
+          || (d.donorEmail || '').toLowerCase().includes(term);
+    });
   }
 
   statusSeverity(status: string | undefined): string {
@@ -426,13 +479,17 @@ export class AllDonationsComponent implements OnInit {
       return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
     };
     const header = cols.map(c => c[0]).join(',');
-    const body = this.donations.map(d => cols.map(c => esc(c[1](d))).join(','));
+    // Export the CURRENT view (year filter + search) so downloading after
+    // picking "2026" gives you the 2026 file the admin expected, not the
+    // full corpus. "All years" still exports everything.
+    const body = this.filteredDonations.map(d => cols.map(c => esc(c[1](d))).join(','));
     const csv = [header, ...body].join('\r\n');
     const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `donations-${new Date().toISOString().slice(0, 10)}.csv`;
+    const yearTag = this.yearFilter == null ? 'all' : this.yearFilter;
+    a.download = `donations-${yearTag}-${new Date().toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }

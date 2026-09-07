@@ -132,7 +132,27 @@ $gradient-sky: linear-gradient(180deg, $dark-teal 0%, #2a5a6a 30%, $warm-amber 7
       margin-left: 0.25rem;
       &:hover { color: #b8651f; border-bottom-color: #b8651f; }
     }
+    // The CTA link wraps a real button, not an inline word -- suppress the
+    // dashed-underline anchor styling that the general `a` rule above adds.
+    .plan-cta {
+      display: inline-block; margin: 0.75rem 0 0;
+      border-bottom: none;
+      &:hover { border-bottom: none; }
+    }
   }
+}
+
+// Top-of-page variant: pushes the banner up next to the capacity counter so
+// price-sensitive attendees see the payment-plan option BEFORE they invest
+// in filling out the form. Slightly stronger left accent + amber tint so it
+// reads as an actionable helper, not a passive note.
+.future-plan-banner-top {
+  margin-top: 1rem;
+  border-left-color: #d4782f;
+  background: linear-gradient(135deg, #fff7e8 0%, #fffaf0 100%);
+  border-color: #d4782f;
+  > i { color: #d4782f; }
+  .future-plan-text strong { color: #8a4a08; }
 }
 
 .help-banner {

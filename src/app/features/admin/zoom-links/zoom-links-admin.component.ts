@@ -33,7 +33,7 @@ import { ZoomLink } from '../../../core/models/zoom-link.model';
       <div class="back-bar">
         <a routerLink="/admin/dashboard" class="back-link"><i class="pi pi-arrow-left"></i> Back to Dashboard</a>
       </div>
-      <div class="page-header"><h1>Manage Zoom Links</h1><p>Add, edit, or remove the Zoom meetings shown on the Worship page</p></div>
+      <div class="page-header"><h1>Manage Zoom Links</h1><p>Add, edit, or remove the Zoom meetings shown on the Meetings page</p></div>
 
       <p-card>
         <ng-template pTemplate="header">
@@ -45,7 +45,7 @@ import { ZoomLink } from '../../../core/models/zoom-link.model';
         <div class="toolbar">
           <button pButton label="Add Zoom Link" icon="pi pi-plus" (click)="openNew()"></button>
           <a routerLink="/worship">
-            <button pButton label="View Worship Page" icon="pi pi-external-link" class="p-button-outlined p-button-sm"></button>
+            <button pButton label="View Meetings Page" icon="pi pi-external-link" class="p-button-outlined p-button-sm"></button>
           </a>
         </div>
 
@@ -126,7 +126,7 @@ import { ZoomLink } from '../../../core/models/zoom-link.model';
           <div class="field switch-field">
             <label>Active</label>
             <p-inputSwitch formControlName="isActive"></p-inputSwitch>
-            <small>Inactive links are hidden from the Worship page.</small>
+            <small>Inactive links are hidden from the Meetings page.</small>
           </div>
         </div>
       </form>

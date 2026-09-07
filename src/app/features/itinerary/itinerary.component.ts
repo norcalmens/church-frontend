@@ -25,6 +25,22 @@ interface Day {
   template: `
     <div class="itinerary-container">
 
+      <!-- 2027 itinerary is still being finalized; the schedule below is
+           the 2026 program preserved as a reference / preview of what the
+           weekend usually looks like. Banner sets expectations up front so
+           nobody prints the times and shows up at the wrong session. -->
+      <div class="itinerary-status" role="note">
+        <i class="pi pi-calendar-clock"></i>
+        <div class="itinerary-status-text">
+          <strong>2027 Itinerary is being finalized</strong>
+          <p>
+            The schedule below is from the <strong>2026</strong> retreat and is shown as a preview
+            of the typical flow. Final speakers, session titles, and times for <strong>April 15&ndash;17, 2027</strong>
+            will replace this once confirmed &mdash; check back soon.
+          </p>
+        </div>
+      </div>
+
       <div class="hero-section">
         <i class="pi pi-calendar"></i>
         <h1>Retreat Itinerary</h1>
@@ -96,6 +112,24 @@ interface Day {
   `,
   styles: [`
     .itinerary-container { max-width: 920px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.25rem; }
+
+    /* "2027 itinerary is being finalized" amber status banner. Same visual
+       language as the "Reservations open August 8" pill on the home page --
+       gold-tinted card, clear headline + short explanation. */
+    .itinerary-status {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: linear-gradient(135deg, #fffaf0 0%, #fff 100%);
+      border: 1px solid var(--retreat-gold);
+      border-left: 4px solid var(--retreat-sunset);
+      border-radius: 12px; padding: 1rem 1.25rem;
+      i { font-size: 1.5rem; color: var(--retreat-sunset); flex-shrink: 0; margin-top: 0.1rem; }
+      .itinerary-status-text {
+        strong { display: block; font-size: 1.05rem; color: var(--retreat-teal-dark); }
+        p { margin: 0.3rem 0 0; color: #6e4b08; line-height: 1.5; font-size: 0.92rem;
+          strong { display: inline; font-size: inherit; color: var(--retreat-sunset); }
+        }
+      }
+    }
 
     /* Next-steps footer */
     .next-steps {

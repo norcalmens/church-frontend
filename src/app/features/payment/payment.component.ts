@@ -44,7 +44,7 @@ import { AuthService } from '../../core/auth/auth.service';
             <h3><i class="pi pi-shield"></i> Secure Payment</h3>
             <p>All payments are processed securely through Stripe. Your card information is never stored on our servers.</p>
             <h3><i class="pi pi-info-circle"></i> Payment Policy</h3>
-            <p>The retreat cost is $248 per person. Full refunds are available until May 28, 2026. After that date, registrations are non-refundable.</p>
+            <p>The retreat cost is $280 per person. Full refunds are available until April 1, 2027. After that date, registrations are non-refundable.</p>
           </div>
         </p-card>
       </div>
@@ -64,7 +64,7 @@ export class PaymentComponent implements OnInit {
   private paymentService = inject(PaymentService);
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
-  amount = 248;
+  amount = 280;
   donorName = '';
   donorEmail = '';
   processing = false;
@@ -77,7 +77,7 @@ export class PaymentComponent implements OnInit {
   processPayment(): void {
     if (!this.donorName || !this.donorEmail) { this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Please fill in all fields' }); return; }
     this.processing = true;
-    this.paymentService.createPaymentIntent({ amount: this.amount * 100, currency: 'usd', description: 'NorCal Men\'s Retreat 2026 Registration', donorName: this.donorName, donorEmail: this.donorEmail }).subscribe({
+    this.paymentService.createPaymentIntent({ amount: this.amount * 100, currency: 'usd', description: 'NorCal Men\'s Retreat 2027 Registration', donorName: this.donorName, donorEmail: this.donorEmail }).subscribe({
       next: () => { this.processing = false; this.messageService.add({ severity: 'info', summary: 'Payment Intent Created', detail: 'Stripe card element integration needed to complete payment.' }); },
       error: (err) => { this.processing = false; this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.error || 'Payment failed' }); }
     });

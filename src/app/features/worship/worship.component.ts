@@ -13,8 +13,8 @@ import { ZoomLink } from '../../core/models/zoom-link.model';
     <div class="worship-container">
       <div class="hero-section">
         <i class="pi pi-video"></i>
-        <h1>Worship</h1>
-        <p>Join our brothers in worship, prayer, and fellowship — wherever you are.</p>
+        <h1>Meetings</h1>
+        <p>Join our brothers for prayer, worship, and fellowship — wherever you are.</p>
       </div>
 
       <div *ngIf="loading" class="loading-state">

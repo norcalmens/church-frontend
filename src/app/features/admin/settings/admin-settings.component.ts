@@ -30,7 +30,7 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
 
       <p-card>
         <ng-template pTemplate="header">
-          <div class="card-header-bar"><i class="pi pi-users"></i><span>Capacity</span></div>
+          <div class="card-header-bar"><i class="pi pi-users"></i><span>Capacity &amp; Season</span></div>
         </ng-template>
         <div class="setting-row">
           <div class="setting-label">
@@ -45,6 +45,25 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
         <p class="hint" *ngIf="capacity !== original">
           <i class="pi pi-info-circle"></i>
           Unsaved &mdash; previous value: <strong>{{ original }}</strong>
+        </p>
+
+        <hr class="setting-divider" />
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <strong>Active retreat year</strong>
+            <p>
+              Every new registration is stamped with this year. The home-page counter shows only <em>this</em> year's overnight registrations &mdash; previous years stay in the database (visible via the year filter on the Registrations page) but no longer count toward capacity. Bump this after a retreat wraps to start the next season at <strong>0 of {{ capacity }}</strong>.
+            </p>
+          </div>
+          <div class="setting-control">
+            <p-inputNumber [(ngModel)]="activeYear" [min]="2020" [max]="2100" [useGrouping]="false" [showButtons]="true" buttonLayout="horizontal" inputId="activeYear"></p-inputNumber>
+            <button pButton label="Save" icon="pi pi-check" (click)="saveActiveYear()" [disabled]="savingYear || activeYear === originalYear" [loading]="savingYear"></button>
+          </div>
+        </div>
+        <p class="hint" *ngIf="activeYear !== originalYear">
+          <i class="pi pi-info-circle"></i>
+          Unsaved &mdash; previous value: <strong>{{ originalYear }}</strong>. Saving does not delete old rows; they keep their original year tag.
         </p>
       </p-card>
 
@@ -170,6 +189,7 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
       p { color: #495057; margin: 0.35rem 0 0; line-height: 1.5; font-size: 0.92rem; }
     }
     .setting-control { display: flex; gap: 0.6rem; align-items: center; }
+    .setting-divider { border: none; border-top: 1px dashed #e0e0e0; margin: 1.5rem 0; }
     .hint { margin: 1rem 0 0; color: #6e4b08; background: #fff7e0;
       border-left: 4px solid var(--retreat-sunset); border-radius: 6px; padding: 0.6rem 0.85rem; font-size: 0.9rem;
       i { color: var(--retreat-sunset); margin-right: 0.4rem; }
@@ -286,6 +306,13 @@ export class AdminSettingsComponent implements OnInit {
   original = 35;
   saving = false;
 
+  // Active-year state. Loaded from /api/settings/public/retreat-year at init,
+  // written back through settings.setActiveYear(). New registrations after
+  // save get stamped with this value; old rows keep whatever year they had.
+  activeYear = 2027;
+  originalYear = 2027;
+  savingYear = false;
+
   // Theme picker state. originalTheme = persisted choice; preview lives on
   // ThemeService.theme$ while the admin clicks swatches. Save commits the
   // current preview; Cancel reverts to originalTheme.
@@ -328,6 +355,10 @@ export class AdminSettingsComponent implements OnInit {
       next: (c) => { this.capacity = c; this.original = c; },
       error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load capacity' })
     });
+    this.settingsService.getActiveYear().subscribe({
+      next: (y) => { this.activeYear = y; this.originalYear = y; },
+      error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load active retreat year' })
+    });
     // Layout already kicked loadActiveTheme on app boot, so the BehaviorSubject
     // already has the persisted value. Snapshot it here as the "original".
     this.originalTheme = this.themeService.currentTheme;
@@ -352,6 +383,26 @@ export class AdminSettingsComponent implements OnInit {
       error: () => {
         this.saving = false;
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save capacity' });
+      }
+    });
+  }
+
+  saveActiveYear(): void {
+    if (this.savingYear || this.activeYear === this.originalYear) return;
+    this.savingYear = true;
+    this.settingsService.setActiveYear(this.activeYear).subscribe({
+      next: (y) => {
+        this.savingYear = false;
+        this.originalYear = y;
+        this.messageService.add({
+          severity: 'success', summary: 'Saved',
+          detail: `Active retreat year set to ${y}. New registrations will be tagged ${y}; the home counter now shows 0 of ${this.capacity}.`
+        });
+      },
+      error: (e) => {
+        this.savingYear = false;
+        const msg = e?.error?.message || 'Failed to save active retreat year';
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
       }
     });
   }

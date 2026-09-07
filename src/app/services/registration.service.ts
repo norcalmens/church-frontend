@@ -88,8 +88,14 @@ export class RegistrationService {
     );
   }
 
-  getAllRegistrations(): Observable<Registration[]> {
-    return this.http.get<ApiResponse<Registration[]>>('/api/registrations/all').pipe(
+  /** Admin list. `year` omitted = every season across all time (used when
+   *  the admin picks "All years" in the filter); passing a year narrows
+   *  to that season so the roster reflects a single retreat. */
+  getAllRegistrations(year?: number | null): Observable<Registration[]> {
+    const url = (year == null)
+      ? '/api/registrations/all'
+      : `/api/registrations/all?year=${year}`;
+    return this.http.get<ApiResponse<Registration[]>>(url).pipe(
       map(res => res.data)
     );
   }
@@ -112,4 +118,8 @@ export interface Availability {
   totalAttendees: number;
   spacesLeft: number;
   isFull: boolean;
+  /** Season the counter is scoped to (from retreat.active.year setting).
+   *  Displayed in the home hero so viewers know "3 left" is for 2027,
+   *  not the aggregate across all seasons. */
+  retreatYear?: number;
 }

@@ -5,13 +5,14 @@ import { TopbarComponent } from './topbar/topbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { FooterComponent } from './footer/footer.component';
 import { MaintenanceBannerComponent } from './maintenance-banner/maintenance-banner.component';
+import { AdminActivityToastComponent } from './admin-activity-toast/admin-activity-toast.component';
 import { BackendStatusService } from '../core/services/backend-status.service';
 import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, TopbarComponent, SidebarComponent, FooterComponent, MaintenanceBannerComponent],
+  imports: [CommonModule, RouterOutlet, TopbarComponent, SidebarComponent, FooterComponent, MaintenanceBannerComponent, AdminActivityToastComponent],
   template: `
     <div class="layout-wrapper">
       <app-topbar (toggleSidebar)="sidebarVisible = !sidebarVisible"></app-topbar>
@@ -23,6 +24,10 @@ import { ThemeService } from '../services/theme.service';
         </div>
         <app-footer></app-footer>
       </div>
+      <!-- Global bottom-right toast host for admin live activity. Renders
+           nothing for non-admin sessions; subscribes/unsubscribes as the
+           user's role changes (login/logout in the same tab). -->
+      <app-admin-activity-toast></app-admin-activity-toast>
     </div>
   `,
   styles: [`

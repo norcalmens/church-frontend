@@ -40,7 +40,7 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
         </a>
         <a routerLink="/worship" routerLinkActive="active" (click)="close()"
            *ngIf="menuVisibility.isVisible('worship')">
-          <i class="pi pi-video"></i> Worship
+          <i class="pi pi-video"></i> Meetings
         </a>
         <ng-container *ngIf="menuVisibility.isVisible('qr-codes') || menuVisibility.isVisible('feedback')">
           <div class="sidebar-section-title">Resources</div>

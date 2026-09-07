@@ -11,9 +11,11 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { DropdownModule } from 'primeng/dropdown';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { forkJoin } from 'rxjs';
 import { RegistrationService } from '../../../services/registration.service';
+import { SettingsService } from '../../../services/settings.service';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Registration } from '../../../core/models/registration.model';
 import { Attendee } from '../../../core/models/attendee.model';
@@ -21,7 +23,7 @@ import { Attendee } from '../../../core/models/attendee.model';
 @Component({
   selector: 'app-manage-registrations',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, CardModule, TableModule, ButtonModule, TagModule, InputTextModule, InputNumberModule, ToastModule, ConfirmDialogModule, DialogModule],
+  imports: [CommonModule, FormsModule, RouterLink, CardModule, TableModule, ButtonModule, TagModule, InputTextModule, InputNumberModule, DropdownModule, ToastModule, ConfirmDialogModule, DialogModule],
   providers: [MessageService, ConfirmationService],
   template: `
     <p-toast></p-toast>
@@ -37,6 +39,12 @@ import { Attendee } from '../../../core/models/attendee.model';
         </ng-template>
         <div class="table-toolbar">
           <span class="p-input-icon-left"><i class="pi pi-search"></i><input type="text" pInputText [(ngModel)]="searchTerm" placeholder="Search..." (input)="filterRegistrations()" /></span>
+          <span class="year-filter">
+            <label for="yearFilter">Season:</label>
+            <p-dropdown inputId="yearFilter" [options]="yearOptions" [(ngModel)]="yearFilter"
+                        optionLabel="label" optionValue="value" [style]="{'min-width': '160px'}"
+                        (onChange)="loadRegistrations()"></p-dropdown>
+          </span>
           <button *ngIf="auth.canEdit() && selected.length" pButton
                   [label]="'Delete ' + selected.length + ' selected'" icon="pi pi-trash"
                   class="p-button-danger" (click)="confirmBulkDelete()"></button>
@@ -57,6 +65,7 @@ import { Attendee } from '../../../core/models/attendee.model';
               <th pSortableColumn="totalAmount">Total <p-sortIcon field="totalAmount"></p-sortIcon></th>
               <th pSortableColumn="paymentStatus">Status <p-sortIcon field="paymentStatus"></p-sortIcon></th>
               <th pSortableColumn="registeredAt">Date <p-sortIcon field="registeredAt"></p-sortIcon></th>
+              <th pSortableColumn="retreatYear" style="width: 90px;">Year <p-sortIcon field="retreatYear"></p-sortIcon></th>
               <th style="width: 80px"></th>
             </tr>
           </ng-template>
@@ -100,6 +109,7 @@ import { Attendee } from '../../../core/models/attendee.model';
               <td>\${{ reg.totalAmount }}</td>
               <td><p-tag [value]="reg.paymentStatus || 'pending'" [severity]="getStatusSeverity(reg.paymentStatus)"></p-tag></td>
               <td>{{ reg.registeredAt | date:'short' }}</td>
+              <td class="year-cell">{{ reg.retreatYear || '—' }}</td>
               <td class="row-actions">
                 <ng-container *ngIf="auth.canEdit()">
                   <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
@@ -111,7 +121,7 @@ import { Attendee } from '../../../core/models/attendee.model';
               </td>
             </tr>
           </ng-template>
-          <ng-template pTemplate="emptymessage"><tr><td colspan="11" style="text-align: center; padding: 2rem; color: #999;">No registrations found.</td></tr></ng-template>
+          <ng-template pTemplate="emptymessage"><tr><td colspan="12" style="text-align: center; padding: 2rem; color: #999;">No registrations found.</td></tr></ng-template>
         </p-table>
       </p-card>
 
@@ -192,6 +202,10 @@ import { Attendee } from '../../../core/models/attendee.model';
     .page-header { text-align: center; padding: 2.5rem 2rem; background: var(--retreat-grad-page-header); color: var(--retreat-cream); border-radius: 12px; margin-bottom: 1.5rem; h1 { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem 0; } p { font-size: 1rem; margin: 0; opacity: 0.9; } }
     .card-header-bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.5rem; background: var(--retreat-grad-nav); color: var(--retreat-cream); font-size: 1.1rem; font-weight: 600; }
     .table-toolbar { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .year-filter { display: inline-flex; align-items: center; gap: 0.5rem;
+      label { font-size: 0.85rem; font-weight: 600; color: var(--retreat-teal-dark); }
+    }
+    .year-cell { font-weight: 600; color: var(--retreat-teal-dark); text-align: center; }
     .csv-btn { margin-left: auto; }
     ::ng-deep .registrations-container .p-card { border-radius: 12px; overflow: hidden; .p-card-header { padding: 0; border-bottom: none; } .p-card-body { padding: 1.5rem; } .p-card-content { padding: 0; } }
     ::ng-deep .p-datatable .p-datatable-thead > tr > th { background: var(--retreat-grad-nav); color: var(--retreat-cream); }
@@ -257,6 +271,7 @@ import { Attendee } from '../../../core/models/attendee.model';
 })
 export class ManageRegistrationsComponent implements OnInit {
   private registrationService = inject(RegistrationService);
+  private settingsService = inject(SettingsService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   auth = inject(AuthService);
@@ -264,6 +279,12 @@ export class ManageRegistrationsComponent implements OnInit {
   filteredRegistrations: Registration[] = [];
   selected: Registration[] = [];
   searchTerm = '';
+
+  // null = "All seasons" (backend returns every year). Defaults to the
+  // currently-active year so the operational default view is the roster
+  // for THIS retreat; historical seasons are one click away.
+  yearFilter: number | null = null;
+  yearOptions: { label: string; value: number | null }[] = [{ label: 'All seasons', value: null }];
 
   regEditOpen = false;
   regEditSaving = false;
@@ -275,10 +296,30 @@ export class ManageRegistrationsComponent implements OnInit {
   attEditDraft: Partial<Attendee> | null = null;
   private attEditTarget: Attendee | null = null;
 
-  ngOnInit(): void { this.loadRegistrations(); }
+  ngOnInit(): void {
+    // Load the active year first so we can default the filter to it and
+    // label it "(active)" in the dropdown. Fall back to no-filter if the
+    // setting call fails so the page still renders something useful.
+    this.settingsService.getActiveYear().subscribe({
+      next: (year) => {
+        this.yearFilter = year;
+        // Show active year + previous two seasons + all-time. Seasons with
+        // no rows still appear so the admin sees the timeline, not just
+        // whatever happens to have data today.
+        this.yearOptions = [
+          { label: `${year} (active)`, value: year },
+          { label: `${year - 1}`,      value: year - 1 },
+          { label: `${year - 2}`,      value: year - 2 },
+          { label: 'All seasons',      value: null },
+        ];
+        this.loadRegistrations();
+      },
+      error: () => { this.loadRegistrations(); }
+    });
+  }
 
   loadRegistrations(): void {
-    this.registrationService.getAllRegistrations().subscribe({
+    this.registrationService.getAllRegistrations(this.yearFilter).subscribe({
       next: (data) => {
         // Compute a derived "sort by attendee last name" key per row.
         // Prefer the alphabetically-first attendee's last name so families
@@ -427,6 +468,7 @@ export class ManageRegistrationsComponent implements OnInit {
     };
     const cols: [string, (r: Registration) => unknown][] = [
       ['ID', r => r.id],
+      ['Retreat Year', r => r.retreatYear],
       ['Registered At', r => r.registeredAt],
       ['First Name', r => titleCase(r.firstName)],
       ['Last Name', r => titleCase(r.lastName)],

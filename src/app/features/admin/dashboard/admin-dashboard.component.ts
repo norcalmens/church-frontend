@@ -13,7 +13,7 @@ import { RegistrationService } from '../../../services/registration.service';
     <div class="dashboard-container">
       <div class="dashboard-header">
         <h1>Admin Dashboard</h1>
-        <p>NorCal Men's Retreat 2026 — Overview</p>
+        <p>NorCal Men's Retreat {{ stats?.retreatYear || '' }} &mdash; Overview</p>
       </div>
       <div class="stats-grid">
         <p-card><div class="stat-card"><i class="pi pi-users"></i><div class="stat-value">{{ stats?.totalRegistrations || 0 }}</div><div class="stat-label">Total Registrations</div></div></p-card>

@@ -5,7 +5,7 @@
   <div class="success-content">
     <i class="pi pi-check-circle"></i>
     <h2>Registration Complete!</h2>
-    <p>Thank you for registering for the NorCal Men's Retreat 2026.</p>
+    <p>Thank you for registering for the NorCal Men's Retreat 2027.</p>
     <p>A confirmation email has been sent to <strong>{{ registrationForm.value.email }}</strong>.</p>
     <div *ngIf="successCapacity && successPositionLast" class="position-badge">
       <ng-container *ngIf="successPositionFirst === successPositionLast; else multi">
@@ -18,7 +18,7 @@
     <div class="success-details">
       <div><i class="pi pi-users"></i> {{ attendees.length }} attendee(s)</div>
       <div><i class="pi pi-dollar"></i> ${{ totalCost }} paid</div>
-      <div><i class="pi pi-calendar"></i> June 11-13, 2026</div>
+      <div><i class="pi pi-calendar"></i> April 15-17, 2027</div>
     </div>
     <a routerLink="/">
       <button pButton label="Return Home" icon="pi pi-home" class="mt-3"></button>
@@ -29,8 +29,8 @@
 <div class="registration-container" *ngIf="!paymentSuccess">
   <div class="header-section">
     <h1>Men's Retreat Registration</h1>
-    <p>June 11-13, 2026 | Alliance Redwoods, Occidental, CA</p>
-    <p class="header-pricing">Full retreat $248 &middot; Single day $85</p>
+    <p>April 15-17, 2027 | Alliance Redwoods, Occidental, CA</p>
+    <p class="header-pricing">Full retreat $280 &middot; Single day $90</p>
     <p class="header-pricing-sub">Linen &amp; towel package $25 (or $5/item) &middot; Single-day meals $50 (2) / $65 (3)</p>
   </div>
 
@@ -53,6 +53,24 @@
         <strong *ngIf="spacesLeft > 1">{{ spacesLeft }} overnight space{{ spacesLeft === 1 ? '' : 's' }} left.</strong>
         <p>{{ totalAttendees }} of {{ capacity }} overnight spots filled. Single-day attendees don't take a slot, so they can register anytime.</p>
       </ng-template>
+    </div>
+  </div>
+
+  <!-- Payment-plan CTA — placed up here (not buried at the bottom) so
+       price-sensitive attendees see it BEFORE they decide to fill in the
+       full form or bounce off the pricing. Submits a request; admin
+       approves and emails a pay link. -->
+  <div class="future-plan-banner future-plan-banner-top" role="note">
+    <i class="pi pi-calendar-plus"></i>
+    <div class="future-plan-text">
+      <strong>Need a Payment Plan?</strong>
+      <p>
+        Spread the cost of the retreat across <strong>monthly installments</strong>. Submit a quick
+        request and our team will set up a plan and email you a secure payment link.
+      </p>
+      <a routerLink="/request-payment-plan" class="plan-cta">
+        <button pButton label="Request a Payment Plan" icon="pi pi-credit-card" class="p-button-outlined"></button>
+      </a>
     </div>
   </div>
 
@@ -147,7 +165,7 @@
 
       <div class="option-block" *ngIf="attendeeForm.get('attendanceType')?.value === 'full'">
         <label class="option-label">Linens &amp; towels (overnight stay)</label>
-        <p class="option-help"><i class="pi pi-info-circle"></i> The $248 retreat fee does <strong>not</strong> include linens or towels.</p>
+        <p class="option-help"><i class="pi pi-info-circle"></i> The $280 retreat fee does <strong>not</strong> include linens or towels.</p>
         <div class="radio-row">
           <div class="radio-item">
             <p-radioButton name="linenOption" value="none" formControlName="linenOption" inputId="linen-none"></p-radioButton>
@@ -270,10 +288,10 @@
       <div class="terms-section">
         <p-checkbox [(ngModel)]="agreedToTerms" [binary]="true" inputId="terms"></p-checkbox>
         <label for="terms" class="terms-label">
-          I agree to the retreat terms and conditions. Full retreat is $248 per attendee (linens
-          $25 package or $5/item add-on); single-day attendance is $85/day with optional half-day
+          I agree to the retreat terms and conditions. Full retreat is $280 per attendee (linens
+          $25 package or $5/item add-on); single-day attendance is $90/day with optional half-day
           ($50, 2 meals) or full-day ($65, 3 meals) meal packages. Registration is non-refundable
-          after May 28, 2026.
+          after April 1, 2027.
         </label>
       </div>
       <div class="requirements-checklist" *ngIf="!agreedToTerms || attendees.length === 0 || !cardReady || registrationForm.invalid">
@@ -300,20 +318,6 @@
               [disabled]="blockedByLodging || notEnoughSpaces || !agreedToTerms || attendees.length === 0 || !cardReady || registrationForm.invalid"
               (click)="submitRegistration()"></button>
     </p-card>
-
-    <!-- 2027 payment-plan teaser — sits next to the help banner so price-sensitive
-         attendees see it right when they're deciding whether to register. -->
-    <div class="future-plan-banner" role="note">
-      <i class="pi pi-calendar-plus"></i>
-      <div class="future-plan-text">
-        <strong>Coming in 2027: Payment Plans</strong>
-        <p>
-          The 2026 retreat is full price up front, but starting in <strong>2027</strong> we'll be
-          offering <strong>monthly installments</strong> so you can spread the cost over time.
-          <a routerLink="/waitlist">Reserve your 2027 spot &rarr;</a> to be the first to know when registration opens.
-        </p>
-      </div>
-    </div>
 
     <!-- Help banner — placed at the bottom, where people are most likely to be stuck -->
     <div class="help-banner" role="note">

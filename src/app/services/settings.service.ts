@@ -46,6 +46,22 @@ export class SettingsService {
     );
   }
 
+  /** Active retreat year -- the season all NEW registrations get stamped
+   *  with, and the season the home counter reflects. Bumping it in admin
+   *  Settings archives the current year in place (old rows keep their
+   *  original year so historical rosters remain queryable). */
+  getActiveYear(): Observable<number> {
+    return this.http.get<ApiResponse<{ year: number }>>('/api/settings/public/retreat-year').pipe(
+      map(r => r.data.year)
+    );
+  }
+
+  setActiveYear(year: number): Observable<number> {
+    return this.http.put<ApiResponse<{ year: number }>>('/api/settings/retreat-year', { year }).pipe(
+      map(r => r.data.year)
+    );
+  }
+
   /** Lazy-loaded once per session, then served from the BehaviorSubject. */
   loadSocialLinks(): Observable<SocialLinks> {
     if (this.socialLoaded) return this.socialLinks$;

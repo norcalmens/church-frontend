@@ -27,4 +27,7 @@ export interface Attendee {
   congregation?: string;
   primaryEmail?: string;
   primaryPhone?: string;
+  /** Season this attendee belongs to (from parent registration). Powers
+   *  the year filter + column on the admin attendees page. */
+  retreatYear?: number;
 }

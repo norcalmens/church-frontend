@@ -18,7 +18,7 @@ import { AuthService } from '../../core/auth/auth.service';
         <div class="register-header">
           <i class="pi pi-sun"></i>
           <h1>Create Account</h1>
-          <p>NorCal Men's Retreat 2026</p>
+          <p>NorCal Men's Retreat 2027</p>
         </div>
         <p-card>
           <div *ngIf="errorMessage" class="error-message">

@@ -14,7 +14,7 @@ import { ButtonModule } from 'primeng/button';
 export class ThemePollComponent {
   googleFormUrl: SafeResourceUrl;
   themes = [
-    'Standing in the Gap', 'A Man Who Shows Up', 'Cover Your House', 'Finishing Well',
+    'A Man Who Shows Up', 'Cover Your House', 'Finishing Well',
     'Brotherhood Strengthened', 'Being Our Brother\'s Keeper', 'If We Don\'t Tell Them, Who Will?',
     'Saved to Serve, Sent to Share', 'Forged by Fire', 'Becoming the Man God Called Us to Be'
   ];

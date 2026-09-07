@@ -38,7 +38,7 @@ interface CartItem {
     <div class="merch-container">
       <div class="header-section">
         <h1>Retreat Merchandise</h1>
-        <p>NorCal Men's Retreat 2026 — Official Gear</p>
+        <p>NorCal Men's Retreat 2027 — Official Gear</p>
       </div>
 
       <!-- Category Filter -->
@@ -382,7 +382,7 @@ export class MerchandiseComponent {
   merchItems: MerchItem[] = [
     {
       id: 1, name: 'Retreat T-Shirt', category: 'Apparel', price: 25.00,
-      description: 'Official NorCal Men\'s Retreat 2026 t-shirt. Soft cotton blend with retreat logo.',
+      description: 'Official NorCal Men\'s Retreat 2027 t-shirt. Soft cotton blend with retreat logo.',
       icon: 'pi-star', sizes: ['S', 'M', 'L', 'XL', '2XL', '3XL'],
       colors: ['Black', 'Navy', 'Forest']
     },
@@ -427,7 +427,7 @@ export class MerchandiseComponent {
     },
     {
       id: 9, name: 'Wristband', category: 'Accessories', price: 5.00,
-      description: 'Silicone wristband with "Standing in the Gap" engraving.',
+      description: 'Silicone wristband with retreat branding.',
       icon: 'pi-circle',
       colors: ['Black', 'Navy', 'Orange']
     },
