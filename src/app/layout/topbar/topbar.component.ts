@@ -92,6 +92,10 @@ interface SearchItem {
                  *ngIf="menuVisibility.isVisible('admin/donations')"><i class="pi pi-heart"></i> View All Donations</a>
               <a routerLink="/admin/payment-plans" (click)="adminMenuOpen = false"
                  *ngIf="menuVisibility.isVisible('admin/payment-plans')"><i class="pi pi-credit-card"></i> Payment Plans</a>
+              <a routerLink="/admin/rsvps" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/rsvps')"><i class="pi pi-check-square"></i> Event RSVPs</a>
+              <a routerLink="/admin/meeting-notes" (click)="adminMenuOpen = false"
+                 *ngIf="menuVisibility.isVisible('admin/meeting-notes')"><i class="pi pi-file-edit"></i> Meeting Notes</a>
               <!-- Admin-only mutating surfaces below the divider -->
               <ng-container *ngIf="authService.isAdmin()">
                 <div class="dropdown-divider"></div>
@@ -101,6 +105,8 @@ interface SearchItem {
                    *ngIf="menuVisibility.isVisible('admin/settings')"><i class="pi pi-cog"></i> Settings</a>
                 <a routerLink="/admin/users" (click)="adminMenuOpen = false"
                    *ngIf="menuVisibility.isVisible('admin/users')"><i class="pi pi-users"></i> Manage Users</a>
+                <a routerLink="/admin/emails" (click)="adminMenuOpen = false"
+                   *ngIf="menuVisibility.isVisible('admin/emails')"><i class="pi pi-envelope"></i> Email Log</a>
                 <a routerLink="/admin/zoom-links" (click)="adminMenuOpen = false"
                    *ngIf="menuVisibility.isVisible('admin/zoom-links')"><i class="pi pi-video"></i> Manage Zoom Links</a>
                 <a href="javascript:void(0)" (click)="forceRefresh(); adminMenuOpen = false"
