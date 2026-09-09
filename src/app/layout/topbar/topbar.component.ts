@@ -404,6 +404,7 @@ export class TopbarComponent {
     { label: 'Payment Plans', description: 'Manage installment payment plans for future retreats', icon: 'pi-credit-card', route: '/admin/payment-plans', adminOnly: true },
     { label: 'Event RSVPs', description: 'Who\'s RSVP\'d for the breakfast and other events', icon: 'pi-check-square', route: '/admin/rsvps', adminOnly: true },
     { label: 'Meeting Notes', description: 'Committee-internal meeting notes, decisions, and attached documents', icon: 'pi-file-edit', route: '/admin/meeting-notes', adminOnly: true },
+    { label: 'Email Log', description: 'Every outbound email the app has attempted (sent + failed + pending)', icon: 'pi-envelope', route: '/admin/emails', adminOnly: true },
     { label: 'Merchandise', description: 'Official retreat gear and apparel', icon: 'pi-shopping-bag', route: '/merchandise', adminOnly: true },
     { label: 'Payment', description: 'Retreat registration and payment', icon: 'pi-credit-card', route: '/registration' },
     { label: 'Theme Poll', description: 'Vote on retreat theme', icon: 'pi-chart-bar', route: '/theme-poll', adminOnly: true },

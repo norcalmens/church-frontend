@@ -14,6 +14,7 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { TooltipModule } from 'primeng/tooltip';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { PaymentPlanService } from '../../../services/payment-plan.service';
 import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-plan.model';
@@ -24,7 +25,7 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink,
             CardModule, TableModule, ButtonModule, InputTextModule, InputTextareaModule,
             InputNumberModule, DropdownModule, DialogModule, TagModule, ToastModule,
-            ConfirmDialogModule, ProgressBarModule],
+            ConfirmDialogModule, ProgressBarModule, TooltipModule],
   providers: [MessageService, ConfirmationService],
   template: `
     <p-toast></p-toast>
@@ -49,11 +50,15 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
               <th pSortableColumn="planName">Plan <p-sortIcon field="planName"></p-sortIcon></th>
               <th pSortableColumn="retreatLabel">Retreat <p-sortIcon field="retreatLabel"></p-sortIcon></th>
               <th>Payer</th>
+              <th pSortableColumn="overnightAttendees" style="width: 90px; text-align: center;">
+                Beds <p-sortIcon field="overnightAttendees"></p-sortIcon>
+              </th>
               <th pSortableColumn="totalAmount" style="width: 95px">Total <p-sortIcon field="totalAmount"></p-sortIcon></th>
               <th style="width: 95px">Paid</th>
               <th style="width: 95px">Balance</th>
               <th style="width: 160px">Progress</th>
               <th style="width: 110px">Status</th>
+              <th style="min-width: 200px;">Notes</th>
               <th style="width: 220px"></th>
             </tr>
           </ng-template>
@@ -64,6 +69,11 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
               <td>
                 <div>{{ p.payerName }}</div>
                 <small class="muted">{{ p.payerEmail }}</small>
+              </td>
+              <td class="beds-cell">
+                <span class="beds-pill" [class.beds-empty]="!p.overnightAttendees">
+                  <i class="pi pi-home"></i> {{ p.overnightAttendees ?? 0 }}
+                </span>
               </td>
               <td>{{'$'}}{{ p.totalAmount | number:'1.2-2' }}</td>
               <td>{{'$'}}{{ (p.paidAmount || 0) | number:'1.2-2' }}</td>
@@ -77,6 +87,10 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
                     {{ p.recurringStatus === 'active' ? ('$' + (p.recurringAmount | number:'1.2-2') + '/mo') : p.recurringStatus }}
                   </span>
                 </div>
+              </td>
+              <td class="notes-cell" [pTooltip]="p.notes || ''" tooltipStyleClass="plan-notes-tooltip">
+                <span *ngIf="p.notes; else noNotes" class="notes-preview">{{ p.notes }}</span>
+                <ng-template #noNotes><span class="muted">—</span></ng-template>
               </td>
               <td class="actions">
                 <!-- Approve is only visible for plans still in the requested
@@ -108,7 +122,7 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
-            <tr><td colspan="9" style="text-align:center; padding:2rem; color:#999;">No payment plans yet. Click "New Plan" to create one.</td></tr>
+            <tr><td colspan="11" style="text-align:center; padding:2rem; color:#999;">No payment plans yet. Click "New Plan" to create one.</td></tr>
           </ng-template>
         </p-table>
       </p-card>
@@ -261,6 +275,30 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
     }
     .toolbar { margin-bottom: 1rem; }
     .muted { color: #6c757d; font-size: 0.82rem; }
+    /* Overnight beds pill -- small stat, always visible so the capacity
+       impact of each plan is obvious in the list. Grey when 0 (plan has
+       no bed reservation for whatever reason). */
+    .beds-cell { text-align: center; }
+    .beds-pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      background: rgba(232, 168, 50, 0.18);
+      color: var(--retreat-teal-dark);
+      padding: 0.2rem 0.6rem; border-radius: 999px;
+      font-weight: 700; font-size: 0.85rem;
+      i { font-size: 0.85rem; color: var(--retreat-sunset); }
+      &.beds-empty { background: rgba(108, 117, 125, 0.14); color: #6c757d;
+        i { color: #999; }
+      }
+    }
+    .notes-cell {
+      max-width: 260px; color: #495057; font-size: 0.88rem;
+      .notes-preview {
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+        overflow: hidden; text-overflow: ellipsis; white-space: pre-wrap;
+        line-height: 1.35;
+      }
+    }
+    ::ng-deep .plan-notes-tooltip .p-tooltip-text { max-width: 380px; white-space: pre-wrap; }
     .actions { white-space: nowrap;
       /* Flex row keeps buttons aligned even when Approve / Cancel-recurring
          come and go conditionally, and gives every action the same tap

@@ -35,6 +35,7 @@ import { PaymentPlanRequestComponent } from './features/payment-plan/payment-pla
 import { EventRsvpComponent } from './features/event-rsvp/event-rsvp.component';
 import { RsvpsAdminComponent } from './features/admin/rsvps/rsvps-admin.component';
 import { MeetingNotesAdminComponent } from './features/admin/meeting-notes/meeting-notes-admin.component';
+import { EmailsAdminComponent } from './features/admin/emails/emails-admin.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -64,6 +65,7 @@ export const routes: Routes = [
       { path: 'rsvp/:eventKey', component: EventRsvpComponent },
       { path: 'admin/rsvps', component: RsvpsAdminComponent, canActivate: [authGuard, committeeOrAdminGuard] },
       { path: 'admin/meeting-notes', component: MeetingNotesAdminComponent, canActivate: [authGuard, committeeOrAdminGuard] },
+      { path: 'admin/emails', component: EmailsAdminComponent, canActivate: [authGuard, adminGuard] },
       { path: 'theme-poll', component: ThemePollComponent, canActivate: [authGuard, adminGuard] },
       { path: 'payment', redirectTo: 'registration', pathMatch: 'full' },
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, committeeOrAdminGuard] },
