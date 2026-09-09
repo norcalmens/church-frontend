@@ -72,6 +72,38 @@ import { RealtimeService } from '../../services/realtime.service';
         </div>
       </div>
 
+      <!-- Upcoming Event callout: sits between the retreat hero and the
+           "Fellowship / Teaching / Renewal" info cards so anyone landing
+           on the home page sees it before scrolling. Flyer thumbnail on
+           the left, event details + primary "RSVP" + secondary "View
+           Flyer" on the right. Hide the whole block by flipping
+           showUpcomingEvent when the event has passed. -->
+      <section *ngIf="showUpcomingEvent" class="upcoming-event" aria-label="Upcoming event">
+        <!-- Click thumbnail to enlarge (same UX as the retreat flyer above).
+             RSVP + download actions live in the buttons on the right so this
+             thumbnail's job is purely "see the flyer bigger". -->
+        <button type="button" class="event-thumb-btn" (click)="breakfastLightboxOpen = true"
+                aria-label="Enlarge breakfast flyer">
+          <img src="assets/images/breakfast-flyer-oct-2026.jpg" alt="Retreat Info Breakfast Flyer — Saturday, October 3, 2026 at Golden Corral, Concord CA" />
+          <span class="thumb-hint"><i class="pi pi-search-plus"></i> Click to enlarge</span>
+        </button>
+        <div class="event-body">
+          <span class="event-tag">Upcoming Event</span>
+          <h3>Retreat Info Breakfast</h3>
+          <p class="event-meta"><i class="pi pi-calendar"></i> Saturday, October 3, 2026 &middot; 8:00 AM</p>
+          <p class="event-meta"><i class="pi pi-map-marker"></i> Golden Corral #2697 &middot; Concord, CA</p>
+          <p class="event-blurb">Join us for breakfast &mdash; a great chance to meet the retreat team and sign up for 2027.</p>
+          <div class="event-actions">
+            <a routerLink="/rsvp/breakfast-oct-2026">
+              <button pButton label="RSVP for Breakfast" icon="pi pi-check"></button>
+            </a>
+            <a href="assets/breakfast-flyer-oct-2026.pdf" target="_blank" rel="noopener" class="ghost">
+              <button pButton label="View Flyer" icon="pi pi-file-pdf" class="p-button-outlined"></button>
+            </a>
+          </div>
+        </div>
+      </section>
+
       <div class="info-grid">
         <p-card>
           <div class="info-card">
@@ -142,6 +174,16 @@ import { RealtimeService } from '../../services/realtime.service';
       <button type="button" class="lightbox-close" (click)="lightboxOpen = false" aria-label="Close"><i class="pi pi-times"></i></button>
       <img src="assets/images/retreat-flyer-2027.jpg" alt="NorCal Men's Retreat 2027 Flyer" (click)="$event.stopPropagation()" />
       <a class="lightbox-download" href="assets/retreat-flyer.pdf" target="_blank" rel="noopener" (click)="$event.stopPropagation()">
+        <i class="pi pi-download"></i> Download PDF
+      </a>
+    </div>
+
+    <!-- Breakfast flyer lightbox: same treatment as the retreat flyer,
+         separate open-state so the two thumbnails don't conflict. -->
+    <div class="flyer-lightbox" *ngIf="breakfastLightboxOpen" (click)="breakfastLightboxOpen = false">
+      <button type="button" class="lightbox-close" (click)="breakfastLightboxOpen = false" aria-label="Close"><i class="pi pi-times"></i></button>
+      <img src="assets/images/breakfast-flyer-oct-2026.jpg" alt="Retreat Info Breakfast Flyer" (click)="$event.stopPropagation()" />
+      <a class="lightbox-download" href="assets/breakfast-flyer-oct-2026.pdf" target="_blank" rel="noopener" (click)="$event.stopPropagation()">
         <i class="pi pi-download"></i> Download PDF
       </a>
     </div>
@@ -262,6 +304,66 @@ import { RealtimeService } from '../../services/realtime.service';
       background: var(--retreat-gold); border-color: var(--retreat-gold); color: var(--retreat-teal-dark); font-weight: 700;
     }
     ::ng-deep .donate-hero-btn.p-button:hover { background: var(--retreat-sunset); border-color: var(--retreat-sunset); color: #fff; }
+    /* Upcoming Event callout -- flyer thumb on the left, details + CTAs
+       on the right. Stacks vertically on narrow screens. Kept visually
+       distinct from the info cards below (border-left gold accent) so
+       it reads as "actionable event", not "general info". */
+    .upcoming-event {
+      display: flex; gap: 1.5rem; align-items: stretch;
+      background: #fff; border-radius: 14px;
+      border: 1px solid #e6dcc4; border-left: 5px solid var(--retreat-gold);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      padding: 1.25rem; margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    /* Click-to-enlarge thumbnail button. Overlaid "Click to enlarge"
+       hint fades in on hover / keyboard focus so mobile users still
+       see it (via focus) and desktop users get the affordance. */
+    .event-thumb-btn {
+      flex-shrink: 0; position: relative; display: block;
+      padding: 0; border: none; background: transparent; cursor: pointer;
+      line-height: 0; border-radius: 8px; overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: transform 0.15s;
+      img { display: block; width: 200px; height: auto; }
+      &:hover, &:focus-visible { transform: scale(1.02); }
+      &:focus-visible { outline: 3px solid var(--retreat-gold); outline-offset: 2px; }
+    }
+    .thumb-hint {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      background: rgba(26, 58, 74, 0.55);
+      color: var(--retreat-cream); font-weight: 600; font-size: 0.9rem;
+      line-height: 1;
+      opacity: 0; transition: opacity 0.15s;
+      i { font-size: 1.05rem; color: var(--retreat-gold); }
+    }
+    .event-thumb-btn:hover .thumb-hint,
+    .event-thumb-btn:focus-visible .thumb-hint { opacity: 1; }
+    .event-body { flex: 1; display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+    .event-tag {
+      display: inline-block; align-self: flex-start;
+      background: var(--retreat-gold); color: var(--retreat-teal-dark);
+      font-weight: 800; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.2rem 0.65rem; border-radius: 999px;
+    }
+    .event-body h3 { color: var(--retreat-teal-dark); font-size: 1.5rem; font-weight: 700; margin: 0.25rem 0 0.35rem; }
+    .event-meta {
+      color: #495057; margin: 0; font-size: 0.95rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      i { color: var(--retreat-sunset); font-size: 0.9rem; }
+    }
+    .event-blurb { color: #495057; margin: 0.5rem 0 0.85rem; line-height: 1.5; font-size: 0.95rem; }
+    .event-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: auto;
+      a { text-decoration: none; }
+    }
+    @media (max-width: 640px) {
+      .upcoming-event { flex-direction: column; align-items: center; text-align: center; }
+      .event-thumb-btn img { width: 240px; }
+      .event-tag { align-self: center; }
+      .event-actions { justify-content: center; }
+    }
+
     .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
     .info-card {
       text-align: center; padding: 1rem;
@@ -297,6 +399,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   private capacitySub?: Subscription;
 
   lightboxOpen = false;
+  /** Second lightbox for the Retreat Info Breakfast flyer. Separate
+   *  state so opening one doesn't interfere with the other. */
+  breakfastLightboxOpen = false;
   /** Master switch for the flyer thumbnail + download button + lightbox.
    *  Flip to true when the 2027 flyer assets are in place. */
   showFlyer = true;
@@ -304,6 +409,10 @@ export class HomeComponent implements OnInit, OnDestroy {
    *  false = hidden (use during pre-open periods, paired with a "coming
    *  soon" pill via hero-status-soon). */
   showRegisterCta = true;
+  /** Toggle for the "Upcoming Event: Retreat Info Breakfast" callout
+   *  on the home page. Flip to true to bring it back for the next
+   *  event with the same wiring; false hides the card + lightbox trigger. */
+  showUpcomingEvent = false;
 
   /** Live overnight capacity snapshot. Populated on ngOnInit and shown as
    *  the hero counter -- "N of 35 overnight spots filled" or "Overnight
@@ -333,5 +442,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown.escape')
   onEscape(): void {
     this.lightboxOpen = false;
+    this.breakfastLightboxOpen = false;
   }
 }

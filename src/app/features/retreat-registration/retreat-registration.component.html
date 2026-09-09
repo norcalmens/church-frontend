@@ -97,7 +97,7 @@
       <div class="field"><label>Phone *</label><p-inputMask formControlName="phone" mask="(999) 999-9999" placeholder="(555) 123-4567" styleClass="w-full"></p-inputMask></div>
       <div class="field"><label>Address *</label><input type="text" pInputText formControlName="address" class="w-full" placeholder="123 Main St" /></div>
       <div class="field"><label>City *</label><input type="text" pInputText formControlName="city" class="w-full" /></div>
-      <div class="field"><label>State *</label><input type="text" pInputText formControlName="state" class="w-full" maxlength="2" placeholder="CA" /></div>
+      <div class="field"><label>State *</label><input type="text" pInputText formControlName="state" class="w-full" maxlength="2" /></div>
       <div class="field"><label>Zip Code *</label><input type="text" pInputText formControlName="zipCode" class="w-full" /></div>
       <div class="field"><label>Congregation *</label><input type="text" pInputText formControlName="congregation" class="w-full" placeholder="e.g., Community Church of Christ" required /></div>
     </div>
@@ -183,6 +183,19 @@
         <div class="field mt-2" *ngIf="attendeeForm.get('linenOption')?.value === 'individual'" style="max-width: 200px;">
           <label>Number of items</label>
           <p-inputNumber formControlName="linenItemCount" [min]="1" [max]="20" [showButtons]="true" styleClass="w-full"></p-inputNumber>
+        </div>
+      </div>
+
+      <!-- Optional per-attendee emergency contact. Left blank uses the
+           primary registration's emergency contact as a fallback -- useful
+           when a friend/coworker is attending and their emergency contact
+           differs from the registrant's. -->
+      <div class="option-block">
+        <label class="option-label">Emergency Contact <span class="option-optional">(optional &mdash; defaults to primary contact)</span></label>
+        <div class="form-grid">
+          <div class="field"><label>Contact Name</label><input type="text" pInputText formControlName="emergencyName" class="w-full" /></div>
+          <div class="field"><label>Relationship</label><input type="text" pInputText formControlName="emergencyRelationship" class="w-full" /></div>
+          <div class="field"><label>Phone</label><p-inputMask formControlName="emergencyPhone" mask="(999) 999-9999" placeholder="(555) 987-6543" styleClass="w-full"></p-inputMask></div>
         </div>
       </div>
 

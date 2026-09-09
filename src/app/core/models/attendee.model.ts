@@ -22,6 +22,12 @@ export interface Attendee {
 
   speaker?: boolean;
 
+  /** Optional per-attendee emergency contact. When blank the primary
+   *  registration's emergency contact is used as a fallback. */
+  emergencyName?: string;
+  emergencyRelationship?: string;
+  emergencyPhone?: string;
+
   // Hoisted from parent registration (populated by the admin flat-attendees endpoint)
   registrationId?: number;
   congregation?: string;

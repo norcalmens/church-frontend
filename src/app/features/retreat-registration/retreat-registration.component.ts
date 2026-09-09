@@ -163,7 +163,12 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
       daySat: [false],
       linenOption: ['none'],
       linenItemCount: [1],
-      mealOption: ['none']
+      mealOption: ['none'],
+      // Optional per-attendee emergency contact -- falls back to the
+      // primary registration's emergency contact when blank.
+      emergencyName: [''],
+      emergencyRelationship: [''],
+      emergencyPhone: [''],
     });
   }
 
@@ -267,7 +272,10 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
       days: isPartial ? days : undefined,
       linenOption: isPartial ? 'none' : v.linenOption,
       linenItemCount: !isPartial && v.linenOption === 'individual' ? v.linenItemCount : undefined,
-      mealOption: isPartial ? v.mealOption : 'none'
+      mealOption: isPartial ? v.mealOption : 'none',
+      emergencyName: v.emergencyName?.trim() || undefined,
+      emergencyRelationship: v.emergencyRelationship?.trim() || undefined,
+      emergencyPhone: v.emergencyPhone?.trim() || undefined,
     };
 
     this.attendees.push(attendee);
@@ -279,7 +287,10 @@ export class RetreatRegistrationComponent implements AfterViewInit, OnDestroy {
       daySat: false,
       linenOption: 'none',
       linenItemCount: 1,
-      mealOption: 'none'
+      mealOption: 'none',
+      emergencyName: '',
+      emergencyRelationship: '',
+      emergencyPhone: '',
     });
     this.messageService.add({ severity: 'success', summary: 'Added', detail: 'Attendee added successfully' });
   }

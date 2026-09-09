@@ -23,6 +23,12 @@ export interface PaymentPlan {
    *  active = pay link is live; completed = fully paid; canceled = shut off. */
   status?: 'requested' | 'active' | 'completed' | 'canceled' | string;
   notes?: string;
+  /** Which season this plan is for. Active/completed plans in the
+   *  current retreat.active.year count against the overnight bed cap. */
+  retreatYear?: number;
+  /** How many overnight beds this plan reserves (defaults to 1). Only
+   *  counts while the plan is active or completed. */
+  overnightAttendees?: number;
   createdAt?: string;
   updatedAt?: string;
 

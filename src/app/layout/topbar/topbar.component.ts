@@ -7,6 +7,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { MenuVisibilityService } from '../../core/services/menu-visibility.service';
 import { MenuSelectorComponent } from '../../features/admin/menu-selector/menu-selector.component';
 import { SettingsService } from '../../services/settings.service';
+import { AvailabilityService } from '../../services/availability.service';
 
 interface SearchItem {
   label: string;
@@ -33,8 +34,12 @@ interface SearchItem {
       <nav class="topbar-nav">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
            *ngIf="menuVisibility.isVisible('home')">Home</a>
+        <!-- Waitlist link only appears once overnight lodging is full.
+             Until then the primary CTA is Register (via the home hero) --
+             showing a Waitlist link while beds are still available would
+             misdirect people who could just register normally. -->
         <a routerLink="/waitlist" routerLinkActive="active"
-           *ngIf="menuVisibility.isVisible('registration')">Waitlist 2027</a>
+           *ngIf="(availability.isFull$ | async) && menuVisibility.isVisible('registration')">Waitlist 2027</a>
         <a routerLink="/venue" routerLinkActive="active"
            *ngIf="menuVisibility.isVisible('venue')">Venue</a>
         <a routerLink="/directions" routerLinkActive="active"
@@ -368,6 +373,9 @@ export class TopbarComponent {
   @ViewChild('menuSelector') menuSelector!: MenuSelectorComponent;
   authService = inject(AuthService);
   menuVisibility = inject(MenuVisibilityService);
+  /** Shared live-updating overnight availability -- used to gate the
+   *  Waitlist nav link (hidden until beds fill). */
+  availability = inject(AvailabilityService);
   private router = inject(Router);
   private settings = inject(SettingsService);
 
@@ -394,6 +402,8 @@ export class TopbarComponent {
     { label: 'Manage Zoom Links', description: 'Add, edit, or remove Meetings page Zoom links', icon: 'pi-video', route: '/admin/zoom-links', adminOnly: true },
     { label: 'All Donations', description: 'View every donation processed through the site', icon: 'pi-heart', route: '/admin/donations', adminOnly: true },
     { label: 'Payment Plans', description: 'Manage installment payment plans for future retreats', icon: 'pi-credit-card', route: '/admin/payment-plans', adminOnly: true },
+    { label: 'Event RSVPs', description: 'Who\'s RSVP\'d for the breakfast and other events', icon: 'pi-check-square', route: '/admin/rsvps', adminOnly: true },
+    { label: 'Meeting Notes', description: 'Committee-internal meeting notes, decisions, and attached documents', icon: 'pi-file-edit', route: '/admin/meeting-notes', adminOnly: true },
     { label: 'Merchandise', description: 'Official retreat gear and apparel', icon: 'pi-shopping-bag', route: '/merchandise', adminOnly: true },
     { label: 'Payment', description: 'Retreat registration and payment', icon: 'pi-credit-card', route: '/registration' },
     { label: 'Theme Poll', description: 'Vote on retreat theme', icon: 'pi-chart-bar', route: '/theme-poll', adminOnly: true },

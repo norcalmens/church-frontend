@@ -304,13 +304,31 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
       &:active { transform: scale(0.94); }
       .p-button-icon { font-size: 0.95rem; }
     }
-    /* Per-action colors -- muted background so the row doesn't shout,
-       but distinct enough to tell apart in peripheral vision. */
-    ::ng-deep .act-view.p-button        { color: #1a3a4a; &:hover { background: rgba(26,58,74,0.10); } }
-    ::ng-deep .act-mail.p-button        { color: #1565c0; &:hover { background: rgba(21,101,192,0.12); } }
-    ::ng-deep .act-cancel-recurring.p-button { color: #8a4a08; background: rgba(232,168,50,0.14); &:hover { background: rgba(232,168,50,0.28); } }
-    ::ng-deep .act-edit.p-button        { color: #6c757d; &:hover { background: rgba(108,117,125,0.14); } }
-    ::ng-deep .act-delete.p-button      { color: #c0392b; &:hover { background: rgba(192,57,43,0.14); } }
+    /* Per-action colors -- saturated fills (not just tinted text) so
+       every action reads clearly on the light row AND on hover states.
+       View-payments in particular was invisible dark-teal-on-off-white;
+       now a bright cyan card with a white icon, matching how the other
+       action icons pop. */
+    ::ng-deep .act-view.p-button {
+      color: #fff; background: #17a2b8; border: 1px solid #138496;
+      &:hover { background: #138496; color: #fff; }
+    }
+    ::ng-deep .act-mail.p-button {
+      color: #fff; background: #1565c0; border: 1px solid #0f4c96;
+      &:hover { background: #0f4c96; color: #fff; }
+    }
+    ::ng-deep .act-cancel-recurring.p-button {
+      color: #fff; background: var(--retreat-gold); border: 1px solid #b48a2a;
+      &:hover { background: var(--retreat-sunset); color: #fff; }
+    }
+    ::ng-deep .act-edit.p-button {
+      color: #fff; background: #6c757d; border: 1px solid #565e64;
+      &:hover { background: #565e64; color: #fff; }
+    }
+    ::ng-deep .act-delete.p-button {
+      color: #fff; background: #c0392b; border: 1px solid #a03225;
+      &:hover { background: #a03225; color: #fff; }
+    }
     .recurring-line { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.35rem;
       font-size: 0.78rem; color: #2e9e5b; font-weight: 600;
       i { font-size: 0.7rem; }

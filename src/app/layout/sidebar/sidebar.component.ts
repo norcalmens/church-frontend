@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SidebarModule } from 'primeng/sidebar';
 import { AuthService } from '../../core/auth/auth.service';
 import { MenuVisibilityService } from '../../core/services/menu-visibility.service';
+import { AvailabilityService } from '../../services/availability.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -22,8 +23,10 @@ import { MenuVisibilityService } from '../../core/services/menu-visibility.servi
            *ngIf="menuVisibility.isVisible('home')">
           <i class="pi pi-home"></i> Home
         </a>
+        <!-- Waitlist hidden until overnight lodging is full; keeps
+             visitors on the primary Register path until it's needed. -->
         <a routerLink="/waitlist" routerLinkActive="active" (click)="close()"
-           *ngIf="menuVisibility.isVisible('registration')">
+           *ngIf="(availability.isFull$ | async) && menuVisibility.isVisible('registration')">
           <i class="pi pi-calendar-plus"></i> Waitlist 2027
         </a>
         <a routerLink="/venue" routerLinkActive="active" (click)="close()"
@@ -159,6 +162,9 @@ export class SidebarComponent {
   @Output() visibleChange = new EventEmitter<boolean>();
   authService = inject(AuthService);
   menuVisibility = inject(MenuVisibilityService);
+  /** Shared live-updating availability -- gates the mobile Waitlist link
+   *  the same way the top-nav does. */
+  availability = inject(AvailabilityService);
 
   close(): void {
     this.visible = false;

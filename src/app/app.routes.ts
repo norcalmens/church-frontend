@@ -32,6 +32,9 @@ import { FeedbackAdminComponent } from './features/admin/feedback/feedback-admin
 import { PaymentPlansAdminComponent } from './features/admin/payment-plans/payment-plans-admin.component';
 import { PaymentPlanPortalComponent } from './features/payment-plan/payment-plan-portal.component';
 import { PaymentPlanRequestComponent } from './features/payment-plan/payment-plan-request.component';
+import { EventRsvpComponent } from './features/event-rsvp/event-rsvp.component';
+import { RsvpsAdminComponent } from './features/admin/rsvps/rsvps-admin.component';
+import { MeetingNotesAdminComponent } from './features/admin/meeting-notes/meeting-notes-admin.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -58,6 +61,9 @@ export const routes: Routes = [
       { path: 'admin/payment-plans', component: PaymentPlansAdminComponent, canActivate: [authGuard, committeeOrAdminGuard] },
       { path: 'plan/:token', component: PaymentPlanPortalComponent },
       { path: 'request-payment-plan', component: PaymentPlanRequestComponent },
+      { path: 'rsvp/:eventKey', component: EventRsvpComponent },
+      { path: 'admin/rsvps', component: RsvpsAdminComponent, canActivate: [authGuard, committeeOrAdminGuard] },
+      { path: 'admin/meeting-notes', component: MeetingNotesAdminComponent, canActivate: [authGuard, committeeOrAdminGuard] },
       { path: 'theme-poll', component: ThemePollComponent, canActivate: [authGuard, adminGuard] },
       { path: 'payment', redirectTo: 'registration', pathMatch: 'full' },
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, committeeOrAdminGuard] },
