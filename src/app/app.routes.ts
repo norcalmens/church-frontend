@@ -66,7 +66,7 @@ export const routes: Routes = [
       { path: 'admin/rsvps', component: RsvpsAdminComponent, canActivate: [authGuard, committeeOrAdminGuard] },
       { path: 'admin/meeting-notes', component: MeetingNotesAdminComponent, canActivate: [authGuard, committeeOrAdminGuard] },
       { path: 'admin/emails', component: EmailsAdminComponent, canActivate: [authGuard, adminGuard] },
-      { path: 'theme-poll', component: ThemePollComponent, canActivate: [authGuard, adminGuard] },
+      { path: 'theme-poll', component: ThemePollComponent },
       { path: 'payment', redirectTo: 'registration', pathMatch: 'full' },
       { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [authGuard, committeeOrAdminGuard] },
       { path: 'admin/registrations', component: ManageRegistrationsComponent, canActivate: [authGuard, committeeOrAdminGuard] },

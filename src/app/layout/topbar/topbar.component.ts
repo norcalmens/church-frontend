@@ -68,7 +68,7 @@ interface SearchItem {
         <a routerLink="/merchandise" routerLinkActive="active"
            *ngIf="authService.isAdmin() && menuVisibility.isVisible('merchandise')">Merch</a>
         <a routerLink="/theme-poll" routerLinkActive="active"
-           *ngIf="authService.isAdmin() && menuVisibility.isVisible('theme-poll')">Theme Poll</a>
+           *ngIf="menuVisibility.isVisible('theme-poll')">Theme Poll</a>
         <div class="admin-dropdown" *ngIf="authService.canViewAdmin() && menuVisibility.isVisible('admin/dashboard')"
              (mouseenter)="adminMenuOpen = true" (mouseleave)="adminMenuOpen = false">
           <a routerLink="/admin/dashboard" routerLinkActive="active" class="admin-nav-link">
@@ -413,7 +413,7 @@ export class TopbarComponent {
     { label: 'Email Log', description: 'Every outbound email the app has attempted (sent + failed + pending)', icon: 'pi-envelope', route: '/admin/emails', adminOnly: true },
     { label: 'Merchandise', description: 'Official retreat gear and apparel', icon: 'pi-shopping-bag', route: '/merchandise', adminOnly: true },
     { label: 'Payment', description: 'Retreat registration and payment', icon: 'pi-credit-card', route: '/registration' },
-    { label: 'Theme Poll', description: 'Vote on retreat theme', icon: 'pi-chart-bar', route: '/theme-poll', adminOnly: true },
+    { label: 'Theme Poll', description: 'Vote on retreat theme', icon: 'pi-chart-bar', route: '/theme-poll' },
     { label: 'Admin Dashboard', description: 'View registrations and statistics', icon: 'pi-chart-line', route: '/admin/dashboard', adminOnly: true },
     { label: 'Manage Registrations', description: 'View and manage all registrations', icon: 'pi-users', route: '/admin/registrations', adminOnly: true },
     { label: 'All Attendees', description: 'Flat list of every individual attendee with congregation + speaker toggle', icon: 'pi-users', route: '/admin/attendees', adminOnly: true },

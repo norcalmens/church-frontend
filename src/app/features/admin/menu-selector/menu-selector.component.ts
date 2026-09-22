@@ -26,7 +26,7 @@ export const MENU_ITEMS: MenuItem[] = [
   { key: 'donations',            label: 'Donate',             icon: 'pi-heart',         adminOnly: false },
   // Admin-only top-level + admin dropdown
   { key: 'merchandise',          label: 'Merch',              icon: 'pi-shopping-bag',  adminOnly: true  },
-  { key: 'theme-poll',           label: 'Theme Poll',         icon: 'pi-chart-bar',     adminOnly: true  },
+  { key: 'theme-poll',           label: 'Theme Poll',         icon: 'pi-chart-bar',     adminOnly: false },
   { key: 'admin/dashboard',      label: 'Dashboard',          icon: 'pi-chart-line',    adminOnly: true  },
   { key: 'admin/registrations',  label: 'All Registrations',  icon: 'pi-list',          adminOnly: true  },
   { key: 'admin/attendees',      label: 'All Attendees',      icon: 'pi-users',         adminOnly: true  },
