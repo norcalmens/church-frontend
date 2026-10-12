@@ -17,6 +17,14 @@ import { RealtimeService } from '../../services/realtime.service';
         <div class="hero-content">
           <div class="hero-text">
             <h1>NorCal Men's Retreat</h1>
+            <!-- 2027 theme tagline. Replaces 2026's "Standing in the Gap"
+                 (Ezekiel 22:30); scripture here anchors Forged By Fire to
+                 the refiner's-fire motif in 1 Peter 1:7. -->
+            <p class="hero-theme">
+              <span class="theme-flame"><i class="pi pi-sun"></i></span>
+              <span class="theme-text">Forged By Fire</span>
+              <span class="theme-scripture">(1 Peter 1:7)</span>
+            </p>
             <p class="hero-details"><i class="pi pi-calendar"></i> April 15&ndash;17, 2027</p>
             <p class="hero-details"><i class="pi pi-map-marker"></i> Alliance Redwoods, Occidental, CA</p>
             <p class="hero-details"><i class="pi pi-dollar"></i> Full retreat $280 &middot; Single day $90</p>
@@ -203,6 +211,33 @@ import { RealtimeService } from '../../services/realtime.service';
       h1 { font-size: 2.8rem; font-weight: 800; margin: 0 0 0.5rem 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
     }
     .hero-subtitle { font-size: 1.3rem; font-style: italic; margin: 0 0 1.5rem 0; opacity: 0.9; }
+    /* 2027 theme tagline. Flame-gold text with a soft text-shadow glow so
+       it reads as the retreat identity, not a decorative chip. */
+    .hero-theme {
+      display: inline-flex; align-items: baseline; gap: 0.65rem;
+      margin: 0.25rem 0 1.25rem 0; padding: 0;
+      font-weight: 800; letter-spacing: 0.02em;
+      .theme-flame { font-size: 1.1rem;
+        i { color: var(--retreat-gold); filter: drop-shadow(0 0 6px rgba(255, 140, 46, 0.6)); }
+      }
+      .theme-text {
+        font-size: 1.9rem; line-height: 1.1;
+        color: #ffd48a;
+        text-shadow:
+          0 0 14px rgba(255, 140, 46, 0.65),
+          0 2px 4px rgba(0,0,0,0.4);
+      }
+      .theme-scripture {
+        font-size: 0.95rem; font-weight: 500; font-style: italic;
+        color: var(--retreat-cream); opacity: 0.75;
+      }
+    }
+    @media (max-width: 640px) {
+      .hero-theme { flex-wrap: wrap; row-gap: 0.1rem;
+        .theme-text { font-size: 1.5rem; }
+        .theme-scripture { font-size: 0.85rem; }
+      }
+    }
     .hero-details { font-size: 1.1rem; margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem; i { color: var(--retreat-gold); } }
     .hero-details-sub { font-size: 0.95rem; opacity: 0.85; }
     /* "Registration is open" status pill. Emerald tint so it reads as a

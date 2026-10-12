@@ -65,6 +65,11 @@ export const AVAILABLE_THEMES: ThemeDefinition[] = [
     id: 'harvest', name: 'Harvest', description: 'Rust + amber + warm cream. Late-autumn, wood-stove warm.',
     swatch: { primary: '#5a2f1f', accent: '#e8a832', cream: '#f0e4cf' },
   },
+  {
+    id: 'forged', name: 'Forged By Fire', description: 'Forge-black + flame orange + molten copper. The 2027 retreat theme.',
+    swatch: { primary: '#0f0806', accent: '#ff7b1a', cream: '#f5e5d0' },
+    defaultYear: 2027,
+  },
 ];
 
 const DEFAULT_THEME = 'sunrise';

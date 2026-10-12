@@ -44,7 +44,7 @@ interface Day {
       <div class="hero-section">
         <i class="pi pi-calendar"></i>
         <h1>Retreat Itinerary</h1>
-        <p class="subtitle">NorCal Men's Retreat 2026 &mdash; <em>Standing in the Gap</em> <span class="scripture">(Ezekiel 22:30)</span></p>
+        <p class="subtitle">NorCal Men's Retreat 2027 &mdash; <em>Forged By Fire</em> <span class="scripture">(1 Peter 1:7)</span></p>
         <p class="tagline">A weekend of reset, renewal, and brotherhood. <strong>Come ready. Leave changed.</strong></p>
         <p class="dates"><i class="pi pi-calendar"></i> June 11&ndash;13, 2026</p>
         <p class="location"><i class="pi pi-map-marker"></i> Alliance Redwoods Conference Grounds, Occidental, CA</p>

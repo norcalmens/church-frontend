@@ -150,11 +150,25 @@
   --retreat-cream-soft: #f8efd9;
 }
 
+/* Forged By Fire — the 2027 retreat theme. Forge-black primary with
+   molten-copper mid tones, a bright flame-orange accent that pops against
+   the dark surfaces, and a warm smoke-cream for body text backgrounds. */
+.theme-forged {
+  --retreat-teal-dark: #0f0806;
+  --retreat-teal: #3a1810;
+  --retreat-teal-light: #1f0c08;
+  --retreat-gold: #ff7b1a;
+  --retreat-sunset: #e63946;
+  --retreat-copper: #c4541f;
+  --retreat-cream: #f5e5d0;
+  --retreat-cream-soft: #fcf2df;
+}
+
 /* Per-theme gradient overrides. The default Sunrise gradient lives on :root
    above; the rest re-derive from each theme's own palette so the page-header
    block on admin tables (and the home hero) rebrand cleanly. */
 .theme-forest, .theme-pacific, .theme-vintage, .theme-slate, .theme-sage,
-.theme-sunset, .theme-midnight, .theme-cardinal, .theme-indigo, .theme-harvest {
+.theme-sunset, .theme-midnight, .theme-cardinal, .theme-indigo, .theme-harvest, .theme-forged {
   --retreat-grad-nav: linear-gradient(135deg, var(--retreat-teal-dark) 0%, var(--retreat-teal-light) 100%);
   --retreat-grad-page-header: linear-gradient(180deg, var(--retreat-teal-dark) 0%, var(--retreat-teal) 30%, var(--retreat-copper) 70%, var(--retreat-sunset) 100%);
 }
