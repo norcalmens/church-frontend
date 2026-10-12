@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { Subscription } from 'rxjs';
 import { RegistrationService, Availability } from '../../services/registration.service';
 import { RealtimeService } from '../../services/realtime.service';
+import { RetreatThemeService } from '../../services/retreat-theme.service';
 
 @Component({
   selector: 'app-home',
@@ -17,13 +18,14 @@ import { RealtimeService } from '../../services/realtime.service';
         <div class="hero-content">
           <div class="hero-text">
             <h1>NorCal Men's Retreat</h1>
-            <!-- 2027 theme tagline. Replaces 2026's "Standing in the Gap"
-                 (Ezekiel 22:30); scripture here anchors Forged By Fire to
-                 the refiner's-fire motif in 1 Peter 1:7. -->
-            <p class="hero-theme">
+            <!-- Retreat event theme tagline. Content is loaded from
+                 /api/settings/public/retreat-theme (via RetreatThemeService)
+                 so admins can update the yearly motif in /admin/settings
+                 and every page that shows it updates in lockstep. -->
+            <p class="hero-theme" *ngIf="(retreatTheme.theme$ | async) as rt">
               <span class="theme-flame"><i class="pi pi-sun"></i></span>
-              <span class="theme-text">Forged By Fire</span>
-              <span class="theme-scripture">(1 Peter 1:7)</span>
+              <span class="theme-text">{{ rt.name }}</span>
+              <span class="theme-scripture" *ngIf="rt.scripture">({{ rt.scripture }})</span>
             </p>
             <p class="hero-details"><i class="pi pi-calendar"></i> April 15&ndash;17, 2027</p>
             <p class="hero-details"><i class="pi pi-map-marker"></i> Alliance Redwoods, Occidental, CA</p>
@@ -431,6 +433,7 @@ import { RealtimeService } from '../../services/realtime.service';
 export class HomeComponent implements OnInit, OnDestroy {
   private registrationService = inject(RegistrationService);
   private realtime = inject(RealtimeService);
+  retreatTheme = inject(RetreatThemeService);
   private capacitySub?: Subscription;
 
   lightboxOpen = false;

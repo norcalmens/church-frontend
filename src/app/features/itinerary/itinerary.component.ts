@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { RetreatThemeService } from '../../services/retreat-theme.service';
 
 interface TimeSlot {
   time: string;
@@ -44,9 +45,15 @@ interface Day {
       <div class="hero-section">
         <i class="pi pi-calendar"></i>
         <h1>Retreat Itinerary</h1>
-        <p class="subtitle">NorCal Men's Retreat 2027 &mdash; <em>Forged By Fire</em> <span class="scripture">(1 Peter 1:7)</span></p>
+        <!-- Subtitle is composed from RetreatThemeService so admins only
+             change the yearly motif in one place (/admin/settings → Retreat
+             theme) and it propagates to every page that renders it. -->
+        <p class="subtitle" *ngIf="(retreatTheme.theme$ | async) as rt">
+          NorCal Men's Retreat 2027 &mdash; <em>{{ rt.name }}</em>
+          <span class="scripture" *ngIf="rt.scripture">({{ rt.scripture }})</span>
+        </p>
         <p class="tagline">A weekend of reset, renewal, and brotherhood. <strong>Come ready. Leave changed.</strong></p>
-        <p class="dates"><i class="pi pi-calendar"></i> June 11&ndash;13, 2026</p>
+        <p class="dates"><i class="pi pi-calendar"></i> April 15&ndash;17, 2027</p>
         <p class="location"><i class="pi pi-map-marker"></i> Alliance Redwoods Conference Grounds, Occidental, CA</p>
       </div>
 
@@ -245,6 +252,8 @@ interface Day {
   `]
 })
 export class ItineraryComponent {
+  retreatTheme = inject(RetreatThemeService);
+
   speakers = [
     { name: 'Mike Hancock',     church: 'Opening Night' },
     { name: 'Winters Jr.',      church: 'Friday Morning' },

@@ -8,6 +8,7 @@ import { MaintenanceBannerComponent } from './maintenance-banner/maintenance-ban
 import { AdminActivityToastComponent } from './admin-activity-toast/admin-activity-toast.component';
 import { BackendStatusService } from '../core/services/backend-status.service';
 import { ThemeService } from '../services/theme.service';
+import { RetreatThemeService } from '../services/retreat-theme.service';
 
 @Component({
   selector: 'app-layout',
@@ -63,10 +64,15 @@ export class LayoutComponent implements OnInit {
   sidebarVisible = false;
   status = inject(BackendStatusService);
   private themeService = inject(ThemeService);
+  private retreatTheme = inject(RetreatThemeService);
 
   ngOnInit(): void {
     // Resolve the admin's saved theme before the visitor sees too much.
     // Failure is silent -- the default theme stays applied via :root.
     this.themeService.loadActiveTheme().subscribe({ error: () => {} });
+    // Same for the retreat event theme (name + scripture) so the home hero
+    // + itinerary subtitle render the current year's motif without a flash
+    // of the hardcoded default.
+    this.retreatTheme.load().subscribe({ error: () => {} });
   }
 }

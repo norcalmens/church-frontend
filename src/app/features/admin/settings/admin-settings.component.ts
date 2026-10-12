@@ -11,6 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SettingsService, SocialLinks } from '../../../services/settings.service';
 import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
+import { RetreatThemeService } from '../../../services/retreat-theme.service';
 
 @Component({
   selector: 'app-admin-settings',
@@ -64,6 +65,49 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
         <p class="hint" *ngIf="activeYear !== originalYear">
           <i class="pi pi-info-circle"></i>
           Unsaved &mdash; previous value: <strong>{{ originalYear }}</strong>. Saving does not delete old rows; they keep their original year tag.
+        </p>
+
+        <hr class="setting-divider" />
+
+        <!-- Retreat event theme — single source of truth for the yearly
+             motif (name + scripture). Home hero + itinerary subtitle both
+             read from this, so one save propagates everywhere. -->
+        <div class="setting-row setting-row-stacked">
+          <div class="setting-label">
+            <strong>Retreat theme</strong>
+            <p>
+              The yearly motif shown under the retreat name on the home page and above the itinerary (currently
+              <em>{{ originalThemeName || 'Forged By Fire' }}</em>
+              <span *ngIf="originalThemeScripture">({{ originalThemeScripture }})</span>). Change it when a new theme is picked for next year &mdash; both pages update immediately for every visitor.
+            </p>
+          </div>
+          <div class="setting-control setting-control-form">
+            <div class="form-field">
+              <label for="themeName">Theme name</label>
+              <input id="themeName" pInputText [(ngModel)]="themeName" maxlength="80" placeholder="e.g. Forged By Fire" />
+            </div>
+            <div class="form-field">
+              <label for="themeScripture">Scripture reference (optional)</label>
+              <input id="themeScripture" pInputText [(ngModel)]="themeScripture" maxlength="60" placeholder="e.g. 1 Peter 1:7" />
+            </div>
+            <button pButton label="Save Theme" icon="pi pi-check"
+                    (click)="saveRetreatTheme()"
+                    [disabled]="savingRetreatTheme || (themeName === originalThemeName && themeScripture === originalThemeScripture) || !themeName.trim()"
+                    [loading]="savingRetreatTheme"></button>
+          </div>
+        </div>
+        <p class="hint" *ngIf="themeName !== originalThemeName || themeScripture !== originalThemeScripture">
+          <i class="pi pi-info-circle"></i>
+          Unsaved &mdash; previous: <strong>{{ originalThemeName || '(unset)' }}</strong>{{ originalThemeScripture ? ' (' + originalThemeScripture + ')' : '' }}
+        </p>
+        <p class="hint hint-note">
+          <i class="pi pi-image"></i>
+          <span>
+            This updates the <strong>text</strong> everywhere the theme appears. The
+            <strong>flyer image</strong> is a static asset &mdash; regenerate it from
+            <code>docs/add_theme_to_2027_flyer.py</code> (edit the <code>label</code>
+            variable) and redeploy the frontend when the new theme image is ready.
+          </span>
         </p>
       </p-card>
 
@@ -184,6 +228,16 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
       .p-card-content { padding: 0; }
     }
     .setting-row { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
+    .setting-row-stacked { align-items: flex-start; }
+    .setting-control-form { display: flex; flex-direction: column; gap: 0.6rem; min-width: 260px; }
+    .form-field { display: flex; flex-direction: column; gap: 0.25rem;
+      label { font-size: 0.85rem; color: #555; font-weight: 600; }
+      input { padding: 0.5rem 0.6rem; border: 1px solid #cfd4da; border-radius: 6px; font-size: 0.95rem; }
+    }
+    .hint-note { color: #334; background: #eef4fa; border-left-color: #4a7bb0;
+      display: flex; align-items: flex-start; gap: 0.4rem;
+      code { background: #e3eaf2; padding: 0.08rem 0.3rem; border-radius: 4px; font-size: 0.85em; }
+    }
     .setting-label { flex: 1; min-width: 250px;
       strong { color: var(--retreat-teal-dark); font-size: 1.05rem; }
       p { color: #495057; margin: 0.35rem 0 0; line-height: 1.5; font-size: 0.92rem; }
@@ -300,6 +354,7 @@ import { ThemeService, ThemeDefinition } from '../../../services/theme.service';
 export class AdminSettingsComponent implements OnInit {
   private settingsService = inject(SettingsService);
   themeService = inject(ThemeService);
+  private retreatTheme = inject(RetreatThemeService);
   private messageService = inject(MessageService);
 
   capacity = 35;
@@ -312,6 +367,14 @@ export class AdminSettingsComponent implements OnInit {
   activeYear = 2027;
   originalYear = 2027;
   savingYear = false;
+
+  // Retreat event theme state. Loaded via RetreatThemeService at init so the
+  // form shows what the public home/itinerary are currently rendering.
+  themeName = '';
+  themeScripture = '';
+  originalThemeName = '';
+  originalThemeScripture = '';
+  savingRetreatTheme = false;
 
   // Theme picker state. originalTheme = persisted choice; preview lives on
   // ThemeService.theme$ while the admin clicks swatches. Save commits the
@@ -362,6 +425,14 @@ export class AdminSettingsComponent implements OnInit {
     // Layout already kicked loadActiveTheme on app boot, so the BehaviorSubject
     // already has the persisted value. Snapshot it here as the "original".
     this.originalTheme = this.themeService.currentTheme;
+    // Retreat event theme — same pattern: layout.component already dispatched
+    // a load(); grab the current cached values to seed the form fields and
+    // the "unsaved — previous:" hint.
+    const rt = this.retreatTheme.current;
+    this.themeName = rt.name;
+    this.themeScripture = rt.scripture;
+    this.originalThemeName = rt.name;
+    this.originalThemeScripture = rt.scripture;
     this.settingsService.loadSocialLinks().subscribe({
       next: (links) => {
         this.social = { ...links };
@@ -402,6 +473,32 @@ export class AdminSettingsComponent implements OnInit {
       error: (e) => {
         this.savingYear = false;
         const msg = e?.error?.message || 'Failed to save active retreat year';
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
+      }
+    });
+  }
+
+  saveRetreatTheme(): void {
+    if (this.savingRetreatTheme) return;
+    const name = this.themeName.trim();
+    const scripture = this.themeScripture.trim();
+    if (!name) return;
+    this.savingRetreatTheme = true;
+    this.retreatTheme.save({ name, scripture }).subscribe({
+      next: (saved) => {
+        this.savingRetreatTheme = false;
+        this.originalThemeName = saved.name;
+        this.originalThemeScripture = saved.scripture;
+        this.themeName = saved.name;
+        this.themeScripture = saved.scripture;
+        this.messageService.add({
+          severity: 'success', summary: 'Saved',
+          detail: `Retreat theme set to "${saved.name}"${saved.scripture ? ' (' + saved.scripture + ')' : ''}. Home + itinerary updated for every visitor.`
+        });
+      },
+      error: (e) => {
+        this.savingRetreatTheme = false;
+        const msg = e?.error?.message || 'Failed to save retreat theme';
         this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
       }
     });
