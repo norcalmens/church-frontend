@@ -26,6 +26,12 @@ export class PaymentPlanService {
   resendInvite(planId: number): Observable<void> {
     return this.http.post<void>(`/api/payment-plans/${planId}/resend-invite`, {});
   }
+  /** Pulls paid invoices from Stripe and records any missing payments. Returns
+   *  the number of payments recorded. Also lazy-links the Stripe subscription
+   *  when the plan was never linked via the usual checkout webhook. */
+  syncStripe(planId: number): Observable<{ recorded: number }> {
+    return this.http.post<{ recorded: number }>(`/api/payment-plans/${planId}/sync-stripe`, {});
+  }
   recordPayment(planId: number, payment: PaymentPlanPayment): Observable<PaymentPlanPayment> {
     return this.http.post<PaymentPlanPayment>(`/api/payment-plans/${planId}/payments`, payment);
   }

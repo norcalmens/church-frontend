@@ -111,6 +111,8 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
                         (click)="openDetail(p)" pTooltip="View payments"></button>
                 <button pButton icon="pi pi-envelope" class="p-button-text p-button-sm act-icon act-mail"
                         (click)="resendInvite(p)" pTooltip="Email the pay link to the payer"></button>
+                <button pButton icon="pi pi-sync" class="p-button-text p-button-sm act-icon act-sync"
+                        (click)="syncStripe(p)" pTooltip="Pull missing Stripe payments onto this plan"></button>
                 <button *ngIf="p.recurringStatus === 'active'" pButton icon="pi pi-ban"
                         class="p-button-text p-button-sm act-icon act-cancel-recurring"
                         (click)="confirmCancelRecurring(p)" pTooltip="Cancel monthly auto-pay"></button>
@@ -355,6 +357,10 @@ import { PaymentPlan, PaymentPlanPayment } from '../../../core/models/payment-pl
       color: #fff; background: #1565c0; border: 1px solid #0f4c96;
       &:hover { background: #0f4c96; color: #fff; }
     }
+    ::ng-deep .act-sync.p-button {
+      color: #fff; background: #635bff; border: 1px solid #4f48d4;
+      &:hover { background: #4f48d4; color: #fff; }
+    }
     ::ng-deep .act-cancel-recurring.p-button {
       color: #fff; background: var(--retreat-gold); border: 1px solid #b48a2a;
       &:hover { background: var(--retreat-sunset); color: #fff; }
@@ -519,6 +525,22 @@ export class PaymentPlansAdminComponent implements OnInit {
     this.svc.resendInvite(p.id).subscribe({
       next: () => this.toast.add({ severity: 'success', summary: 'Email sent', detail: `Invite re-sent to ${p.payerEmail}` }),
       error: (e) => this.toast.add({ severity: 'error', summary: 'Error', detail: e?.error?.message || 'Could not send invite' })
+    });
+  }
+
+  syncStripe(p: PaymentPlan): void {
+    if (p.id == null) return;
+    this.svc.syncStripe(p.id).subscribe({
+      next: (res) => {
+        const n = res?.recorded ?? 0;
+        this.toast.add({
+          severity: n > 0 ? 'success' : 'info',
+          summary: n > 0 ? 'Payments synced' : 'Already up to date',
+          detail: n > 0 ? `Recorded ${n} missing payment${n === 1 ? '' : 's'} from Stripe` : 'No new Stripe payments to record'
+        });
+        if (n > 0) this.load();
+      },
+      error: (e) => this.toast.add({ severity: 'error', summary: 'Stripe sync failed', detail: e?.error?.message || 'Could not sync from Stripe' })
     });
   }
 
