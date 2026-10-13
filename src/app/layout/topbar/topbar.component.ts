@@ -107,6 +107,8 @@ interface SearchItem {
                    *ngIf="menuVisibility.isVisible('admin/users')"><i class="pi pi-users"></i> Manage Users</a>
                 <a routerLink="/admin/emails" (click)="adminMenuOpen = false"
                    *ngIf="menuVisibility.isVisible('admin/emails')"><i class="pi pi-envelope"></i> Email Log</a>
+                <a routerLink="/admin/speakers" (click)="adminMenuOpen = false"
+                   *ngIf="menuVisibility.isVisible('admin/speakers')"><i class="pi pi-megaphone"></i> Prospective Speakers</a>
                 <a routerLink="/admin/zoom-links" (click)="adminMenuOpen = false"
                    *ngIf="menuVisibility.isVisible('admin/zoom-links')"><i class="pi pi-video"></i> Manage Zoom Links</a>
                 <a href="javascript:void(0)" (click)="forceRefresh(); adminMenuOpen = false"
@@ -411,6 +413,7 @@ export class TopbarComponent {
     { label: 'Event RSVPs', description: 'Who\'s RSVP\'d for the breakfast and other events', icon: 'pi-check-square', route: '/admin/rsvps', adminOnly: true },
     { label: 'Meeting Notes', description: 'Committee-internal meeting notes, decisions, and attached documents', icon: 'pi-file-edit', route: '/admin/meeting-notes', adminOnly: true },
     { label: 'Email Log', description: 'Every outbound email the app has attempted (sent + failed + pending)', icon: 'pi-envelope', route: '/admin/emails', adminOnly: true },
+    { label: 'Prospective Speakers', description: 'Contact info + outreach status for potential retreat speakers', icon: 'pi-megaphone', route: '/admin/speakers', adminOnly: true },
     { label: 'Merchandise', description: 'Official retreat gear and apparel', icon: 'pi-shopping-bag', route: '/merchandise', adminOnly: true },
     { label: 'Payment', description: 'Retreat registration and payment', icon: 'pi-credit-card', route: '/registration' },
     { label: 'Theme Poll', description: 'Vote on retreat theme', icon: 'pi-chart-bar', route: '/theme-poll' },

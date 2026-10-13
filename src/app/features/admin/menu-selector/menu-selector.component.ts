@@ -38,6 +38,7 @@ export const MENU_ITEMS: MenuItem[] = [
   { key: 'admin/payment-plans',  label: 'Payment Plans',      icon: 'pi-credit-card',   adminOnly: true  },
   { key: 'admin/users',          label: 'Manage Users',       icon: 'pi-users',         adminOnly: true  },
   { key: 'admin/zoom-links',     label: 'Manage Zoom Links',  icon: 'pi-video',         adminOnly: true  },
+  { key: 'admin/speakers',       label: 'Prospective Speakers', icon: 'pi-megaphone',   adminOnly: true  },
 ];
 
 interface MenuCheckboxItem extends MenuItem {
