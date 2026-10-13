@@ -34,4 +34,16 @@ export interface Registration {
   positionLast?: number;
   totalAttendees?: number;
   capacity?: number;
+  /** Where this row originated — "registration" (default/absent) or
+   *  "payment_plan" when the admin All Registrations view merged in a
+   *  plan payer. The row isn't editable like a real registration; the
+   *  table shows a badge + a link through to the plan. */
+  source?: 'registration' | 'payment_plan';
+  /** When source==="payment_plan", the originating PaymentPlan id so
+   *  the UI can link to /admin/payment-plans and highlight that row. */
+  planId?: number;
+  /** Count of attendees — populated by the backend for both sources. For
+   *  plan rows this comes from PaymentPlan.overnightAttendees since
+   *  plans don't have a granular attendee list. */
+  attendeeCount?: number;
 }

@@ -71,13 +71,24 @@ import { Attendee } from '../../../core/models/attendee.model';
           </ng-template>
           <ng-template pTemplate="body" let-reg>
             <tr>
-              <td><p-tableCheckbox *ngIf="auth.canEdit()" [value]="reg"></p-tableCheckbox></td>
-              <td>{{ reg.firstName | titlecase }} {{ reg.lastName | titlecase }}</td>
+              <td><p-tableCheckbox *ngIf="auth.canEdit() && reg.source !== 'payment_plan'" [value]="reg"></p-tableCheckbox></td>
+              <td>
+                {{ reg.firstName | titlecase }} {{ reg.lastName | titlecase }}
+                <!-- Payment-plan rows merge in from /api/payment-plans. Badge
+                     tells the admin this isn't a traditional registration
+                     and attendee-level fields won't be populated. -->
+                <span *ngIf="reg.source === 'payment_plan'" class="src-badge" title="Attending via payment plan">
+                  <i class="pi pi-credit-card"></i> Payment Plan
+                </span>
+              </td>
               <td>{{ reg.email }}</td>
               <td>{{ reg.phone }}</td>
               <td>{{ reg.congregation || '—' }}</td>
               <td style="text-align: center;">
-                <button type="button" class="speaker-toggle" [class.is-speaker]="reg.speaker"
+                <!-- Speaker toggle is a registration-level flag; plan rows
+                     don't have it. Show a dash for plan rows. -->
+                <span *ngIf="reg.source === 'payment_plan'" class="muted">—</span>
+                <button *ngIf="reg.source !== 'payment_plan'" type="button" class="speaker-toggle" [class.is-speaker]="reg.speaker"
                         (click)="toggleSpeaker(reg)"
                         [attr.aria-label]="reg.speaker ? 'Unmark as speaker' : 'Mark as speaker'"
                         [title]="reg.speaker ? 'Speaker — click to remove' : 'Click to mark as speaker'">
@@ -85,33 +96,50 @@ import { Attendee } from '../../../core/models/attendee.model';
                 </button>
               </td>
               <td class="attendees-cell">
-                <div *ngIf="reg.attendees?.length; else noAttendees" class="attendee-list">
-                  <span class="attendee-count">{{ reg.attendees!.length }}</span>
-                  <ul>
-                    <li *ngFor="let a of reg.attendees">
-                      <button type="button" class="attendee-speaker-toggle" [class.is-speaker]="a.speaker"
-                              (click)="toggleAttendeeSpeaker(a)"
-                              [title]="a.speaker ? 'Speaker — click to remove' : 'Click to mark as speaker'">
-                        <i class="pi" [class.pi-star-fill]="a.speaker" [class.pi-star]="!a.speaker"></i>
-                      </button>
-                      <span class="attendee-name">{{ a.firstName | titlecase }} {{ a.lastName | titlecase }}</span>
-                      <span class="attendee-age" *ngIf="a.age">({{ a.age }})</span>
-                      <button type="button" class="attendee-edit-btn"
-                              (click)="openAttendeeEdit(a)"
-                              title="Edit name / age">
-                        <i class="pi pi-pencil"></i>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-                <ng-template #noAttendees><span class="muted">none</span></ng-template>
+                <!-- Plan rows don't carry a granular attendee list; show the
+                     overnight count the payer committed to on the plan. -->
+                <ng-container *ngIf="reg.source === 'payment_plan'; else regAttendees">
+                  <span class="attendee-count plan-count">
+                    <i class="pi pi-home"></i> {{ reg.attendeeCount || 1 }}
+                    overnight {{ (reg.attendeeCount || 1) === 1 ? 'bed' : 'beds' }}
+                  </span>
+                </ng-container>
+                <ng-template #regAttendees>
+                  <div *ngIf="reg.attendees?.length; else noAttendees" class="attendee-list">
+                    <span class="attendee-count">{{ reg.attendees!.length }}</span>
+                    <ul>
+                      <li *ngFor="let a of reg.attendees">
+                        <button type="button" class="attendee-speaker-toggle" [class.is-speaker]="a.speaker"
+                                (click)="toggleAttendeeSpeaker(a)"
+                                [title]="a.speaker ? 'Speaker — click to remove' : 'Click to mark as speaker'">
+                          <i class="pi" [class.pi-star-fill]="a.speaker" [class.pi-star]="!a.speaker"></i>
+                        </button>
+                        <span class="attendee-name">{{ a.firstName | titlecase }} {{ a.lastName | titlecase }}</span>
+                        <span class="attendee-age" *ngIf="a.age">({{ a.age }})</span>
+                        <button type="button" class="attendee-edit-btn"
+                                (click)="openAttendeeEdit(a)"
+                                title="Edit name / age">
+                          <i class="pi pi-pencil"></i>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                  <ng-template #noAttendees><span class="muted">none</span></ng-template>
+                </ng-template>
               </td>
               <td>\${{ reg.totalAmount }}</td>
               <td><p-tag [value]="reg.paymentStatus || 'pending'" [severity]="getStatusSeverity(reg.paymentStatus)"></p-tag></td>
               <td>{{ reg.registeredAt | date:'short' }}</td>
               <td class="year-cell">{{ reg.retreatYear || '—' }}</td>
               <td class="row-actions">
-                <ng-container *ngIf="auth.canEdit()">
+                <!-- Plan rows: edit/delete happens on /admin/payment-plans
+                     (the plan is the source of truth). Link through to it
+                     instead of exposing the registration CRUD here. -->
+                <a *ngIf="reg.source === 'payment_plan'" routerLink="/admin/payment-plans"
+                   class="plan-link" title="Manage this payment plan">
+                  <i class="pi pi-external-link"></i>
+                </a>
+                <ng-container *ngIf="reg.source !== 'payment_plan' && auth.canEdit()">
                   <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
                           pTooltip="Edit registration" tooltipPosition="left"
                           (click)="openRegEdit(reg)"></button>
@@ -256,6 +284,34 @@ import { Attendee } from '../../../core/models/attendee.model';
     }
     .attendee-list li:hover .attendee-edit-btn { opacity: 1; }
     .row-actions { white-space: nowrap; }
+    /* Payment-plan badge next to the payer name — purple to echo the sync
+       action color on /admin/payment-plans, so it's visually associated
+       with that page. */
+    .src-badge {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      margin-left: 0.5rem; padding: 0.08rem 0.5rem;
+      background: #efeaff; color: #4f48d4; border: 1px solid #d4ccff;
+      border-radius: 999px; font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.03em;
+      i { font-size: 0.7rem; }
+    }
+    /* Plan row's attendee cell: single pill showing the overnight bed count
+       (plans don't have a per-attendee list to render). */
+    .attendees-cell .plan-count {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: #fef3c7; color: #7a5a00; border: 1px solid #fde68a;
+      padding: 0.2rem 0.6rem; border-radius: 999px;
+      font-size: 0.82rem; font-weight: 600;
+      i { font-size: 0.75rem; }
+    }
+    /* "Open in Payment Plans" link on plan rows (replaces edit/delete). */
+    .plan-link {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 2rem; height: 2rem; border-radius: 50%;
+      color: #4f48d4; background: #efeaff; text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+      &:hover { background: #4f48d4; color: #fff; }
+    }
 
     /* Edit dialog form */
     .edit-form { display: flex; flex-direction: column; gap: 0.85rem; padding: 0.25rem 0; }
