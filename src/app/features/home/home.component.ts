@@ -30,6 +30,7 @@ import { RetreatThemeService } from '../../services/retreat-theme.service';
             <p class="hero-details"><i class="pi pi-calendar"></i> April 15&ndash;17, 2027</p>
             <p class="hero-details"><i class="pi pi-map-marker"></i> Alliance Redwoods, Occidental, CA</p>
             <p class="hero-details"><i class="pi pi-dollar"></i> Full retreat $280 &middot; Single day $90</p>
+            <p class="hero-details"><i class="pi pi-video"></i> Also <strong>livestreamed on Zoom</strong> &mdash; join from anywhere</p>
             <!-- "Registration is open" status pill. Green (open-now) once
                  reservations go live. Hidden once lodging fills (the red
                  capacity chip tells the whole story at that point). -->
